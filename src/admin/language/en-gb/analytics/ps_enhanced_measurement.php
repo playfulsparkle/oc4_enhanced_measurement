@@ -24,6 +24,7 @@ $_['tab_help_and_support']          = 'Help &amp; Support';
 
 // Entry
 $_['entry_status']                  = 'Status';
+$_['entry_active_store']            = 'Active Store';
 
 // Button
 $_['button_fix_event_handler']      = 'Fix Event Handler';

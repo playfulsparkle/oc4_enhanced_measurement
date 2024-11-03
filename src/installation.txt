@@ -25,7 +25,7 @@ Installation Guide
 2. Upload the Extension Files
    - Log in to your OpenCart admin panel.
    - Go to Extensions > Installer.
-   - Click the Upload button and upload the ps_ga4_em.ocmod.zip file.
+   - Click the Upload button and upload the ps_enhanced_measurement.ocmod.zip file.
 
 3. Install the Extension
    - Once uploaded, find the Playful Sparkle - (GA4) Enhanced Measurement extension and click the Install button.

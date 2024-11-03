@@ -1,11 +1,11 @@
 <?php
-namespace Opencart\Catalog\Model\Extension\PsGa4Em\Analytics;
+namespace Opencart\Catalog\Model\Extension\PsEnhancedMeasurement\Analytics;
 /**
- * Class PsGa4Em
+ * Class PsEnhancedMeasurement
  *
- * @package Opencart\Catalog\Model\Extension\PsGa4Em\Analytics
+ * @package Opencart\Catalog\Model\Extension\PsEnhancedMeasurement\Analytics
  */
-class PsGa4Em extends \Opencart\System\Engine\Model
+class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 {
     /**
      * @param array $args
@@ -22,7 +22,7 @@ class PsGa4Em extends \Opencart\System\Engine\Model
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id={{ ps_ga4_em_gtm_id }}" height="0" width="0" style="display:none; visibility:hidden;"></iframe>
+    <iframe src="https://www.googletagmanager.com/ns.html?id={{ ps_enhanced_measurement_gtm_id }}" height="0" width="0" style="display:none; visibility:hidden;"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
 HTML

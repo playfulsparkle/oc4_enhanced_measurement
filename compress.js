@@ -2,7 +2,7 @@ const fs = require("fs");
 const archiver = require("archiver");
 const path = require("path");
 
-const output = fs.createWriteStream(__dirname + "/dist/ps_ga4_em.ocmod.zip");
+const output = fs.createWriteStream(__dirname + "/dist/ps_enhanced_measurement.ocmod.zip");
 
 const archive = archiver("zip", {
   zlib: { level: 4 },
@@ -10,7 +10,7 @@ const archive = archiver("zip", {
 
 output.on("close", function () {
   console.log(archive.pointer() + " total bytes");
-  console.log("ps_ga4_em.ocmod.zip has been created");
+  console.log("ps_enhanced_measurement.ocmod.zip has been created");
 });
 
 archive.on("warning", function (err) {
@@ -28,6 +28,7 @@ archive.on("error", function (err) {
 archive.pipe(output);
 
 archive.directory("src/admin/", "admin");
+archive.directory("src/catalog/", "catalog");
 archive.file("src/install.json", { name: "install.json" });
 
 archive.finalize();

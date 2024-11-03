@@ -1,11 +1,11 @@
 <?php
-namespace Opencart\Catalog\Controller\Extension\PsGa4Em\Analytics;
+namespace Opencart\Catalog\Controller\Extension\PsEnhancedMeasurement\Analytics;
 /**
- * Class PsGa4Em
+ * Class PsEnhancedMeasurement
  *
- * @package Opencart\Catalog\Controller\Extension\PsGa4Em\Analytics
+ * @package Opencart\Catalog\Controller\Extension\PsEnhancedMeasurement\Analytics
  */
-class PsGa4Em extends \Opencart\System\Engine\Controller
+class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 {
     public function index(): string
     {
@@ -14,7 +14,7 @@ class PsGa4Em extends \Opencart\System\Engine\Controller
          *
          * If disabled, the function returns an empty string, meaning no GTM script will be added to the page.
          */
-        if (!$this->config->get('analytics_ps_ga4_em_status')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return '';
         }
 
@@ -30,18 +30,18 @@ class PsGa4Em extends \Opencart\System\Engine\Controller
          * - `$ads_data_redaction`: Boolean setting for redacting ads data.
          * - `$url_passthrough`: Boolean to control URL passthrough setting for enhanced link tracking.
          */
-        $gtm_id = $this->config->get('analytics_ps_ga4_em_gtm_id');
-        $gcm_status = (bool) $this->config->get('analytics_ps_ga4_em_gcm_status');
-        $ad_storage = (bool) $this->config->get('analytics_ps_ga4_em_ad_storage');
-        $ad_user_data = (bool) $this->config->get('analytics_ps_ga4_em_ad_user_data');
-        $ad_personalization = (bool) $this->config->get('analytics_ps_ga4_em_ad_personalization');
-        $analytics_storage = (bool) $this->config->get('analytics_ps_ga4_em_analytics_storage');
-        $functionality_storage = (bool) $this->config->get('analytics_ps_ga4_em_functionality_storage');
-        $personalization_storage = (bool) $this->config->get('analytics_ps_ga4_em_personalization_storage');
-        $security_storage = (bool) $this->config->get('analytics_ps_ga4_em_security_storage');
-        $wait_for_update = (int) $this->config->get('analytics_ps_ga4_em_wait_for_update');
-        $ads_data_redaction = (bool) $this->config->get('analytics_ps_ga4_em_ads_data_redaction');
-        $url_passthrough = (bool) $this->config->get('analytics_ps_ga4_em_url_passthrough');
+        $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+        $gcm_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
+        $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
+        $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
+        $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
+        $analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
+        $functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
+        $personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
+        $security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
+        $wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
+        $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
+        $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
 
         $html = '';
 
@@ -111,15 +111,15 @@ class PsGa4Em extends \Opencart\System\Engine\Controller
      */
     public function eventCatalogViewCommonHeaderBefore(string &$route, array &$args, string &$template): void
     {
-        if (!$this->config->get('analytics_ps_ga4_em_status')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        $this->load->model('extension/ps_ga4_em/analytics/ps_ga4_em');
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-        $args['ps_ga4_em_gtm_id'] = $this->config->get('analytics_ps_ga4_em_gtm_id');
+        $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
 
-        $headerViews = $this->model_extension_ps_ga4_em_analytics_ps_ga4_em->replaceHeaderViews($args);
+        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceHeaderViews($args);
 
         $template = $this->replaceViews($route, $template, $headerViews);
     }
