@@ -9,94 +9,34 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 {
     public function index(): string
     {
-        /**
-         * Checks if Google Tag Manager (GTM) is enabled in the configuration.
-         *
-         * If disabled, the function returns an empty string, meaning no GTM script will be added to the page.
-         */
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return '';
         }
 
-        /**
-         * Retrieves GTM and GCM configuration settings from the system configuration.
-         *
-         * - `$gtm_id`: Unique ID for the Google Tag Manager container.
-         * - `$gcm_status`: Boolean indicating if Google Consent Mode (GCM) is enabled.
-         * - `$ad_storage`, `$ad_user_data`, `$ad_personalization`, `$analytics_storage`,
-         *   `$functionality_storage`, `$personalization_storage`, `$security_storage`:
-         *   Booleans determining storage access settings for different types of cookies/data.
-         * - `$wait_for_update`: Integer representing delay (in milliseconds) before applying consent settings.
-         * - `$ads_data_redaction`: Boolean setting for redacting ads data.
-         * - `$url_passthrough`: Boolean to control URL passthrough setting for enhanced link tracking.
-         */
         $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
-        $gcm_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
-        $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
-        $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
-        $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
-        $analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
-        $functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
-        $personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
-        $security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
-        $wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
-        $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
-        $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
+        $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
 
-        $html = '';
+        $html = <<<HTML
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={$google_tag_id}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
 
-        /**
-         * If Google Consent Mode (GCM) is enabled, configure consent settings.
-         *
-         * Creates a `gcm_options` array, defining consent preferences for storage and data types. These include:
-         * - `ad_storage`, `ad_user_data`, `ad_personalization`, `analytics_storage`,
-         *   `functionality_storage`, `personalization_storage`, `security_storage`:
-         *   Each is set to either "granted" or "denied" based on the corresponding configuration.
-         * - If `$wait_for_update` is greater than 0, it adds a delay before applying these settings.
-         *
-         * Appends a JavaScript block to `$html` that initializes the `dataLayer`, defines the `gtag` function,
-         * and sets consent using the `gcm_options` and `ads_data_redaction` and `url_passthrough` configurations.
-         */
-        if ($gcm_status) {
-            $gcm_options = [
-                'ad_storage' => $ad_storage ? 'granted' : 'denied',
-                'ad_user_data' => $ad_user_data ? 'granted' : 'denied',
-                'ad_personalization' => $ad_personalization ? 'granted' : 'denied',
-                'analytics_storage' => $analytics_storage ? 'granted' : 'denied',
-                'functionality_storage' => $functionality_storage ? 'granted' : 'denied',
-                'personalization_storage' => $personalization_storage ? 'granted' : 'denied',
-                'security_storage' => $security_storage ? 'granted' : 'denied',
-            ];
+            gtag('js', new Date());
+            gtag('config', '{$google_tag_id}', {'cookie_flags': 'SameSite=None;Secure'});
+        </script>
+        HTML;
 
-            if ($wait_for_update > 0) {
-                $gcm_options['wait_for_update'] = $wait_for_update;
-            }
-
-            $html .= '<script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag() { dataLayer.push(arguments); }
-
-                gtag("consent", "default", ' . json_encode($gcm_options, JSON_PRETTY_PRINT) . ');
-                gtag("set", "ads_data_redaction", ' . ($ads_data_redaction ? 'true' : 'false') . ');
-                gtag("set", "url_passthrough", ' . ($url_passthrough ? 'true' : 'false') . ');
-            </script>';
-        }
-
-        /**
-         * Appends the main GTM script block to `$html`.
-         *
-         * This block creates and inserts a script element into the page that loads GTM from `googletagmanager.com`.
-         * - Uses the GTM ID retrieved from configuration.
-         * - Initializes the dataLayer and sends a 'gtm.js' event to trigger GTM processing.
-         */
-        $html .= '
+        $html = <<<HTML
         <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({\'gtm.start\':
-        new Date().getTime(),event:\'gtm.js\'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!=\'dataLayer\'?\'&l=\'+l:\'\';j.async=true;j.src=
-        \'https://www.googletagmanager.com/gtm.js?id=\'+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,\'script\',\'dataLayer\',\'' . $gtm_id . '\');</script>
-        <!-- End Google Tag Manager -->';
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','{$gtm_id}');</script>
+        <!-- End Google Tag Manager -->
+        HTML;
 
         return $html;
     }

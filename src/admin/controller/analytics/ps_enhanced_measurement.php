@@ -51,6 +51,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['back'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=analytics');
 
         $data['analytics_ps_enhanced_measurement_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_status');
+        $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+        $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
 
         $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
 
@@ -69,6 +71,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if (!$this->user->hasPermission('modify', 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement')) {
             $json['error'] = $this->language->get('error_permission');
+        }
+
+        if (!$json) {
+            if (!isset($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_google_tag_id');
+            } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_google_tag_id_invalid');
+            }
+
+            if (!isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
+            } elseif (preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
+            }
         }
 
         if (!$json) {
