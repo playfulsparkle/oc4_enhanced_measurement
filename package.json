@@ -1,5 +1,5 @@
 {
-  "name": "oc4_product_category_filter",
+  "name": "oc4_ga4_enhanced_measurement",
   "version": "1.0.0",
   "description": "layful Sparkle - (GA4) Enhanced Measurement for OpenCart 4",
   "main": "index.js",
@@ -10,8 +10,8 @@
     "opencart",
     "oc",
     "playfulsparkle",
-    "product filter",
-    "category filter"
+    "ga4",
+    "enhanced measurement"
   ],
   "author": "zsoltoroszlany82 <zsolt.oroszlany@playfulsparkle.com>",
   "license": "GPL",
