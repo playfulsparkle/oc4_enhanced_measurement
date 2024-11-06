@@ -28,7 +28,7 @@ $_['tab_help_and_support']             = 'Help &amp; Support';
 $_['entry_status']                     = 'Status';
 $_['entry_measurement_implementation'] = 'Measurement Implementation';
 $_['entry_google_tag_id']              = 'Google tag ID';
-$_['entry_gtm_id']                     = 'Measurement ID
+$_['entry_gtm_id']                     = 'Measurement ID';
 
 // Button
 $_['button_fix_event_handler']         = 'Fix Event Handler';
@@ -41,6 +41,6 @@ $_['help_gtm_id_locate']               = 'To find your Measurement IDn to your <
 $_['error_permission']                 = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
 $_['error_google_tag_id']              = 'The Google tag ID field is required. Please enter your Google Analytics ID.';
 $_['error_google_tag_id_invalid']      = 'The Google tag ID format is incorrect. Ensure it follows the format G-XXXXXXXXXX.';
-$_['error_gtm_id']                     = 'The GTM ID field is required. Please enter your Measurement ID
+$_['error_gtm_id']                     = 'The GTM ID field is required. Please enter your Measurement ID';
 $_['error_gtm_id_invalid']             = 'The GTM ID format is incorrect. Ensure it follows the format GTM-XXXXXXX.';
 
