@@ -1,5 +1,4 @@
 $(document).ready(function () {
-  var addToWishlists = $('[data-ps-track-event="add_to_wishlist"]');
   var selectItems = $('[data-ps-track-event="select_item"]');
   var selectPromotions = $('[data-ps-track-event="select_promotion"]');
 
@@ -16,36 +15,6 @@ $(document).ready(function () {
     }, 200);
   }
 
-  function wishlistClick(e) {
-    e.preventDefault();
-
-    var self = $(this);
-    var productId = self.data("ps-track-id");
-
-    console.log(productId);
-
-    self.off("click", wishlistClick);
-
-    self.trigger("click");
-
-    self.on("click", wishlistClick);
-  }
-
-  function removeFromCartClick(e) {
-    e.preventDefault();
-
-    var self = $(this);
-    var productId = self.data("ps-track-id");
-
-    self.removeAttr("data-ps-track-event");
-
-    console.log(productId);
-
-    setTimeout(function () {
-      self.trigger("click");
-    }, 200);
-  }
-
   if (selectItems.length > 0) {
     selectItems.on("click", linkClick);
   }
@@ -54,15 +23,20 @@ $(document).ready(function () {
     selectPromotions.on("click", linkClick);
   }
 
-  if (addToWishlists.length > 0) {
-    addToWishlists.on("click", wishlistClick);
-  }
+  $(document).on("click", '[data-ps-track-event="remove_from_cart"]', function (e) {
+    e.preventDefault();
 
-  $(document).on(
-    "click",
-    '[data-ps-track-event="remove_from_cart"]',
-    removeFromCartClick
-  );
+    var self = $(this);
+    var productId = self.data("ps-track-id");
+
+    self.removeAttr("data-ps-track-event"); // prevent invoking this function again
+
+    console.log(productId);
+
+    setTimeout(function () {
+      self.trigger("click");
+    }, 200);
+  });
 });
 
 (function ($) {
@@ -77,14 +51,21 @@ $(document).ready(function () {
 
     jqXHR.done(function (data) {
       if (
+        requestUrl.indexOf("route=account/wishlist.add") > 0 &&
+        productId &&
+        typeof data === "object" &&
+        "success" in data
+      ) {
+        console.log("Successfully added product to wishlist, product_id: " + productId);
+      }
+
+      if (
         requestUrl.indexOf("route=checkout/cart.add") > 0 &&
         productId &&
         typeof data === "object" &&
         "success" in data
       ) {
-        console.log(
-          "Successfully added product to cart, product_id: " + productId
-        );
+        console.log("Successfully added product to cart, product_id: " + productId);
       }
     });
 

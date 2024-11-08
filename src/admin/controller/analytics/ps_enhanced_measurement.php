@@ -54,6 +54,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+        $data['analytics_ps_enhanced_measurement_item_id'] = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+        $data['analytics_ps_enhanced_measurement_item_category_option'] = $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+        $data['analytics_ps_enhanced_measurement_item_price_tax'] = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+        $data['analytics_ps_enhanced_measurement_affiliation'] = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+        $data['analytics_ps_enhanced_measurement_location_id'] = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+        $data['analytics_ps_enhanced_measurement_currency'] = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+        $data['gtm_id_visibility'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
+        $data['google_tag_id_visibility'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag';
 
         $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
 
@@ -62,6 +71,38 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'gtag' => $this->language->get('text_gtag'),
             'gtm' => $this->language->get('text_gtm'),
         ];
+
+        $data['item_id_options'] = [
+            'product_id' => $this->language->get('text_product_id') . ' ' . $this->language->get('text_default'),
+            'model' => $this->language->get('text_model'),
+            'sku' => $this->language->get('text_sku'),
+            'upc' => $this->language->get('text_upc'),
+            'ean' => $this->language->get('text_ean'),
+            'jan' => $this->language->get('text_jan'),
+            'isbn' => $this->language->get('text_isbn'),
+            'mpn' => $this->language->get('text_mpn'),
+        ];
+
+        $data['item_category_options'] = [
+            $this->language->get('text_category_option_type_1'),
+            $this->language->get('text_category_option_type_2'),
+            $this->language->get('text_category_option_type_3'),
+            $this->language->get('text_category_option_type_4'),
+        ];
+
+        $this->load->model('localisation/currency');
+
+        $currencies = $this->model_localisation_currency->getCurrencies();
+
+        $data['currencies'] = [
+            '' => $this->language->get('text_multi_currency')
+        ];
+
+        foreach ($currencies as $currency) {
+            if ($currency['status']) {
+                $data['currencies'][$currency['code']] = sprintf('%s (%s)', $currency['title'], $currency['code']);
+            }
+        }
 
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
@@ -81,16 +122,28 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (!$json) {
-            if (!isset($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
-                $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
-            } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
-                $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
+            if (!isset($this->request->post['analytics_ps_enhanced_measurement_implementation'])) {
+                $json['error']['input-measurement-implementation'] = $this->language->get('error_measurement_implementation');
+            } else if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === '') {
+                $json['error']['input-measurement-implementation'] = $this->language->get('error_measurement_implementation');
+            }
+        }
+
+        if (!$json) {
+            if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtag') {
+                if (!isset($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
+                    $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
+                } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
+                    $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
+                }
             }
 
-            if (!isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
-                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
-            } elseif (preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
-                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
+            if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtm') {
+                if (!isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
+                    $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
+                } elseif (preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                    $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
+                }
             }
         }
 
@@ -109,26 +162,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function install(): void
     {
         if ($this->user->hasPermission('modify', 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement')) {
+            $this->load->model('setting/setting');
+
+            $data = [
+                'analytics_ps_enhanced_measurement_item_id' => 'product_id',
+                'analytics_ps_enhanced_measurement_item_category_option' => 0,
+                'analytics_ps_enhanced_measurement_item_price_tax' => 1,
+            ];
+
+            $this->model_setting_setting->editSetting('module_ps_live_search', $data);
+
             $this->load->model('setting/event');
 
-            $separator = version_compare(VERSION, '4.0.2.0', '>=') ? '.' : '|';
-
-            if (version_compare(VERSION, '4.0.1.0', '>=')) {
-                $this->model_setting_event->addEvent([
-                    'code' => 'analytics_ps_enhanced_measurement',
-                    'description' => '',
-                    'trigger' => 'catalog/view/common/header/before',
-                    'action' => 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . 'eventCatalogViewCommonHeaderBefore',
-                    'status' => '1',
-                    'sort_order' => '0'
-                ]);
-            } else {
-                $this->model_setting_event->addEvent(
-                    'analytics_ps_enhanced_measurement',
-                    'catalog/view/common/header/before',
-                    'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . 'eventCatalogViewCommonHeaderBefore'
-                );
-            }
+            $this->_registerEvents();
         }
     }
 
@@ -137,7 +183,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($this->user->hasPermission('modify', 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement')) {
             $this->load->model('setting/event');
 
-            $this->model_setting_event->deleteEventByCode('analytics_ps_enhanced_measurement');
+            $this->_unregisterEvents();
         }
     }
 
@@ -154,28 +200,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (!$json) {
             $this->load->model('setting/event');
 
-            $this->model_setting_event->deleteEventByCode('analytics_ps_enhanced_measurement');
+            $this->_unregisterEvents();
 
-            $separator = version_compare(VERSION, '4.0.2.0', '>=') ? '.' : '|';
-
-            if (version_compare(VERSION, '4.0.1.0', '>=')) {
-                $result = $this->model_setting_event->addEvent([
-                    'code' => 'analytics_ps_enhanced_measurement',
-                    'description' => '',
-                    'trigger' => 'catalog/view/common/header/before',
-                    'action' => 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . 'eventCatalogViewCommonHeaderBefore',
-                    'status' => '1',
-                    'sort_order' => '0'
-                ]);
-            } else {
-                $result = $this->model_setting_event->addEvent(
-                    'analytics_ps_enhanced_measurement',
-                    'catalog/view/common/header/before',
-                    'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . 'eventCatalogViewCommonHeaderBefore'
-                );
-            }
-
-            if ($result > 0) {
+            if ($this->_registerEvents() > 0) {
                 $json['success'] = $this->language->get('text_success');
             } else {
                 $json['error'] = $this->language->get('error_event');
@@ -184,5 +211,54 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
+    }
+
+    private function _unregisterEvents(): void
+    {
+        $this->model_setting_event->deleteEventByCode('analytics_ps_enhanced_measurement');
+    }
+
+    private function _registerEvents(): int
+    {
+        $separator = version_compare(VERSION, '4.0.2.0', '>=') ? '.' : '|';
+
+        $events = [
+            ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
+            ['trigger' => 'catalog/view/extension/opencart/module/banner/before', 'actionName' => 'eventCatalogViewExtensionOpencartModuleBannerBefore'],
+            ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
+            ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
+            ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
+
+            ['trigger' => 'catalog/view/product/category/before', 'actionName' => 'eventCatalogViewProductCategoryBefore'],
+            ['trigger' => 'catalog/view/product/product/before', 'actionName' => 'eventCatalogViewProductProductBefore'],
+            ['trigger' => 'catalog/view/product/search/before', 'actionName' => 'eventCatalogViewProductSearchBefore'],
+            ['trigger' => 'catalog/view/product/thumb/before', 'actionName' => 'eventCatalogViewProductThumbBefore'],
+            ['trigger' => 'catalog/view/product/compare/before', 'actionName' => 'eventCatalogViewProductCompareBefore'],
+        ];
+
+        $result = 0;
+
+        if (version_compare(VERSION, '4.0.1.0', '>=')) {
+            foreach ($events as $event) {
+                $result += $this->model_setting_event->addEvent([
+                    'code' => 'analytics_ps_enhanced_measurement',
+                    'description' => '',
+                    'trigger' => $event['trigger'],
+                    'action' => 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . $event['actionName'],
+                    'status' => '1',
+                    'sort_order' => '0'
+                ]);
+            }
+        } else {
+            foreach ($events as $event) {
+                $result += $this->model_setting_event->addEvent(
+                    'analytics_ps_enhanced_measurement',
+                    $event['trigger'],
+                    'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . $event['actionName']
+                );
+            }
+        }
+
+        return $result > 0;
     }
 }
