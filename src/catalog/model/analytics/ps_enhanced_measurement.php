@@ -112,6 +112,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 {{ ps_enhanced_measurement }}
             </script>
             {% endif %}
+            {% if ps_products %}
+            <script>
+                {% for product_id, item in ps_products %}
+                var ps_datalayer_{{ product_id }} = {{ item }};
+                {% endfor %}
+            </script>
+            {% endif %}
             {% if products %}
             HTML
         ];
@@ -132,7 +139,71 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 {{ ps_enhanced_measurement }}
             </script>
             {% endif %}
+            {% if ps_products %}
+            <script>
+                {% for product_id, item in ps_products %}
+                var ps_datalayer_{{ product_id }} = {{ item }};
+                {% endfor %}
+            </script>
+            {% endif %}
             HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewProductSearchViews(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_enhanced_measurement %}
+            <script>
+                {{ ps_enhanced_measurement }}
+            </script>
+            {% endif %}
+            {% if ps_products %}
+            <script>
+                {% for product_id, item in ps_products %}
+                var ps_datalayer_{{ product_id }} = {{ item }};
+                {% endfor %}
+            </script>
+            {% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewProductCompareViews(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_enhanced_measurement %}
+            <script>
+                {{ ps_enhanced_measurement }}
+            </script>
+            {% endif %}
+            {% if ps_products %}
+            <script>
+                {% for product_id, item in ps_products %}
+                var ps_datalayer_{{ product_id }} = {{ item }};
+                {% endfor %}
+            </script>
+            {% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="select_item">'
         ];
 
         return $views;
@@ -182,7 +253,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
     {
         $query = $this->db->query("SELECT
                 DISTINCT *,
-                (SELECT GROUP_CONCAT(cd1.`name` ORDER BY `level` SEPARATOR ' > ') FROM `" . DB_PREFIX . "category_path` cp LEFT JOIN `" . DB_PREFIX . "category_description` cd1 ON (cp.`path_id` = cd1.`category_id` AND cp.`category_id` != cp.`path_id`) WHERE cp.`category_id` = c.`category_id` AND cd1.`language_id` = '" . (int) $this->config->get('config_language_id') . "' GROUP BY cp.`category_id`) AS `path`
+                (SELECT GROUP_CONCAT(cd1.`name` ORDER BY `level` SEPARATOR ' &gt; ') FROM `" . DB_PREFIX . "category_path` cp LEFT JOIN `" . DB_PREFIX . "category_description` cd1 ON (cp.`path_id` = cd1.`category_id` AND cp.`category_id` != cp.`path_id`) WHERE cp.`category_id` = c.`category_id` AND cd1.`language_id` = '" . (int) $this->config->get('config_language_id') . "' GROUP BY cp.`category_id`) AS `path`
             FROM `" . DB_PREFIX . "category` c
             LEFT JOIN `" . DB_PREFIX . "category_description` cd2 ON (c.`category_id` = cd2.`category_id`)
             WHERE c.`category_id` = '" . (int) $category_id . "' AND cd2.`language_id` = '" . (int) $this->config->get('config_language_id') . "'");

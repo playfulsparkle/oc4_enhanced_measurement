@@ -1,3 +1,18 @@
+function sendGAData(event, productId) {
+  console.log('Event: ' + event)
+  if (typeof window['ps_datalayer_' + productId] !== 'undefined') {
+    console.log('Data: ');
+    console.log(window['ps_datalayer_' + productId]);
+
+    if (ps_config.measurement_implementation === 'gtag') {
+      gtag('event', event, window['ps_datalayer_' + productId]);
+    } else if (ps_config.measurement_implementation === 'gtm') {
+      dataLayer.push({ ecommerce: null });
+      dataLayer.push({ event: event, ecommerce: window['ps_datalayer_' + productId] });
+    }
+  }
+}
+
 $(document).ready(function () {
   var selectItems = $('[data-ps-track-event="select_item"]');
   var selectPromotions = $('[data-ps-track-event="select_promotion"]');
@@ -8,7 +23,7 @@ $(document).ready(function () {
     var self = $(this);
     var productId = self.data("ps-track-id");
 
-    console.log(productId);
+    sendGAData('select_item', productId);
 
     setTimeout(function () {
       location = location = self.attr("href");
@@ -31,7 +46,7 @@ $(document).ready(function () {
 
     self.removeAttr("data-ps-track-event"); // prevent invoking this function again
 
-    console.log(productId);
+    sendGAData('select_item', productId);
 
     setTimeout(function () {
       self.trigger("click");
@@ -56,7 +71,7 @@ $(document).ready(function () {
         typeof data === "object" &&
         "success" in data
       ) {
-        console.log("Successfully added product to wishlist, product_id: " + productId);
+        sendGAData('add_to_wishlist', productId);
       }
 
       if (
@@ -65,7 +80,7 @@ $(document).ready(function () {
         typeof data === "object" &&
         "success" in data
       ) {
-        console.log("Successfully added product to cart, product_id: " + productId);
+        sendGAData('add_to_cart', productId);
       }
     });
 

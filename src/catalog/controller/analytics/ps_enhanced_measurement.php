@@ -21,6 +21,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($measurement_implementation === 'gtag') {
             return <<<HTML
+            <script>var ps_config = { measurement_implementation: '{$measurement_implementation}' };</script>
             <!-- Google tag (gtag.js) -->
             <script async src="https://www.googletagmanager.com/gtag/js?id={$google_tag_id}"></script>
             <script>
@@ -33,6 +34,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             HTML;
         } else if ($measurement_implementation === 'gtm') {
             return <<<HTML
+            <script>var ps_config = { measurement_implementation: '{$measurement_implementation}' };</script>
             <!-- Google Tag Manager -->
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -284,7 +286,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($total_categories === 0 || $category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = html_entity_decode($category_name, ENT_QUOTES, 'UTF-8');
+                        $item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
@@ -314,20 +316,27 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
-                $items[] = $item;
+                $items[$product_info['product_id']] = $item;
             }
 
             $data['ecommerce']['item_list_id'] = $item_list_id;
             $data['ecommerce']['item_list_name'] = $item_list_name;
-            $data['ecommerce']['items'] = $items;
+            $data['ecommerce']['items'] = array_values($items);
 
             if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
                 $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
             } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
                 $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
             }
+
+            $args['ps_products'] = [];
+
+            foreach ($items as $product_id => $item) {
+                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
         } else {
             $args['ps_enhanced_measurement'] = '';
+            $args['ps_products'] = '';
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCategoryViews($args);
@@ -434,7 +443,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($total_categories === 0 || $category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = html_entity_decode($category_name, ENT_QUOTES, 'UTF-8');
+                    $item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
@@ -462,19 +471,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['quantity'] = $product_info['quantity'];
 
-            $items[] = $item;
+            $items[$product_info['product_id']] = $item;
 
             $data['ecommerce']['currency'] = $currency;
             $data['ecommerce']['value'] = $item['price'];
-            $data['ecommerce']['items'] = $items;
+            $data['ecommerce']['items'] = array_values($items);
 
             if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
                 $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
             } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
                 $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
             }
+
+            $args['ps_products'] = [];
+
+            foreach ($items as $product_id => $item) {
+                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
         } else {
             $args['ps_enhanced_measurement'] = '';
+            $args['ps_products'] = '';
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductViews($args);
@@ -487,6 +503,215 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
+
+        if (isset($this->request->get['search'])) {
+            $search = $this->request->get['search'];
+        } else {
+            $search = '';
+        }
+
+        if (isset($this->request->get['tag'])) {
+            $tag = $this->request->get['tag'];
+        } elseif (isset($this->request->get['search'])) {
+            $tag = $this->request->get['search'];
+        } else {
+            $tag = '';
+        }
+
+        if (isset($this->request->get['description'])) {
+            $description = $this->request->get['description'];
+        } else {
+            $description = '';
+        }
+
+        if (isset($this->request->get['category_id'])) {
+            $category_id = (int) $this->request->get['category_id'];
+        } else {
+            $category_id = 0;
+        }
+
+        if (isset($this->request->get['sub_category'])) {
+            $sub_category = $this->request->get['sub_category'];
+        } else {
+            $sub_category = 0;
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'p.sort_order';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = (int) $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+            $limit = (int) $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_pagination');
+        }
+
+
+        if ($search || $tag) {
+            $data = [
+                'event' => 'view_item_list',
+                'ecommerce' => [],
+            ];
+
+            if (isset($this->request->get['search'])) {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title') . ' - ' . $this->request->get['search']);
+                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->request->get['search'];
+            } elseif (isset($this->request->get['tag'])) {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
+                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag'];
+            } else {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title'));
+                $item_list_name = $this->language->get('heading_title');
+            }
+
+            $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+            $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+            $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+            $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+            $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
+            if (empty($affiliation)) {
+                $affiliation = $this->config->get('config_name');
+            }
+
+            $items = [];
+
+            $filter_data = [
+                'filter_search' => $search,
+                'filter_tag' => $tag,
+                'filter_description' => $description,
+                'filter_category_id' => $category_id,
+                'filter_sub_category' => $sub_category,
+                'sort' => $sort,
+                'order' => $order,
+                'start' => ($page - 1) * $limit,
+                'limit' => $limit
+            ];
+
+            $products = $this->model_catalog_product->getProducts($filter_data);
+
+            foreach ($products as $key => $product_info) {
+                $item = [];
+                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->_formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $item['affiliation'] = $affiliation;
+
+                if (isset($this->session->data['coupon'])) {
+                    $item['coupon'] = $this->session->data['coupon'];
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $discount = $product_info['price'] - $product_info['special'];
+                    }
+
+                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                }
+
+                $item['index'] = $key;
+
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+                if ($manufacturer_info) {
+                    $item['item_brand'] = $manufacturer_info['name'];
+                }
+
+                if ($item_category_option === 0) {
+                    $categories = $this->_getCategoryType1($product_info['product_id']);
+                } else if ($item_category_option === 1) {
+                    $categories = $this->_getCategoryType2($product_info['product_id']);
+                } else {
+                    $categories = [];
+                }
+
+                $total_categories = count($categories);
+
+                foreach ($categories as $category_index => $category_name) {
+                    if ($total_categories === 0 || $category_index === 0) {
+                        $item['item_category'] = $category_name;
+                    } else {
+                        $item['item_category' . ($category_index + 1)] = $category_name;
+                    }
+                }
+
+                $item['item_list_id'] = $item_list_id;
+                $item['item_list_name'] = $item_list_name;
+                // $item['item_variant'] = '';
+
+                if ($location_id) {
+                    $item['location_id'] = $location_id;
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['special'];
+                    }
+                } else {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['price'];
+                    }
+                }
+
+                $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+                $item['quantity'] = $product_info['quantity'];
+
+                $items[$product_info['product_id']] = $item;
+            }
+
+            $data['ecommerce']['item_list_id'] = $item_list_id;
+            $data['ecommerce']['item_list_name'] = $item_list_name;
+            $data['ecommerce']['items'] = array_values($items);
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
+                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
+                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+            }
+
+            $args['ps_products'] = [];
+
+            foreach ($items as $product_id => $item) {
+                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
+        } else {
+            $args['ps_enhanced_measurement'] = '';
+            $args['ps_products'] = '';
+        }
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSearchViews($args);
+
+        $template = $this->replaceViews($route, $template, $views);
     }
 
     public function eventCatalogViewProductCompareBefore(string &$route, array &$args, string &$template): void
@@ -496,8 +721,142 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
 
-        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCompareAndWishlistViews($args);
+		if (isset($this->session->data['compare'])) {
+            $data = [
+                'event' => 'view_item_list',
+                'ecommerce' => [],
+            ];
+
+            if (isset($this->request->get['search'])) {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title') . ' - ' . $this->request->get['search']);
+                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->request->get['search'];
+            } elseif (isset($this->request->get['tag'])) {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
+                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag'];
+            } else {
+                $item_list_id = $this->_formatListId($this->language->get('heading_title'));
+                $item_list_name = $this->language->get('heading_title');
+            }
+
+            $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+            $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+            $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+            $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+            $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
+            if (empty($affiliation)) {
+                $affiliation = $this->config->get('config_name');
+            }
+
+            $items = [];
+
+            foreach ($this->session->data['compare'] as $key => $product_id) {
+                $product_info = $this->model_catalog_product->getProduct($product_id);
+
+                $item = [];
+                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->_formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $item['affiliation'] = $affiliation;
+
+                if (isset($this->session->data['coupon'])) {
+                    $item['coupon'] = $this->session->data['coupon'];
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $discount = $product_info['price'] - $product_info['special'];
+                    }
+
+                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                }
+
+                $item['index'] = $key;
+
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+                if ($manufacturer_info) {
+                    $item['item_brand'] = $manufacturer_info['name'];
+                }
+
+                if ($item_category_option === 0) {
+                    $categories = $this->_getCategoryType1($product_info['product_id']);
+                } else if ($item_category_option === 1) {
+                    $categories = $this->_getCategoryType2($product_info['product_id']);
+                } else {
+                    $categories = [];
+                }
+
+                $total_categories = count($categories);
+
+                foreach ($categories as $category_index => $category_name) {
+                    if ($total_categories === 0 || $category_index === 0) {
+                        $item['item_category'] = $category_name;
+                    } else {
+                        $item['item_category' . ($category_index + 1)] = $category_name;
+                    }
+                }
+
+                $item['item_list_id'] = $item_list_id;
+                $item['item_list_name'] = $item_list_name;
+                // $item['item_variant'] = '';
+
+                if ($location_id) {
+                    $item['location_id'] = $location_id;
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['special'];
+                    }
+                } else {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['price'];
+                    }
+                }
+
+                $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+                $item['quantity'] = $product_info['quantity'];
+
+                $items[$product_info['product_id']] = $item;
+            }
+
+            $data['ecommerce']['item_list_id'] = $item_list_id;
+            $data['ecommerce']['item_list_name'] = $item_list_name;
+            $data['ecommerce']['items'] = array_values($items);
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
+                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
+                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+            }
+
+            $args['ps_products'] = [];
+
+            foreach ($items as $product_id => $item) {
+                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
+		} else {
+            $args['ps_enhanced_measurement'] = '';
+            $args['ps_products'] = '';
+        }
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCompareViews($args);
 
         $template = $this->replaceViews($route, $template, $views);
     }
@@ -737,7 +1096,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
 
             if ($category_info) {
-                $result[] = $category_info['last_category_name'];
+                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
             }
         }
 
@@ -760,7 +1119,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
 
             if ($category_info) {
-                $result[] = ($category_info['path']) ? $category_info['path'] . ' > ' . $category_info['name'] : $category_info['name'];
+                if ($category_info['path']) {
+                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
+                } else {
+                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+                }
             }
         }
 
@@ -780,7 +1143,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($category_id);
 
         foreach ($category_infos as $category_info) {
-            $result[] = $category_info['name'];
+            $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
         }
 
         return $result;
