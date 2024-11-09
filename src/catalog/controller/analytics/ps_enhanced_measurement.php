@@ -21,7 +21,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($measurement_implementation === 'gtag') {
             return <<<HTML
-            <script>var ps_config = { measurement_implementation: '{$measurement_implementation}' };</script>
             <!-- Google tag (gtag.js) -->
             <script async src="https://www.googletagmanager.com/gtag/js?id={$google_tag_id}"></script>
             <script>
@@ -34,7 +33,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             HTML;
         } else if ($measurement_implementation === 'gtm') {
             return <<<HTML
-            <script>var ps_config = { measurement_implementation: '{$measurement_implementation}' };</script>
             <!-- Google Tag Manager -->
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -323,20 +321,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $data['ecommerce']['item_list_name'] = $item_list_name;
             $data['ecommerce']['items'] = array_values($items);
 
-            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
-                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            }
-
-            $args['ps_products'] = [];
-
-            foreach ($items as $product_id => $item) {
-                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
+            $args['ps_enhanced_measurement'] = $this->_generateJavaScriptCode($data, $items);
         } else {
-            $args['ps_enhanced_measurement'] = '';
-            $args['ps_products'] = '';
+            $args['ps_enhanced_measurement'] = null;
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCategoryViews($args);
@@ -477,20 +464,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $data['ecommerce']['value'] = $item['price'];
             $data['ecommerce']['items'] = array_values($items);
 
-            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
-                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            }
-
-            $args['ps_products'] = [];
-
-            foreach ($items as $product_id => $item) {
-                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
+            $args['ps_enhanced_measurement'] = $this->_generateJavaScriptCode($data, $items);
         } else {
-            $args['ps_enhanced_measurement'] = '';
-            $args['ps_products'] = '';
+            $args['ps_enhanced_measurement'] = null;
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductViews($args);
@@ -693,20 +669,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $data['ecommerce']['item_list_name'] = $item_list_name;
             $data['ecommerce']['items'] = array_values($items);
 
-            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
-                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            }
-
-            $args['ps_products'] = [];
-
-            foreach ($items as $product_id => $item) {
-                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
+            $args['ps_enhanced_measurement'] = $this->_generateJavaScriptCode($data, $items);
         } else {
-            $args['ps_enhanced_measurement'] = '';
-            $args['ps_products'] = '';
+            $args['ps_enhanced_measurement'] = null;
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSearchViews($args);
@@ -725,7 +690,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
 
-		if (isset($this->session->data['compare'])) {
+        if (isset($this->session->data['compare'])) {
             $data = [
                 'event' => 'view_item_list',
                 'ecommerce' => [],
@@ -840,20 +805,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $data['ecommerce']['item_list_name'] = $item_list_name;
             $data['ecommerce']['items'] = array_values($items);
 
-            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
-                $args['ps_enhanced_measurement'] = 'gtag("event", "' . $data['event'] . '", ' . json_encode($data['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-                $args['ps_enhanced_measurement'] = 'dataLayer.push({ ecommerce: null });' . PHP_EOL . 'dataLayer.push(' . json_encode($data, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
-            }
-
-            $args['ps_products'] = [];
-
-            foreach ($items as $product_id => $item) {
-                $args['ps_products'][$product_id] = json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
-		} else {
-            $args['ps_enhanced_measurement'] = '';
-            $args['ps_products'] = '';
+            $args['ps_enhanced_measurement'] = $this->_generateJavaScriptCode($data, $items);
+        } else {
+            $args['ps_enhanced_measurement'] = null;
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCompareViews($args);
@@ -1177,5 +1131,42 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $string = preg_replace('/\s+/', ' ', $string);
 
         return str_replace(' ', '_', trim($string));
+    }
+
+    private function _generateJavaScriptCode(array $datalayer, array $items): string
+    {
+        $result = 'var ps_enhanced_measurement = {' . PHP_EOL;
+        $result .= '    datalayer: {' . PHP_EOL;
+
+        foreach ($items as $product_id => $item) {
+            $result .= $product_id . ': ' . json_encode($item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL;
+        }
+
+        $result .= '    },' . PHP_EOL;
+        $result .= '    send: function(event_name, product_id) {' . PHP_EOL;
+        $result .= '        if (Object.prototype.hasOwnProperty.call(this.datalayer, product_id)) {' . PHP_EOL;
+        $result .= '            console.log(\'Event: \', event_name, \', product_id: \', product_id, \', data: \', this.datalayer[product_id]);' . PHP_EOL;
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
+            $result .= '        gtag("event", event_name, this.datalayer[product_id])' . PHP_EOL;
+        } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
+            $result .= '        dataLayer.push({ ecommerce: null });' . PHP_EOL;
+            $result .= '        dataLayer.push(this.datalayer[product_id])' . PHP_EOL;
+        }
+
+        $result .= '        } else {' . PHP_EOL;
+        $result .= '            console.error(\'Data for product_id "\' + product_id + \'" does not exists!\');' . PHP_EOL;
+        $result .= '        }' . PHP_EOL;
+        $result .= '    }' . PHP_EOL;
+        $result .= '};' . PHP_EOL;
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
+            $result .= 'gtag("event", "' . $datalayer['event'] . '", ' . json_encode($datalayer['ecommerce'], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+        } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
+            $result .= 'dataLayer.push({ ecommerce: null });' . PHP_EOL;
+            $result .= 'dataLayer.push(' . json_encode($datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ')';
+        }
+
+        return $result;
     }
 }

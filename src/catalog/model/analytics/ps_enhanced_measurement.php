@@ -112,13 +112,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 {{ ps_enhanced_measurement }}
             </script>
             {% endif %}
-            {% if ps_products %}
-            <script>
-                {% for product_id, item in ps_products %}
-                var ps_datalayer_{{ product_id }} = {{ item }};
-                {% endfor %}
-            </script>
-            {% endif %}
             {% if products %}
             HTML
         ];
@@ -139,13 +132,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 {{ ps_enhanced_measurement }}
             </script>
             {% endif %}
-            {% if ps_products %}
-            <script>
-                {% for product_id, item in ps_products %}
-                var ps_datalayer_{{ product_id }} = {{ item }};
-                {% endfor %}
-            </script>
-            {% endif %}
             HTML
         ];
 
@@ -162,13 +148,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_enhanced_measurement %}
             <script>
                 {{ ps_enhanced_measurement }}
-            </script>
-            {% endif %}
-            {% if ps_products %}
-            <script>
-                {% for product_id, item in ps_products %}
-                var ps_datalayer_{{ product_id }} = {{ item }};
-                {% endfor %}
             </script>
             {% endif %}
             {% if products %}
@@ -188,13 +167,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_enhanced_measurement %}
             <script>
                 {{ ps_enhanced_measurement }}
-            </script>
-            {% endif %}
-            {% if ps_products %}
-            <script>
-                {% for product_id, item in ps_products %}
-                var ps_datalayer_{{ product_id }} = {{ item }};
-                {% endfor %}
             </script>
             {% endif %}
             {% if products %}
