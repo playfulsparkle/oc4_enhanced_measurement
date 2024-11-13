@@ -30,7 +30,7 @@
 						<div id="tab-general" class="tab-pane active">
 
 							<div class="row mb-3">
-								<label class="col-sm-2 col-form-label" for="input-status">{{ entry_status }}</label>
+								<label for="input-status" class="col-sm-2 col-form-label">{{ entry_status }}</label>
 								<div class="col-sm-10">
 									<div class="form-check form-switch form-switch-lg">
 										<input type="hidden" name="analytics_ps_enhanced_measurement_status" value="0" />
@@ -69,7 +69,7 @@
 								</div>
 							</div>
 
-							<div id="group-gtm" class="row mb-3">
+							<div class="row mb-3">
 								<label for="input-affiliation" class="col-sm-2 col-form-label">{{ entry_affiliation }}</label>
 								<div class="col-sm-10">
 									<input type="text" name="analytics_ps_enhanced_measurement_affiliation" value="{{ analytics_ps_enhanced_measurement_affiliation | default('') }}" placeholder="{{ entry_affiliation }}" id="input-affiliation" class="form-control" />
@@ -77,7 +77,7 @@
 								</div>
 							</div>
 
-							<div id="group-gtm" class="row mb-3">
+							<div class="row mb-3">
 								<label for="input-location-id" class="col-sm-2 col-form-label">{{ entry_location_id }}</label>
 								<div class="col-sm-10">
 									<input type="text" name="analytics_ps_enhanced_measurement_location_id" value="{{ analytics_ps_enhanced_measurement_location_id | default('') }}" placeholder="{{ entry_location_id }}" id="input-location-id" class="form-control" />
@@ -101,7 +101,7 @@
 								<div class="col-sm-10">
 									<div class="form-check form-switch form-switch-lg">
 										<input type="hidden" name="analytics_ps_enhanced_measurement_item_price_tax" value="0" />
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_item_price_tax" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_item_price_tax %} checked{% endif %} id="input-item-price-tax" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_item_price_tax" value="1" id="input-item-price-tax" class="form-check-input" {% if analytics_ps_enhanced_measurement_item_price_tax %} checked{% endif %} />
 									</div>
 								</div>
 							</div>

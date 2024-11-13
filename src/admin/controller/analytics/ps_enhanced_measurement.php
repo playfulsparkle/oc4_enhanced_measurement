@@ -170,7 +170,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_item_price_tax' => 1,
             ];
 
-            $this->model_setting_setting->editSetting('module_ps_live_search', $data);
+            $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
 
             $this->load->model('setting/event');
 
@@ -224,16 +224,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $events = [
             ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
-            ['trigger' => 'catalog/view/extension/opencart/module/banner/before', 'actionName' => 'eventCatalogViewExtensionOpencartModuleBannerBefore'],
-            ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
-            ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
-            ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
-
-            ['trigger' => 'catalog/view/product/category/before', 'actionName' => 'eventCatalogViewProductCategoryBefore'],
-            ['trigger' => 'catalog/view/product/product/before', 'actionName' => 'eventCatalogViewProductProductBefore'],
-            ['trigger' => 'catalog/view/product/search/before', 'actionName' => 'eventCatalogViewProductSearchBefore'],
-            ['trigger' => 'catalog/view/product/thumb/before', 'actionName' => 'eventCatalogViewProductThumbBefore'],
-            ['trigger' => 'catalog/view/product/compare/before', 'actionName' => 'eventCatalogViewProductCompareBefore'],
         ];
 
         $result = 0;
