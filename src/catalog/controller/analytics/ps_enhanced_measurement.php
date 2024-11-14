@@ -59,21 +59,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $ps_enhanced_measurement_script = 'extension/ps_enhanced_measurement/catalog/view/javascript/ps-enhanced-measurement.js';
 
-        $script = 'extension/ps_enhanced_measurement/catalog/view/javascript/ps-enhanced-measurement.js';
+        $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
 
-        $args['scripts'][$script] = ['href' => $script];
+        $args['ps_enhanced_measurement_status'] = $this->config->get('analytics_ps_enhanced_measurement_status');
+        $args['ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
+        $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
 
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-            $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
-            $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
-
-            $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceHeaderViews($args);
-
-            $template = $this->replaceViews($route, $template, $headerViews);
-        }
+        $template = $this->replaceViews($route, $template, $headerViews);
     }
 
     /**
