@@ -74,6 +74,222 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $headerViews);
     }
 
+    public function eventCatalogViewProductThumbBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        $args['has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($args['product_id']);
+
+        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductThumbBefore($args);
+
+        $template = $this->replaceViews($route, $template, $headerViews);
+    }
+
+    public function eventCatalogViewProductCategoryBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $args['ps_datalayer'] = null;
+        $args['ps_datalayer_items'] = null;
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
+
+
+        if (isset($this->request->get['path'])) {
+            $path = (string) $this->request->get['path'];
+        } else {
+            $path = '';
+        }
+
+        if (isset($this->request->get['filter'])) {
+            $filter = $this->request->get['filter'];
+        } else {
+            $filter = '';
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $sort = $this->request->get['sort'];
+        } else {
+            $sort = 'p.sort_order';
+        }
+
+        if (isset($this->request->get['order'])) {
+            $order = $this->request->get['order'];
+        } else {
+            $order = 'ASC';
+        }
+
+        if (isset($this->request->get['page'])) {
+            $page = (int) $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+            $limit = (int) $this->request->get['limit'];
+        } else {
+            $limit = $this->config->get('config_pagination');
+        }
+
+        $parts = explode('_', $path);
+
+        $category_id = (int) array_pop($parts);
+
+        $category_info = $this->model_catalog_category->getCategory($category_id);
+
+        if ($category_info) {
+            $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+            $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+            $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+            $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+            $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
+            if (empty($affiliation)) {
+                $affiliation = $this->config->get('config_name');
+            }
+
+            $item_list_id = $this->formatListId(html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'));
+            $item_list_name = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+
+            $filter_data = [
+                'filter_category_id' => $category_id,
+                'filter_sub_category' => false,
+                'filter_filter' => $filter,
+                'sort' => $sort,
+                'order' => $order,
+                'start' => ($page - 1) * $limit,
+                'limit' => $limit
+            ];
+
+            $products = $this->model_catalog_product->getProducts($filter_data);
+
+            $items = [];
+
+            foreach ($products as $index => $product_info) {
+                $item = [];
+                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $item['affiliation'] = $affiliation;
+
+                if (isset($this->session->data['coupon'])) {
+                    $item['coupon'] = $this->session->data['coupon'];
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $discount = $product_info['price'] - $product_info['special'];
+                    }
+
+                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                }
+
+                $item['index'] = $index;
+
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+                if ($manufacturer_info) {
+                    $item['item_brand'] = $manufacturer_info['name'];
+                }
+
+                if ($item_category_option === 0) {
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                } else if ($item_category_option === 1) {
+                    $categories = $this->getCategoryType2($product_info['product_id']);
+                } else if ($item_category_option === 2) {
+                    $categories = $this->getCategoryType3($category_id);
+                } else if ($item_category_option === 3) {
+                    $categories = $this->getCategoryType4($category_info);
+                } else {
+                    $categories = [];
+                }
+
+                $total_categories = count($categories);
+
+                foreach ($categories as $category_index => $category_name) {
+                    if ($total_categories === 0 || $category_index === 0) {
+                        $item['item_category'] = $category_name;
+                    } else {
+                        $item['item_category' . ($category_index + 1)] = $category_name;
+                    }
+                }
+
+                $item['item_list_id'] = $item_list_id;
+                $item['item_list_name'] = $item_list_name;
+                // $item['item_variant'] = '';
+
+                if ($location_id) {
+                    $item['location_id'] = $location_id;
+                }
+
+                if ((float) $product_info['special']) {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['special'];
+                    }
+                } else {
+                    if ($item_price_tax) {
+                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                    } else {
+                        $price = $product_info['price'];
+                    }
+                }
+
+                $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+                $item['quantity'] = $product_info['quantity'];
+
+                $items[(int) $product_info['product_id']] = $item;
+            }
+
+            if ($items) {
+                $ps_datalayer = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => array_values($items),
+                    ],
+                ];
+
+                $ps_datalayer_items = [];
+
+                foreach ($items as $product_id => $item) {
+                    $ps_datalayer_items[$product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => $items[$product_id],
+                        ],
+                    ];
+                }
+
+                $args['ps_datalayer'] = json_encode($ps_datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_datalayer_items'] = json_encode($ps_datalayer_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
+        }
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCategoryBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
     /**
      * Retrieves the contents of a template file based on the provided route.
      *
@@ -278,5 +494,86 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         return $output;
+    }
+
+    public function getCategoryType1(int $product_id)
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
+
+            if ($category_info) {
+                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        return $result;
+    }
+
+    public function getCategoryType2(int $product_id)
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
+
+            if ($category_info) {
+                if ($category_info['path']) {
+                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
+                } else {
+                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public function getCategoryType3(int $category_id): array
+    {
+        $result = [];
+
+        $category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($category_id);
+
+        foreach ($category_infos as $category_info) {
+            $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+        }
+
+        return $result;
+    }
+
+    public function getCategoryType4(array $category_info): array
+    {
+        $result = [];
+
+        $result[] = $category_info['name'];
+
+        return $result;
+    }
+
+    public function formatListId(string $string): string
+    {
+        if (function_exists('iconv')) {
+            $new_string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        } elseif (function_exists('mb_convert_encoding')) {
+            $new_string = mb_convert_encoding($string, 'ASCII');
+        } else {
+            $new_string = false;
+        }
+
+        if ($new_string === false) {
+            $new_string = $string;
+        }
+
+        $string = preg_replace('/[^a-zA-Z0-9_]/', ' ', $string);
+        $string = strtolower($string);
+        $string = preg_replace('/\s+/', ' ', $string);
+
+        return str_replace(' ', '_', trim($string));
     }
 }

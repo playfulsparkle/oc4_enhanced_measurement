@@ -224,6 +224,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $events = [
             ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
+            ['trigger' => 'catalog/view/product/thumb/before', 'actionName' => 'eventCatalogViewProductThumbBefore'],
+
+            ['trigger' => 'catalog/view/product/category/before', 'actionName' => 'eventCatalogViewProductCategoryBefore'],
         ];
 
         $result = 0;
