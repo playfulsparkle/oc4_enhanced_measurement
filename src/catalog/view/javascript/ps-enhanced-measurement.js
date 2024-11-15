@@ -19,5 +19,5 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
       } else if (elementType === 'A') {
         location = self.attr("href");
       }
-    }, 200);
+    }, 500);
 });
