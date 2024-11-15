@@ -102,6 +102,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewProductSearchBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_datalayer %}
+            <script>
+                ps_dataLayer.merge({{ ps_datalayer_items }});
+                ps_dataLayer.push('view_item_list', {{ ps_datalayer }});
+            </script>
+            {% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function hasOptions(int $product_id): bool
     {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int) $product_id . "'");
