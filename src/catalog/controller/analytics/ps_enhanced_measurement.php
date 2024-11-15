@@ -95,8 +95,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        $args['ps_datalayer'] = null;
-        $args['ps_datalayer_items'] = null;
+        $args['ps_view_item_list'] = null;
+        $args['ps_all_items'] = null;
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -260,7 +260,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $ps_datalayer = [
+                $ps_view_item_list = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -268,10 +268,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                $ps_datalayer_items = [];
+                $ps_all_items = [];
 
                 foreach ($items as $product_id => $item) {
-                    $ps_datalayer_items[$product_id] = [
+                    $ps_all_items[$product_id] = [
                         'ecommerce' => [
                             'item_list_id' => $item_list_id,
                             'item_list_name' => $item_list_name,
@@ -280,8 +280,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ];
                 }
 
-                $args['ps_datalayer'] = json_encode($ps_datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-                $args['ps_datalayer_items'] = json_encode($ps_datalayer_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_all_items'] = json_encode($ps_all_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
         }
 
@@ -296,8 +296,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        $args['ps_datalayer'] = null;
-        $args['ps_datalayer_items'] = null;
+        $args['ps_view_item_list'] = null;
+        $args['ps_all_items'] = null;
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -482,7 +482,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $ps_datalayer = [
+                $ps_view_item_list = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -490,10 +490,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                $ps_datalayer_items = [];
+                $ps_all_items = [];
 
                 foreach ($items as $product_id => $item) {
-                    $ps_datalayer_items[$product_id] = [
+                    $ps_all_items[$product_id] = [
                         'ecommerce' => [
                             'item_list_id' => $item_list_id,
                             'item_list_name' => $item_list_name,
@@ -502,8 +502,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ];
                 }
 
-                $args['ps_datalayer'] = json_encode($ps_datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-                $args['ps_datalayer_items'] = json_encode($ps_datalayer_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_all_items'] = json_encode($ps_all_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
         }
 
@@ -518,8 +518,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        $args['ps_datalayer'] = null;
-        $args['ps_datalayer_items'] = null;
+        $args['ps_view_item'] = null;
+        $args['ps_all_items'] = null;
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -645,7 +645,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['product_id']] = $item;
 
             if ($items) {
-                $ps_datalayer = [
+                $ps_view_item = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -653,10 +653,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                $ps_datalayer_items = [];
+                $ps_all_items = [];
 
                 foreach ($items as $product_id => $item) {
-                    $ps_datalayer_items[$product_id] = [
+                    $ps_all_items[$product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
                             'value' => $item['price'],
@@ -665,8 +665,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ];
                 }
 
-                $args['ps_datalayer'] = json_encode($ps_datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-                $args['ps_datalayer_items'] = json_encode($ps_datalayer_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_view_item'] = json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_all_items'] = json_encode($ps_all_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
         }
 
