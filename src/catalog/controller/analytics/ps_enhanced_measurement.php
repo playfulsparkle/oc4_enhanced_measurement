@@ -512,6 +512,169 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
+    public function eventCatalogViewProductProductBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $args['ps_datalayer'] = null;
+        $args['ps_datalayer_items'] = null;
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
+
+
+        if (isset($this->request->get['product_id'])) {
+            $product_id = (int) $this->request->get['product_id'];
+        } else {
+            $product_id = 0;
+        }
+
+
+        $product_info = $this->model_catalog_product->getProduct($product_id);
+
+        if ($product_info) {
+            $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+            $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+            $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+            $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+            $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
+            if (empty($affiliation)) {
+                $affiliation = $this->config->get('config_name');
+            }
+
+            $items = [];
+
+            $item = [];
+            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $item['affiliation'] = $affiliation;
+
+            if (isset($this->session->data['coupon'])) {
+                $item['coupon'] = $this->session->data['coupon'];
+            }
+
+            if ((float) $product_info['special']) {
+                if ($item_price_tax) {
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $discount = $product_info['price'] - $product_info['special'];
+                }
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+            }
+
+            $item['index'] = 0;
+
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+            if ($manufacturer_info) {
+                $item['item_brand'] = $manufacturer_info['name'];
+            }
+
+            if (isset($this->request->get['path'])) {
+                $parts = explode('_', (string) $this->request->get['path']);
+
+                $category_id = (int) array_pop($parts);
+            } else if (isset($this->request->get['category_id'])) {
+                $category_id = (int) $this->request->get['category_id'];
+            } else {
+                $category_id = 0;
+            }
+
+            $category_info = $this->model_catalog_category->getCategory($category_id);
+
+            if ($item_category_option === 0) {
+                $categories = $this->getCategoryType1($product_info['product_id']);
+            } else if ($item_category_option === 1) {
+                $categories = $this->getCategoryType2($product_info['product_id']);
+            } else if ($item_category_option === 2 && $category_id) {
+                $categories = $this->getCategoryType3($category_id);
+            } else if ($item_category_option === 3 && $category_info) {
+                $categories = $this->getCategoryType4($category_info);
+            } else {
+                $categories = [];
+            }
+
+            $total_categories = count($categories);
+
+            foreach ($categories as $category_index => $category_name) {
+                if ($total_categories === 0 || $category_index === 0) {
+                    $item['item_category'] = $category_name;
+                } else {
+                    $item['item_category' . ($category_index + 1)] = $category_name;
+                }
+            }
+
+            // $item['item_list_id'] = '';
+            // $item['item_list_name'] = '';
+            // $item['item_variant'] = '';
+
+            if ($location_id) {
+                $item['location_id'] = $location_id;
+            }
+
+            if ((float) $product_info['special']) {
+                if ($item_price_tax) {
+                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $price = $product_info['special'];
+                }
+            } else {
+                if ($item_price_tax) {
+                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                } else {
+                    $price = $product_info['price'];
+                }
+            }
+
+            $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $item['quantity'] = $product_info['quantity'];
+
+            $items[(int) $product_info['product_id']] = $item;
+
+            if ($items) {
+                $ps_datalayer = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => array_values($items),
+                    ],
+                ];
+
+                $ps_datalayer_items = [];
+
+                foreach ($items as $product_id => $item) {
+                    $ps_datalayer_items[$product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'],
+                            'items' => $items[$product_id],
+                        ],
+                    ];
+                }
+
+                $args['ps_datalayer'] = json_encode($ps_datalayer, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+                $args['ps_datalayer_items'] = json_encode($ps_datalayer_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
+        }
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
     /**
      * Retrieves the contents of a template file based on the provided route.
      *
