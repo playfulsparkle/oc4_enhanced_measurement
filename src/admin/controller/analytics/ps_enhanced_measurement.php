@@ -230,6 +230,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/product/search/before', 'actionName' => 'eventCatalogViewProductSearchBefore'],
 
             ['trigger' => 'catalog/view/product/product/before', 'actionName' => 'eventCatalogViewProductProductBefore'],
+            ['trigger' => 'catalog/controller/checkout/cart.add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
         ];
 
         $result = 0;

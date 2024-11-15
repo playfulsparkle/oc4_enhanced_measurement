@@ -40,6 +40,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             merge: function(data) {
                 this.data = Object.assign({}, this.data, data);
             },
+            push_manuall: function(eventName, productId) {
+                if (this.data.hasOwnProperty(productId)) {
+                    this.push(eventName, this.data[productId]);
+                } else {
+                    console.error(productId + ' does not exists in dataset!');
+                }
+            },
             push: function(eventName, data) {
                 {% if ps_enhanced_measurement_implementation == 'gtag' %}
                     gtag('event', eventName, data);
@@ -47,6 +54,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     dataLayer.push({ ecommerce: null });
                     dataLayer.push({ event: eventName, ...data });
                 {% endif %}
+
+                console.log('Event: ', eventName + '. Data: ', JSON.stringify(data));
             }
         };
     </script>
@@ -89,12 +98,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_view_item_list %}
-            <script>
-                ps_dataLayer.merge({{ ps_all_items }});
-                ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});
-            </script>
-            {% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -109,12 +114,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_view_item_list %}
-            <script>
-                ps_dataLayer.merge({{ ps_all_items }});
-                ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});
-            </script>
-            {% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -127,14 +128,33 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views = [];
 
         $views[] = [
+            'search' => '<button type="submit" id="button-cart"',
+            'replace' => '<input type="hidden" name="category_id" value="{{ ps_category_id }}">
+            <button type="submit" id="button-cart"'
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
+            'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
+        ];
+
+        $views[] = [
+            'search' => 'if (json[\'success\']) {',
+            'replace' => <<<HTML
+            if (json['add_to_cart']) {
+                ps_dataLayer.push('add_to_cart', json['add_to_cart']);
+            }
+
+            if (json['success']) {
+            HTML
+        ];
+
+        $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_view_item %}
-            <script>
-                ps_dataLayer.merge({{ ps_all_items }});
-                ps_dataLayer.push('view_item', {{ ps_view_item }});
-            </script>
-            {% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item %}<script>ps_dataLayer.push('view_item', {{ ps_view_item }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
