@@ -909,33 +909,30 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             // $item['item_list_id'] = '';
             // $item['item_list_name'] = '';
 
-            // if ($product_info['option']) {
-            //     $variant = [];
-
-            //     foreach ($product_info['option'] as $key => $option) {
-            //         $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
-            //     }
-
-            //     $item['item_variant'] = implode(', ', $variant);
-            // }
-
-            if ($location_id) {
-                $item['location_id'] = $location_id;
-            }
-
-
             $base_price = $product_info['price'];
+
+            $variant = [];
 
             foreach ($options as $product_option_id => $product_option_value_ids) {
                 if (is_array($product_option_value_ids)) {
                     foreach ($product_option_value_ids as $product_option_value_id) {
-                        $product_option_price = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getOptionPrice($product_option_id, $product_option_value_id);
-                        $base_price += $product_option_price;
+                        $product_options_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($product_option_id, $product_option_value_id);
+
+                        $base_price += $product_options_info['price'];
+                        $variant[] = html_entity_decode($product_options_info['name'] . ': ' . $product_options_info['value'], ENT_QUOTES, 'UTF-8');
                     }
                 } else {
-                    $product_option_price = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getOptionPrice($product_option_id, $product_option_value_ids);
-                    $base_price += $product_option_price;
+                    $product_options_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($product_option_id, $product_option_value_ids);
+
+                    $base_price += $product_options_info['price'];
+                    $variant[] = html_entity_decode($product_options_info['name'] . ': ' . $product_options_info['value'], ENT_QUOTES, 'UTF-8');
                 }
+            }
+
+            $item['item_variant'] = implode(', ', $variant);
+
+            if ($location_id) {
+                $item['location_id'] = $location_id;
             }
 
             if ($item_price_tax) {

@@ -169,19 +169,44 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return (int) $query->row['total'] > 0;
     }
 
-    public function getOptionPrice($product_option_id, $product_option_value_id): int {
-        $query = $this->db->query("
-            SELECT price, price_prefix
-            FROM " . DB_PREFIX . "product_option_value
-            WHERE product_option_id = '" . (int)$product_option_id . "'
-              AND product_option_value_id = '" . (int)$product_option_value_id . "'");
+    public function getProductOptionInfo($product_option_id, $product_option_value_id): array
+    {
+        $sql = "SELECT
+                pov.price,
+                pov.price_prefix,
+                od.name AS option_name,
+                ovd.name AS option_value_name
+            FROM " . DB_PREFIX . "product_option_value pov
+            LEFT JOIN " . DB_PREFIX . "option o ON pov.option_id = o.option_id
+            LEFT JOIN " . DB_PREFIX . "option_description od ON o.option_id = od.option_id
+            LEFT JOIN " . DB_PREFIX . "option_value ov ON pov.option_value_id = ov.option_value_id
+            LEFT JOIN " . DB_PREFIX . "option_value_description ovd ON ov.option_value_id = ovd.option_value_id
+            WHERE pov.product_option_id = '" . (int) $product_option_id . "'
+              AND pov.product_option_value_id = '" . (int) $product_option_value_id . "'
+              AND od.language_id = '" . (int) $this->config->get('config_language_id') . "'
+              AND ovd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        if ($query->num_rows) {
-            $option_price = $query->row['price'];
-            return ($query->row['price_prefix'] == '+') ? $option_price : -$option_price;
-        } else {
-            return 0; // No price adjustment
+        $option_price_data = $this->cache->get('getproductoptioninfo.' . md5($sql));
+
+        if (!$option_price_data) {
+            $query = $this->db->query($sql);
+
+            if ($query->num_rows) {
+                $option_price = ($query->row['price_prefix'] == '+')
+                    ? $query->row['price']
+                    : -$query->row['price'];
+
+                $option_price_data = [
+                    'price' => $option_price,
+                    'name' => $query->row['option_name'],
+                    'value' => $query->row['option_value_name']
+                ];
+
+                $this->cache->set('getproductoptioninfo.' . md5($sql), $option_price_data);
+            }
         }
+
+        return (array) $option_price_data;
     }
 
     public function getCategories(int $product_id): array
