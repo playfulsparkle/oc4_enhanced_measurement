@@ -1,23 +1,47 @@
 
 $(document).on('click', '[data-ps-track-event]', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    var self = $(this);
-    var elementType = self.prop("nodeName");
-    var productId = self.data("ps-track-id");
-    var eventName = self.data("ps-track-event");
+  var self = $(this);
+  var elementType = self.prop("nodeName");
+  var trackId = self.data("ps-track-id");
+  var eventName = self.data("ps-track-event");
 
-    self.removeAttr("data-ps-track-event");
+  self.removeAttr("data-ps-track-event");
 
-    if (typeof productId !== 'undefined') {
-      ps_dataLayer.push_manuall(eventName, productId);
-    }
+  if (typeof trackId !== 'undefined') {
+    if (eventName === 'update_cart') {
+      var trackData = ps_dataLayer.getData(trackId);
 
-    setTimeout(function () {
-      if (elementType === 'BUTTON') {
-        self.trigger("click");
-      } else if (elementType === 'A') {
-        location = self.attr("href");
+      var quantityObj = $('#product-quantity-' + trackId);
+      var newQuantity = parseInt(quantityObj.val());
+
+      if (newQuantity > 0) {
+        var dataQuantity = trackData.ecommerce.items[0].quantity;
+        var dataPrice = trackData.ecommerce.items[0].price;
+
+        dataPrice /= dataQuantity;
+
+        trackData.ecommerce.value = dataPrice * newQuantity;
+        trackData.ecommerce.items[0].price = dataPrice * newQuantity;
+        trackData.ecommerce.items[0].quantity = newQuantity;
+
+        eventName = 'add_to_cart';
+      } else {
+        eventName = 'remove_from_cart';
       }
-    }, 500);
+
+      ps_dataLayer.push(eventName, trackData);
+    } else {
+      ps_dataLayer.push_manuall(eventName, trackId);
+    }
+  }
+
+  setTimeout(function () {
+    if (elementType === 'BUTTON') {
+      self.trigger("click");
+    } else if (elementType === 'A') {
+      location = self.attr("href");
+    }
+  }, 500);
 });

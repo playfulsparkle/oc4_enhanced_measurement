@@ -37,6 +37,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
     <script>
         var ps_dataLayer = {
             data: {},
+            getData: function(productId) {
+                if (this.data.hasOwnProperty(productId)) {
+                    return this.data[productId];
+                }
+
+                return null;
+            },
             merge: function(data) {
                 this.data = Object.assign({}, this.data, data);
             },
@@ -162,6 +169,56 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewCheckoutCartBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<div id="shopping-cart">{{ list }}</div>',
+            'replace' => <<<HTML
+            <div id="shopping-cart">{{ list }}</div>
+            {% if ps_view_cart %}<script>ps_dataLayer.push('view_cart', {{ ps_view_cart }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutCartListBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="select_item">',
+        ];
+
+        $views[] = [
+            'search' => '<input type="text" name="quantity"',
+            'replace' => '<input type="text" id="product-quantity-{{ product.cart_id }}" name="quantity"',
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" formaction="{{ product_edit }}"',
+            'replace' => '<button type="submit" formaction="{{ product_edit }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="update_cart"',
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" formaction="{{ product_remove }}"',
+            'replace' => '<button type="submit" formaction="{{ product_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
+        ];
+
+        $views[] = [
+            'search' => '</table>',
+            'replace' => <<<HTML
+            </table>
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function hasOptions(int $product_id): bool
     {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int) $product_id . "'");
@@ -207,6 +264,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         }
 
         return (array) $option_price_data;
+    }
+
+    public function getManufacturerNameByProductId($product_id)
+    {
+        $query = $this->db->query("
+            SELECT m.name
+            FROM " . DB_PREFIX . "manufacturer m
+            INNER JOIN " . DB_PREFIX . "product p ON m.manufacturer_id = p.manufacturer_id
+            WHERE p.product_id = '" . (int) $product_id . "'
+            LIMIT 1
+        ");
+
+        if ($query->num_rows) {
+            return ['name' => $query->row['name']];
+        }
+
+        return false;
     }
 
     public function getCategories(int $product_id): array
