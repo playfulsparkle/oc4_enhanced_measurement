@@ -239,7 +239,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['item_list_id'] = $item_list_id;
                 $item['item_list_name'] = $item_list_name;
-                // $item['item_variant'] = '';
 
                 if ($location_id) {
                     $item['location_id'] = $location_id;
@@ -449,12 +448,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['item_brand'] = $manufacturer_info['name'];
                 }
 
-                if ($item_category_option === 0) {
-                    $categories = $this->getCategoryType1($product_info['product_id']);
-                } else if ($item_category_option === 1) {
-                    $categories = $this->getCategoryType2($product_info['product_id']);
-                } else {
-                    $categories = [];
+                switch ($item_category_option) {
+                    case 0:
+                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        break;
+                    case 1:
+                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        break;
+                    default:
+                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        break;
                 }
 
                 $total_categories = count($categories);
@@ -469,7 +472,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['item_list_id'] = $item_list_id;
                 $item['item_list_name'] = $item_list_name;
-                // $item['item_variant'] = '';
 
                 if ($location_id) {
                     $item['location_id'] = $location_id;
@@ -642,10 +644,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            // $item['item_list_id'] = '';
-            // $item['item_list_name'] = '';
-            // $item['item_variant'] = '';
-
             if ($location_id) {
                 $item['location_id'] = $location_id;
             }
@@ -727,12 +725,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['item_brand'] = $manufacturer_info['name'];
                 }
 
-                if ($item_category_option === 0) {
-                    $categories = $this->getCategoryType1($product_info['product_id']);
-                } else if ($item_category_option === 1) {
-                    $categories = $this->getCategoryType2($product_info['product_id']);
-                } else {
-                    $categories = [];
+                switch ($item_category_option) {
+                    case 0:
+                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        break;
+                    case 1:
+                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        break;
+                    default:
+                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        break;
                 }
 
                 $total_categories = count($categories);
@@ -747,7 +749,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['item_list_id'] = $item_list_id;
                 $item['item_list_name'] = $item_list_name;
-                // $item['item_variant'] = '';
 
                 if ($location_id) {
                     $item['location_id'] = $location_id;
@@ -906,9 +907,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            // $item['item_list_id'] = '';
-            // $item['item_list_name'] = '';
-
             $base_price = $product_info['price'];
 
             $variant = [];
@@ -929,7 +927,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $item['item_variant'] = implode(', ', $variant);
+            if ($variant) {
+                $item['item_variant'] = implode(', ', $variant);
+            }
 
             if ($location_id) {
                 $item['location_id'] = $location_id;
@@ -994,88 +994,94 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $products = $this->model_checkout_cart->getProducts();
 
-        if ($products) {
-            foreach ($products as $index => $product_info) {
-                $items = [];
+        $items = [];
+        $total_price = 0;
 
-                $item = [];
+        foreach ($products as $index => $product_info) {
 
-                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-                $item['affiliation'] = $affiliation;
+            $item = [];
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
-                }
+            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $item['affiliation'] = $affiliation;
 
-                $item['index'] = $index;
+            if (isset($this->session->data['coupon'])) {
+                $item['coupon'] = $this->session->data['coupon'];
+            }
 
-                $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $item['index'] = $index;
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
-                }
+            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-                if ($item_category_option === 0) {
+            if ($manufacturer_info) {
+                $item['item_brand'] = $manufacturer_info['name'];
+            }
+
+            switch ($item_category_option) {
+                case 0:
                     $categories = $this->getCategoryType1($product_info['product_id']);
-                } else if ($item_category_option === 1) {
+                    break;
+                case 1:
                     $categories = $this->getCategoryType2($product_info['product_id']);
+                    break;
+                default:
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    break;
+            }
+
+            $total_categories = count($categories);
+
+            foreach ($categories as $category_index => $category_name) {
+                if ($total_categories === 0 || $category_index === 0) {
+                    $item['item_category'] = $category_name;
                 } else {
-                    $categories = [];
+                    $item['item_category' . ($category_index + 1)] = $category_name;
                 }
+            }
 
-                $total_categories = count($categories);
+            $variant = [];
 
-                foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
-                        $item['item_category'] = $category_name;
-                    } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
-                    }
-                }
+            foreach ($product_info['option'] as $option) {
+                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+            }
 
-                $variant = [];
-
-                foreach ($product_info['option'] as $option) {
-                    $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
-                }
-
+            if ($variant) {
                 $item['item_variant'] = implode(', ', $variant);
-
-                if ($location_id) {
-                    $item['location_id'] = $location_id;
-                }
-
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'] * $product_info['quantity'];
-                }
-
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
-
-                $item['quantity'] = $product_info['quantity'];
-
-                $items[(int) $product_info['product_id']] = $item;
             }
 
-            if ($items) {
-                if ($item_price_tax) {
-                    $total = $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $total = $product_info['total'];
-                }
-
-                $ps_view_cart = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $this->currency->format($total, $currency, 0, false),
-                        'items' => array_values($items),
-                    ],
-                ];
-
-                $args['ps_view_cart'] = json_encode($ps_view_cart, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            if ($location_id) {
+                $item['location_id'] = $location_id;
             }
+
+            if ($item_price_tax) {
+                $price = $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $price = $product_info['total'];
+            }
+
+            if ($item_price_tax) {
+                $total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $total_price += $product_info['total'];
+            }
+
+            $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $item['quantity'] = $product_info['quantity'];
+
+            $items[(int) $product_info['product_id']] = $item;
+        }
+
+        if ($items) {
+            $ps_view_cart = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $this->currency->format($total_price, $currency, 0, false),
+                    'items' => array_values($items),
+                ],
+            ];
+
+            $args['ps_view_cart'] = json_encode($ps_view_cart, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
         }
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartBefore($args);
@@ -1120,85 +1126,85 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $products = $this->model_checkout_cart->getProducts();
 
-        if ($products) {
-            $items = [];
+        $items = [];
 
-            foreach ($products as $index => $product_info) {
-                $item = [];
+        foreach ($products as $index => $product_info) {
+            $item = [];
 
-                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-                $item['affiliation'] = $affiliation;
+            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
-                }
-
-                $item['index'] = $index;
-
-                $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
-
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
-                }
-
-                if ($item_category_option === 0) {
-                    $categories = $this->getCategoryType1($product_info['product_id']);
-                } else if ($item_category_option === 1) {
-                    $categories = $this->getCategoryType2($product_info['product_id']);
-                } else {
-                    $categories = [];
-                }
-
-                $total_categories = count($categories);
-
-                foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
-                        $item['item_category'] = $category_name;
-                    } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
-                    }
-                }
-
-                $variant = [];
-
-                foreach ($product_info['option'] as $option) {
-                    $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
-                }
-
-                $item['item_variant'] = implode(', ', $variant);
-
-                if ($location_id) {
-                    $item['location_id'] = $location_id;
-                }
-
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-
-                    $one_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'] * $product_info['quantity'];
-
-                    $one_price = $product_info['price'];
-                }
-
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
-
-                $item['quantity'] = $product_info['quantity'];
-
-                $items[(int) $product_info['cart_id']] = $item;
+            if (isset($this->session->data['coupon'])) {
+                $item['coupon'] = $this->session->data['coupon'];
             }
 
-            if ($items) {
-                foreach ($items as $cart_id => $item) {
-                    $ps_merge_items[$cart_id] = [
-                        'ecommerce' => [
-                            'currency' => $currency,
-                            'value' => $this->currency->format($item['price'], $currency, 0, false),
-                            'items' => [$item],
-                        ],
-                    ];
+            $item['index'] = $index;
+
+            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+
+            if ($manufacturer_info) {
+                $item['item_brand'] = $manufacturer_info['name'];
+            }
+
+            switch ($item_category_option) {
+                case 0:
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    break;
+                case 1:
+                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    break;
+                default:
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    break;
+            }
+
+            $total_categories = count($categories);
+
+            foreach ($categories as $category_index => $category_name) {
+                if ($total_categories === 0 || $category_index === 0) {
+                    $item['item_category'] = $category_name;
+                } else {
+                    $item['item_category' . ($category_index + 1)] = $category_name;
                 }
+            }
+
+            $variant = [];
+
+            foreach ($product_info['option'] as $option) {
+                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+            }
+
+            if ($variant) {
+                $item['item_variant'] = implode(', ', $variant);
+            }
+
+            if ($location_id) {
+                $item['location_id'] = $location_id;
+            }
+
+            if ($item_price_tax) {
+                $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $price = $product_info['price'] * $product_info['quantity'];
+            }
+
+            $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $item['quantity'] = $product_info['quantity'];
+
+            $items[(int) $product_info['cart_id']] = $item;
+        }
+
+        if ($items) {
+            foreach ($items as $cart_id => $item) {
+                $ps_merge_items[$cart_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $this->currency->format($item['price'], $currency, 0, false),
+                        'items' => [$item],
+                    ],
+                ];
             }
         }
 
