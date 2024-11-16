@@ -1217,6 +1217,133 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
+    public function eventCatalogViewCheckoutCartInfoBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
+        $this->load->model('checkout/cart');
+
+        $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+        $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+        $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+        $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+
+        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+        if (empty($currency)) {
+            $currency = $this->session->data['currency'];
+        }
+
+        $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+
+        if (empty($affiliation)) {
+            $affiliation = $this->config->get('config_name');
+        }
+
+
+        $args['ps_merge_items'] = null;
+
+        $ps_merge_items = [];
+
+
+        $products = $this->model_checkout_cart->getProducts();
+
+        $items = [];
+
+        foreach ($products as $index => $product_info) {
+            $item = [];
+
+            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $item['affiliation'] = $affiliation;
+
+            if (isset($this->session->data['coupon'])) {
+                $item['coupon'] = $this->session->data['coupon'];
+            }
+
+            $item['index'] = $index;
+
+            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+
+            if ($manufacturer_info) {
+                $item['item_brand'] = $manufacturer_info['name'];
+            }
+
+            switch ($item_category_option) {
+                case 0:
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    break;
+                case 1:
+                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    break;
+                default:
+                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    break;
+            }
+
+            $total_categories = count($categories);
+
+            foreach ($categories as $category_index => $category_name) {
+                if ($total_categories === 0 || $category_index === 0) {
+                    $item['item_category'] = $category_name;
+                } else {
+                    $item['item_category' . ($category_index + 1)] = $category_name;
+                }
+            }
+
+            $variant = [];
+
+            foreach ($product_info['option'] as $option) {
+                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+            }
+
+            if ($variant) {
+                $item['item_variant'] = implode(', ', $variant);
+            }
+
+            if ($location_id) {
+                $item['location_id'] = $location_id;
+            }
+
+            if ($item_price_tax) {
+                $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $price = $product_info['price'] * $product_info['quantity'];
+            }
+
+            $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $item['quantity'] = $product_info['quantity'];
+
+            $items[(int) $product_info['cart_id']] = $item;
+        }
+
+        if ($items) {
+            foreach ($items as $cart_id => $item) {
+                $ps_merge_items[$cart_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $this->currency->format($item['price'], $currency, 0, false),
+                        'items' => [$item],
+                    ],
+                ];
+            }
+        }
+
+        if ($ps_merge_items) {
+            $args['ps_merge_items'] = json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+        }
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartInfoBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
     /**
      * Retrieves the contents of a template file based on the provided route.
      *

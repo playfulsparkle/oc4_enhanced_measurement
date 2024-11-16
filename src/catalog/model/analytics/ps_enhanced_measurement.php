@@ -175,15 +175,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => '<div id="shopping-cart">{{ list }}</div>',
-            'replace' => <<<HTML
-            <div id="shopping-cart">{{ list }}</div>
-            {% if ps_view_cart %}<script>ps_dataLayer.push('view_cart', {{ ps_view_cart }});</script>{% endif %}
-            HTML
+            'replace' => '<div id="shopping-cart">{{ list }}</div>
+            {% if ps_view_cart %}<script>ps_dataLayer.push(\'view_cart\', {{ ps_view_cart }});</script>{% endif %}'
         ];
 
         return $views;
     }
 
+    /**
+     * Main checkout page - list controller
+     *
+     * @param array $args
+     * @return array
+     */
     public function replaceCatalogViewCheckoutCartListBefore(array $args): array
     {
         $views = [];
@@ -209,11 +213,38 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         ];
 
         $views[] = [
-            'search' => '</table>',
-            'replace' => <<<HTML
-            </table>
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            HTML
+            'search' => '<div class="table-responsive">',
+            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            <div class="table-responsive">'
+        ];
+
+        return $views;
+    }
+
+    /**
+     * Dropdown cart button list
+     *
+     * @param array $args
+     * @return array
+     */
+    public function replaceCatalogViewCheckoutCartInfoBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="select_item">',
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}"',
+            'replace' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
+        ];
+
+        $views[] = [
+            'search' => '<button type="button" data-bs-toggle="dropdown"',
+            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            <button type="button" data-bs-toggle="dropdown"'
         ];
 
         return $views;

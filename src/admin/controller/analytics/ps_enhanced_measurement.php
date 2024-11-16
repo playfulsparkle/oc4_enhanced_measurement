@@ -232,6 +232,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             ['trigger' => 'catalog/view/checkout/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartBefore'],
             ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
+
+            ['trigger' => 'catalog/view/checkout/cart_info/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'],
+            ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'],
+
             ['trigger' => 'catalog/controller/checkout/cart.add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
         ];
 
