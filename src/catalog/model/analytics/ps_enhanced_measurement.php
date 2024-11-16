@@ -169,6 +169,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return (int) $query->row['total'] > 0;
     }
 
+    public function getOptionPrice($product_option_id, $product_option_value_id): int {
+        $query = $this->db->query("
+            SELECT price, price_prefix
+            FROM " . DB_PREFIX . "product_option_value
+            WHERE product_option_id = '" . (int)$product_option_id . "'
+              AND product_option_value_id = '" . (int)$product_option_value_id . "'");
+
+        if ($query->num_rows) {
+            $option_price = $query->row['price'];
+            return ($query->row['price_prefix'] == '+') ? $option_price : -$option_price;
+        } else {
+            return 0; // No price adjustment
+        }
+    }
+
     public function getCategories(int $product_id): array
     {
         $product_category_data = [];

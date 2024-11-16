@@ -822,7 +822,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->response) {
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response) || !isset($json_response['success'])) {
             return;
         }
 
@@ -849,101 +851,112 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $json_response = json_decode($this->response->getOutput(), true);
+        $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
+        $quantity = isset($this->request->post['quantity']) ? (int) $this->request->post['quantity'] : 1;
+        $options = isset($this->request->post['option']) ? $this->request->post['option'] : [];
 
-        if ($json_response && isset($json_response['success'], $this->request->post['product_id'])) {
-            $cart_product_info = $this->getCartProductInfo((int) $this->request->post['product_id']);
+        if ($product_info) {
+            $item = [];
 
-            $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
+            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $item['affiliation'] = $affiliation;
 
-            if ($product_info) {
-                $item = [];
-
-                $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-                $item['affiliation'] = $affiliation;
-
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
-                }
-
-                // $item['discount'] = 0;
-
-                $item['index'] = 0;
-
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
-
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
-                }
-
-                if (isset($this->request->post['category_id'])) {
-                    $category_id = (int) $this->request->post['category_id'];
-                } else {
-                    $category_id = 0;
-                }
-
-                $category_info = $this->model_catalog_category->getCategory($category_id);
-
-                if ($item_category_option === 0) {
-                    $categories = $this->getCategoryType1($product_info['product_id']);
-                } else if ($item_category_option === 1) {
-                    $categories = $this->getCategoryType2($product_info['product_id']);
-                } else if ($item_category_option === 2 && $category_id) {
-                    $categories = $this->getCategoryType3($category_id);
-                } else if ($item_category_option === 3 && $category_info) {
-                    $categories = $this->getCategoryType4($category_info);
-                } else {
-                    $categories = [];
-                }
-
-                $total_categories = count($categories);
-
-                foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
-                        $item['item_category'] = $category_name;
-                    } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
-                    }
-                }
-
-                // $item['item_list_id'] = '';
-                // $item['item_list_name'] = '';
-
-                if ($cart_product_info['option']) {
-                    $variant = [];
-
-                    foreach ($cart_product_info['option'] as $key => $option) {
-                        $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
-                    }
-
-                    $item['item_variant'] = implode(', ', $variant);
-                }
-
-                if ($location_id) {
-                    $item['location_id'] = $location_id;
-                }
-
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($cart_product_info['price'], $cart_product_info['tax_class_id'], $this->config->get('config_tax'));
-                    $total = $this->tax->calculate($cart_product_info['total'], $cart_product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $cart_product_info['price'];
-                    $total = $cart_product_info['total'];
-                }
-
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
-
-                $item['quantity'] = $cart_product_info['quantity'];
-
-                $json_response['add_to_cart'] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $this->currency->format($total, $currency, 0, false),
-                        'items' => [$item],
-                    ],
-                ];
+            if (isset($this->session->data['coupon'])) {
+                $item['coupon'] = $this->session->data['coupon'];
             }
+
+            // $item['discount'] = 0;
+
+            $item['index'] = 0;
+
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+            if ($manufacturer_info) {
+                $item['item_brand'] = $manufacturer_info['name'];
+            }
+
+            if (isset($this->request->post['category_id'])) {
+                $category_id = (int) $this->request->post['category_id'];
+            } else {
+                $category_id = 0;
+            }
+
+            $category_info = $this->model_catalog_category->getCategory($category_id);
+
+            if ($item_category_option === 0) {
+                $categories = $this->getCategoryType1($product_info['product_id']);
+            } else if ($item_category_option === 1) {
+                $categories = $this->getCategoryType2($product_info['product_id']);
+            } else if ($item_category_option === 2 && $category_id) {
+                $categories = $this->getCategoryType3($category_id);
+            } else if ($item_category_option === 3 && $category_info) {
+                $categories = $this->getCategoryType4($category_info);
+            } else {
+                $categories = [];
+            }
+
+            $total_categories = count($categories);
+
+            foreach ($categories as $category_index => $category_name) {
+                if ($total_categories === 0 || $category_index === 0) {
+                    $item['item_category'] = $category_name;
+                } else {
+                    $item['item_category' . ($category_index + 1)] = $category_name;
+                }
+            }
+
+            // $item['item_list_id'] = '';
+            // $item['item_list_name'] = '';
+
+            // if ($product_info['option']) {
+            //     $variant = [];
+
+            //     foreach ($product_info['option'] as $key => $option) {
+            //         $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+            //     }
+
+            //     $item['item_variant'] = implode(', ', $variant);
+            // }
+
+            if ($location_id) {
+                $item['location_id'] = $location_id;
+            }
+
+
+            $base_price = $product_info['price'];
+
+            foreach ($options as $product_option_id => $product_option_value_ids) {
+                if (is_array($product_option_value_ids)) {
+                    foreach ($product_option_value_ids as $product_option_value_id) {
+                        $product_option_price = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getOptionPrice($product_option_id, $product_option_value_id);
+                        $base_price += $product_option_price;
+                    }
+                } else {
+                    $product_option_price = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getOptionPrice($product_option_id, $product_option_value_ids);
+                    $base_price += $product_option_price;
+                }
+            }
+
+            if ($item_price_tax) {
+                $price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $total = $this->tax->calculate($base_price * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax'));
+            } else {
+                $price = $base_price;
+                $total = $base_price * $quantity;
+            }
+
+            $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $item['quantity'] = $quantity;
+
+            $json_response['add_to_cart'] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $this->currency->format($total, $currency, 0, false),
+                    'items' => [$item],
+                ],
+            ];
 
             $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
         }
