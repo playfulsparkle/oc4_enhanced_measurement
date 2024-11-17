@@ -83,12 +83,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<a href="{{ href }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="select_item">'
         ];
 
-        if (false === $args['has_options']) {
-            $views[] = [
-                'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-                'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_cart"'
-            ];
-        }
+        $views[] = [
+            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="' . ($args['has_options'] ? 'select_item' : 'add_to_cart') . '"'
+        ];
 
         $views[] = [
             'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
@@ -161,7 +159,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
             {% if ps_view_item %}<script>ps_dataLayer.push('view_item', {{ ps_view_item }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.push('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];

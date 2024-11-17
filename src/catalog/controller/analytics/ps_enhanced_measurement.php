@@ -777,24 +777,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $items[(int) $product_info['product_id']] = $item;
             }
 
-            if ($items) {
-                $ps_view_item_list = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => array_values($items),
-                    ],
-                ];
-
-                $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
-
 
             foreach ($items as $product_id => $item) {
                 $ps_merge_items[$product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'],
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
                         'items' => [$items[$product_id]],
                     ],
                 ];
@@ -1376,11 +1364,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $products = $this->model_extension_opencart_module_bestseller->getBestSellers($args[0]['limit']);
+        $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
+
+        $products = $this->model_extension_opencart_module_bestseller->getBestSellers($setting['limit']);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
+            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
 
             $items = [];
 
@@ -1509,10 +1499,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if (!empty($args[0]['product'])) {
+        $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
+
+        if (!empty($setting['product'])) {
             $products = [];
 
-            foreach ($args[0]['product'] as $product_id) {
+            foreach ($setting['product'] as $product_id) {
                 $product_info = $this->model_catalog_product->getProduct($product_id);
 
                 if ($product_info) {
@@ -1520,8 +1512,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $item_list_id = $this->formatListId(html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
+            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
 
             $items = [];
 
@@ -1650,11 +1642,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $products = $this->model_extension_opencart_module_latest->getLatest($args[0]['limit']);
+        $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
+
+        $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
+            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
 
             $items = [];
 
@@ -1783,18 +1777,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $filter_data = [
+        $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
+
+        $specials_filter_data = [
             'sort' => 'pd.name',
             'order' => 'ASC',
             'start' => 0,
-            'limit' => $args[0]['limit']
+            'limit' => $setting['limit']
         ];
 
-        $products = $this->model_catalog_product->getSpecials($filter_data);
+        $products = $this->model_catalog_product->getSpecials($specials_filter_data);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($args[0]['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
+            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
 
             $items = [];
 
