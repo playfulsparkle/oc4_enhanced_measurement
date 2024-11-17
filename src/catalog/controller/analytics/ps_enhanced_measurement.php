@@ -274,18 +274,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                foreach ($items as $product_id => $item) {
-                    $ps_merge_items[$product_id] = [
-                        'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => $items[$product_id],
-                        ],
-                    ];
-                }
-
                 $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
+        }
+
+
+        foreach ($items as $product_id => $item) {
+            $ps_merge_items[$product_id] = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => $items[$product_id],
+                ],
+            ];
         }
 
         if ($ps_merge_items) {
@@ -507,18 +508,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                foreach ($items as $product_id => $item) {
-                    $ps_merge_items[$product_id] = [
-                        'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => $items[$product_id],
-                        ],
-                    ];
-                }
-
                 $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
+        }
+
+
+        foreach ($items as $product_id => $item) {
+            $ps_merge_items[$product_id] = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => $items[$product_id],
+                ],
+            ];
         }
 
         if ($ps_merge_items) {
@@ -677,19 +679,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                foreach ($items as $product_id => $item) {
-                    $ps_merge_items[$product_id] = [
-                        'ecommerce' => [
-                            'currency' => $currency,
-                            'value' => $item['price'],
-                            'items' => $items[$product_id],
-                        ],
-                    ];
-                }
-
                 $args['ps_view_item'] = json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
 
+
+            foreach ($items as $product_id => $item) {
+                $ps_merge_items[$product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => $items[$product_id],
+                    ],
+                ];
+            }
 
 
             $products = $this->model_catalog_product->getRelated($product_id);
@@ -784,23 +786,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                foreach ($items as $product_id => $item) {
-                    $ps_merge_items[$product_id] = [
-                        'ecommerce' => [
-                            'currency' => $currency,
-                            'value' => $item['price'],
-                            'items' => $items[$product_id],
-                        ],
-                    ];
-                }
-
                 $args['ps_view_item_list'] = json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
+            }
+
+
+            foreach ($items as $product_id => $item) {
+                $ps_merge_items[$product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => $items[$product_id],
+                    ],
+                ];
             }
 
             if ($ps_merge_items) {
                 $args['ps_merge_items'] = json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
             }
         }
+
 
         if (isset($this->request->get['path'])) {
             $parts = explode('_', (string) $this->request->get['path']);
@@ -1324,16 +1328,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['cart_id']] = $item;
         }
 
-        if ($items) {
-            foreach ($items as $cart_id => $item) {
-                $ps_merge_items[$cart_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $this->currency->format($item['price'], $currency, 0, false),
-                        'items' => [$item],
-                    ],
-                ];
-            }
+
+        foreach ($items as $cart_id => $item) {
+            $ps_merge_items[$cart_id] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $this->currency->format($item['price'], $currency, 0, false),
+                    'items' => [$item],
+                ],
+            ];
         }
 
         if ($ps_merge_items) {
@@ -1344,6 +1347,88 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $template = $this->replaceViews($route, $template, $views);
     }
+
+    protected function getCategoryType1(int $product_id): array
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
+
+            if ($category_info) {
+                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getCategoryType2(int $product_id): array
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
+
+            if ($category_info) {
+                if ($category_info['path']) {
+                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
+                } else {
+                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getCategoryType3(int $category_id): array
+    {
+        $result = [];
+
+        $category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($category_id);
+
+        foreach ($category_infos as $category_info) {
+            $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+        }
+
+        return $result;
+    }
+
+    protected function getCategoryType4(array $category_info): array
+    {
+        $result = [];
+
+        $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+
+        return $result;
+    }
+
+    protected function formatListId(string $string): string
+    {
+        if (function_exists('iconv')) {
+            $new_string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+        } elseif (function_exists('mb_convert_encoding')) {
+            $new_string = mb_convert_encoding($string, 'ASCII');
+        } else {
+            $new_string = false;
+        }
+
+        if ($new_string === false) {
+            $new_string = $string;
+        }
+
+        $string = preg_replace('/[^a-zA-Z0-9_]/', ' ', $string);
+        $string = strtolower($string);
+        $string = preg_replace('/\s+/', ' ', $string);
+
+        return str_replace(' ', '_', trim($string));
+    }
+
     /**
      * Retrieves the contents of a template file based on the provided route.
      *
@@ -1548,86 +1633,5 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         return $output;
-    }
-
-    public function getCategoryType1(int $product_id)
-    {
-        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
-
-        $result = [];
-
-        foreach ($categories as $category_id) {
-            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
-
-            if ($category_info) {
-                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
-            }
-        }
-
-        return $result;
-    }
-
-    public function getCategoryType2(int $product_id)
-    {
-        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
-
-        $result = [];
-
-        foreach ($categories as $category_id) {
-            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
-
-            if ($category_info) {
-                if ($category_info['path']) {
-                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
-                } else {
-                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    public function getCategoryType3(int $category_id): array
-    {
-        $result = [];
-
-        $category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($category_id);
-
-        foreach ($category_infos as $category_info) {
-            $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
-        }
-
-        return $result;
-    }
-
-    public function getCategoryType4(array $category_info): array
-    {
-        $result = [];
-
-        $result[] = $category_info['name'];
-
-        return $result;
-    }
-
-    public function formatListId(string $string): string
-    {
-        if (function_exists('iconv')) {
-            $new_string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
-        } elseif (function_exists('mb_convert_encoding')) {
-            $new_string = mb_convert_encoding($string, 'ASCII');
-        } else {
-            $new_string = false;
-        }
-
-        if ($new_string === false) {
-            $new_string = $string;
-        }
-
-        $string = preg_replace('/[^a-zA-Z0-9_]/', ' ', $string);
-        $string = strtolower($string);
-        $string = preg_replace('/\s+/', ' ', $string);
-
-        return str_replace(' ', '_', trim($string));
     }
 }

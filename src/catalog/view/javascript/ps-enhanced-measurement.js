@@ -7,7 +7,7 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
   var trackId = self.data("ps-track-id");
   var eventName = self.data("ps-track-event");
 
-  self.removeAttr("data-ps-track-event");
+  self.removeAttr("data-ps-track-event").prop('disabled', true);
 
   if (typeof trackId !== 'undefined') {
     if (eventName === 'update_cart') {
@@ -39,9 +39,9 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
 
   setTimeout(function () {
     if (elementType === 'BUTTON') {
-      self.trigger("click");
+      self.prop('disabled', false).trigger("click");
     } else if (elementType === 'A') {
       location = self.attr("href");
     }
-  }, 500);
+  }, 800);
 });
