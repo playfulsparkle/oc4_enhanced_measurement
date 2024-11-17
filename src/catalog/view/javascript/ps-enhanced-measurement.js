@@ -9,32 +9,41 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
 
   self.removeAttr("data-ps-track-event").prop('disabled', true);
 
-  if (typeof trackId !== 'undefined') {
-    if (eventName === 'update_cart') {
-      var trackData = ps_dataLayer.getData(trackId);
+  if (typeof trackId === 'undefined') {
+    console.error('No track ID found');
+    return;
+  }
 
-      var quantityObj = $('#product-quantity-' + trackId);
-      var newQuantity = parseInt(quantityObj.val());
+  if (eventName === 'update_cart') {
+    var trackData = ps_dataLayer.getData(trackId);
 
-      if (newQuantity > 0) {
-        var dataQuantity = trackData.ecommerce.items[0].quantity;
-        var dataPrice = trackData.ecommerce.items[0].price;
+    var quantityObj = $('#product-quantity-' + trackId);
+    var newQuantity = parseInt(quantityObj.val());
 
-        dataPrice /= dataQuantity;
+    if (newQuantity > 0) {
+      var dataQuantity = trackData.ecommerce.items[0].quantity;
+      var dataPrice = trackData.ecommerce.items[0].price;
 
-        trackData.ecommerce.value = dataPrice * newQuantity;
-        trackData.ecommerce.items[0].price = dataPrice * newQuantity;
-        trackData.ecommerce.items[0].quantity = newQuantity;
+      dataPrice /= dataQuantity;
 
-        eventName = 'add_to_cart';
-      } else {
-        eventName = 'remove_from_cart';
-      }
+      trackData.ecommerce.value = dataPrice * newQuantity;
+      trackData.ecommerce.items[0].price = dataPrice * newQuantity;
+      trackData.ecommerce.items[0].quantity = newQuantity;
 
-      ps_dataLayer.push(eventName, trackData);
+      eventName = 'add_to_cart';
     } else {
-      ps_dataLayer.push_manuall(eventName, trackId);
+      eventName = 'remove_from_cart';
     }
+
+    ps_dataLayer.push(eventName, trackData);
+  } else if (eventName === 'add_to_cart') {
+    var trackData = ps_dataLayer.getData(trackId);
+
+    trackData.ecommerce.items[0].quantity = 1;
+
+    ps_dataLayer.push(eventName, trackData);
+  } else {
+    ps_dataLayer.push_manuall(eventName, trackId);
   }
 
   setTimeout(function () {

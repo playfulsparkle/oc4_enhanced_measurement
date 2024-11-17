@@ -237,6 +237,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'], // standard cart page
 
             ['trigger' => 'catalog/controller/checkout/cart.add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
+
+            ['trigger' => 'catalog/controller/extension/opencart/module/bestseller/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleBestsellerAfter'],
+            ['trigger' => 'catalog/controller/extension/opencart/module/featured/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleFeaturedAfter'],
+            ['trigger' => 'catalog/controller/extension/opencart/module/latest/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleLatestAfter'],
+            ['trigger' => 'catalog/controller/extension/opencart/module/special/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleSpecialAfter'],
         ];
 
         $result = 0;
