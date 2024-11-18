@@ -18,7 +18,7 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
     var trackData = ps_dataLayer.getData(trackId);
 
     var quantityObj = $('#product-quantity-' + trackId);
-    var newQuantity = parseInt(quantityObj.val());
+    var newQuantity = parseInt(quantityObj.val()) ?? 0;
 
     if (newQuantity > 0) {
       var dataQuantity = trackData.ecommerce.items[0].quantity;

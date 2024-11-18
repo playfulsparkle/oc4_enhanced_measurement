@@ -38,11 +38,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         var ps_dataLayer = {
             data: {},
             getData: function(productId) {
-                if (this.data.hasOwnProperty(productId)) {
-                    return this.data[productId];
-                }
-
-                return null;
+                return this.data.hasOwnProperty(productId) ? this.data[productId] : null;
             },
             merge: function(data) {
                 this.data = Object.assign({}, this.data, data);
@@ -62,7 +58,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     dataLayer.push({ event: eventName, ...data });
                 {% endif %}
 
-                console.log('Event: ', eventName + '. Data: ', JSON.stringify(data));
+                console.log(JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));
             }
         };
     </script>

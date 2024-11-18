@@ -67,6 +67,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
@@ -79,6 +82,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
+
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
@@ -95,6 +101,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -169,8 +177,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
-            $item_list_id = $this->formatListId(html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'));
-            $item_list_name = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+            $item_list_name = sprintf($this->language->get('text_x_products'), html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'));
+            $item_list_id = $this->formatListId($item_list_name);
 
             $filter_data = [
                 'filter_category_id' => $category_id,
@@ -305,6 +313,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
@@ -394,14 +404,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($search || $tag) {
             if (isset($this->request->get['search'])) {
-                $item_list_id = $this->formatListId($this->language->get('heading_title') . ' - ' . $this->request->get['search']);
-                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->request->get['search'];
+                $item_list_name = sprintf(
+                    $this->language->get('text_x_products'),
+                    $this->language->get('heading_title') . ' - ' . $this->request->get['search']
+                );
+                $item_list_id = $this->formatListId($item_list_name);
             } elseif (isset($this->request->get['tag'])) {
-                $item_list_id = $this->formatListId($this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']);
-                $item_list_name = $this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag'];
+                $item_list_name = sprintf(
+                    $this->language->get('text_x_products'),
+                    $this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']
+                );
+                $item_list_id = $this->formatListId($item_list_name);
             } else {
-                $item_list_id = $this->formatListId($this->language->get('heading_title'));
-                $item_list_name = $this->language->get('heading_title');
+                $item_list_name = sprintf(
+                    $this->language->get('text_x_products'),
+                    $this->language->get('heading_title')
+                );
+                $item_list_id = $this->formatListId($item_list_name);
             }
 
             $filter_data = [
@@ -539,6 +558,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
@@ -569,7 +590,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_view_item_list'] = null;
         $args['ps_view_item'] = null;
         $args['ps_merge_items'] = null;
 
@@ -579,9 +599,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $product_info = $this->model_catalog_product->getProduct($product_id);
 
         if ($product_info) {
-            $item_list_id = $this->formatListId(html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8') . ' related product list');
-            $item_list_name = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8') . ' related product list';
-
             $items = [];
 
             $item = [];
@@ -692,6 +709,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
             }
+
+
+            $item_list_name = sprintf(
+                $this->language->get('text_x_related_products'),
+                html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8')
+            );
+            $item_list_id = $this->formatListId($item_list_name);
 
 
             $products = $this->model_catalog_product->getRelated($product_id);
@@ -821,10 +845,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
+
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -957,11 +985,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
         $this->load->model('checkout/cart');
+
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -1087,11 +1119,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
         $this->load->model('checkout/cart');
+
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -1215,11 +1251,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
         $this->load->model('checkout/cart');
+
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -1342,6 +1382,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/opencart/module/bestseller');
         $this->load->model('catalog/manufacturer');
 
@@ -1369,8 +1412,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_extension_opencart_module_bestseller->getBestSellers($setting['limit']);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_name = sprintf(
+                $this->language->get('text_x_products'),
+                html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
+            );
+            $item_list_id = $this->formatListId($item_list_name);
 
             $items = [];
 
@@ -1477,6 +1523,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('catalog/product');
         $this->load->model('catalog/manufacturer');
 
@@ -1512,8 +1561,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_name = sprintf(
+                $this->language->get('text_x_products'),
+                html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
+            );
+            $item_list_id = $this->formatListId($item_list_name);
 
             $items = [];
 
@@ -1620,6 +1672,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('extension/opencart/module/latest');
         $this->load->model('catalog/manufacturer');
 
@@ -1647,8 +1702,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_name = sprintf(
+                $this->language->get('text_x_products'),
+                html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
+            );
+            $item_list_id = $this->formatListId($item_list_name);
 
             $items = [];
 
@@ -1755,6 +1813,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
         $this->load->model('catalog/product');
         $this->load->model('catalog/manufacturer');
 
@@ -1789,8 +1850,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_catalog_product->getSpecials($specials_filter_data);
 
         if ($products) {
-            $item_list_id = $this->formatListId(html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list');
-            $item_list_name = html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8') . ' product list';
+            $item_list_name = sprintf(
+                $this->language->get('text_x_products'),
+                html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
+            );
+            $item_list_id = $this->formatListId($item_list_name);
 
             $items = [];
 
