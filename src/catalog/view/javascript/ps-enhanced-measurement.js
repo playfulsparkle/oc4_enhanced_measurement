@@ -48,7 +48,7 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
 
   setTimeout(function () {
     if (elementType === 'BUTTON') {
-      self.prop('disabled', false).trigger("click");
+      self.prop('disabled', false).trigger("click").attr("data-ps-track-event", eventName);
     } else if (elementType === 'A') {
       location = self.attr("href");
     }

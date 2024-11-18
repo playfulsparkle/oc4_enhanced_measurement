@@ -164,6 +164,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $limit = $this->config->get('config_pagination');
         }
 
+
         $parts = explode('_', $path);
 
         $category_id = (int) array_pop($parts);
@@ -537,6 +538,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSearchBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
@@ -581,11 +583,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_view_item'] = null;
-        $args['ps_merge_items'] = null;
+        if (isset($this->request->get['path'])) {
+            $parts = explode('_', (string) $this->request->get['path']);
+
+            $args['ps_category_id'] = (int) array_pop($parts);
+        } else if (isset($this->request->get['category_id'])) {
+            $args['ps_category_id'] = (int) $this->request->get['category_id'];
+        } else {
+            $args['ps_category_id'] = 0;
+        }
+
 
         $ps_merge_items = [];
-
 
         $product_info = $this->model_catalog_product->getProduct($product_id);
 
@@ -678,20 +687,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items[(int) $product_info['product_id']] = $item;
 
-            if ($items) {
-                $ps_view_item = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'],
-                        'items' => array_values($items),
-                    ],
-                ];
 
-                $args['ps_view_item'] = json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
+            $ps_view_item = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $item['price'],
+                    'items' => array_values($items),
+                ],
+            ];
+
+            $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
-            foreach ($items as $product_id => $item) {
+            foreach ($items as $product_id => $item) { // Add the current product to the merge stack
                 $ps_merge_items[$product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
@@ -793,7 +801,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
 
-            foreach ($items as $product_id => $item) {
+            foreach ($items as $product_id => $item) { // Add related prodcuts to the merge stack
                 $ps_merge_items[$product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -803,21 +811,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ];
             }
 
-            if ($ps_merge_items) {
-                $args['ps_merge_items'] = json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-            }
-        }
-
-
-        if (isset($this->request->get['path'])) {
-            $parts = explode('_', (string) $this->request->get['path']);
-
-            $args['ps_category_id'] = (int) array_pop($parts);
-        } else if (isset($this->request->get['category_id'])) {
-            $args['ps_category_id'] = (int) $this->request->get['category_id'];
+            $args['ps_merge_items'] = $items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
         } else {
-            $args['ps_category_id'] = 0;
+            $args['ps_view_item'] = null;
+            $args['ps_merge_items'] = null;
         }
+
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductBefore($args);
 
@@ -1004,16 +1003,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_view_cart'] = null;
-
-
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
-
             $item = [];
 
             $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
@@ -1087,17 +1082,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['product_id']] = $item;
         }
 
-        if ($items) {
-            $ps_view_cart = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $this->currency->format($total_price, $currency, 0, false),
-                    'items' => array_values($items),
-                ],
-            ];
 
-            $args['ps_view_cart'] = json_encode($ps_view_cart, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-        }
+        $ps_view_cart = [
+            'ecommerce' => [
+                'currency' => $currency,
+                'value' => $this->currency->format($total_price, $currency, 0, false),
+                'items' => array_values($items),
+            ],
+        ];
+
+        $args['ps_view_cart'] = $items ? json_encode($ps_view_cart, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartBefore($args);
 
@@ -1138,11 +1133,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_merge_items'] = null;
-
-        $ps_merge_items = [];
-
-
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
@@ -1215,21 +1205,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['cart_id']] = $item;
         }
 
-        if ($items) {
-            foreach ($items as $cart_id => $item) {
-                $ps_merge_items[$cart_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $this->currency->format($item['price'], $currency, 0, false),
-                        'items' => [$item],
-                    ],
-                ];
-            }
+
+        $ps_merge_items = [];
+
+        foreach ($items as $cart_id => $item) {
+            $ps_merge_items[$cart_id] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $this->currency->format($item['price'], $currency, 0, false),
+                    'items' => [$item],
+                ],
+            ];
         }
 
-        if ($ps_merge_items) {
-            $args['ps_merge_items'] = json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-        }
+        $args['ps_merge_items'] = $items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartListBefore($args);
 
@@ -1270,11 +1260,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_merge_items'] = null;
-
-        $ps_merge_items = [];
-
-
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
@@ -1348,6 +1333,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+
+        $ps_merge_items = [];
+
         foreach ($items as $cart_id => $item) {
             $ps_merge_items[$cart_id] = [
                 'ecommerce' => [
@@ -1358,9 +1346,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
         }
 
-        if ($ps_merge_items) {
-            $args['ps_merge_items'] = json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-        }
+        $args['ps_merge_items'] = $items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartInfoBefore($args);
 
