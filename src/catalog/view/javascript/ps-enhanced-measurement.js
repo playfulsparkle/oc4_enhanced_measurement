@@ -3,48 +3,47 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
   e.preventDefault();
 
   var self = $(this);
-  var elementType = self.prop("nodeName");
   var trackId = self.data("ps-track-id");
   var eventName = self.data("ps-track-event");
-
-  self.removeAttr("data-ps-track-event").prop('disabled', true);
 
   if (typeof trackId === 'undefined') {
     console.error('No track ID found');
     return;
+  } else if (typeof eventName === 'undefined') {
+    console.error('No event name found');
+    return;
   }
 
-  if (eventName === 'update_cart') {
-    var trackData = ps_dataLayer.getData(trackId);
+  self.removeAttr("data-ps-track-event").prop('disabled', true);
 
+  if (eventName === 'update_cart') { // Handle shopping cart events
     var quantityObj = $('#product-quantity-' + trackId);
     var newQuantity = parseInt(quantityObj.val()) ?? 0;
 
-    if (newQuantity > 0) {
-      var dataQuantity = trackData.ecommerce.items[0].quantity;
-      var dataPrice = trackData.ecommerce.items[0].price;
+    eventName = (newQuantity > 0) ? 'add_to_cart' : 'remove_from_cart';
 
-      dataPrice /= dataQuantity;
+    var trackData = ps_dataLayer.getData(eventName, trackId);
+
+    if (eventName === 'add_to_cart') {
+      var dataPrice = trackData.ecommerce.items[0].price / trackData.ecommerce.items[0].quantity;
 
       trackData.ecommerce.value = dataPrice * newQuantity;
-      trackData.ecommerce.items[0].price = dataPrice * newQuantity;
+      trackData.ecommerce.items[0].price = dataPrice;
       trackData.ecommerce.items[0].quantity = newQuantity;
-
-      eventName = 'add_to_cart';
-    } else {
-      eventName = 'remove_from_cart';
     }
 
-    ps_dataLayer.push(eventName, trackData);
+    ps_dataLayer.pushData(eventName, trackData);
   } else if (eventName === 'add_to_cart') {
-    var trackData = ps_dataLayer.getData(trackId);
+    var trackData = ps_dataLayer.getData(eventName, trackId);
 
     trackData.ecommerce.items[0].quantity = 1;
 
-    ps_dataLayer.push(eventName, trackData);
+    ps_dataLayer.pushData(eventName, trackData);
   } else {
-    ps_dataLayer.push_manuall(eventName, trackId);
+    ps_dataLayer.push(eventName, trackId);
   }
+
+  var elementType = self.prop("nodeName");
 
   setTimeout(function () {
     if (elementType === 'BUTTON') {
