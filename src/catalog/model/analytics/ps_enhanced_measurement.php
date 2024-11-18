@@ -253,6 +253,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
     public function getProductOptionInfo($product_option_id, $product_option_value_id): array
     {
         $sql = "SELECT
+                o.type,
                 pov.price,
                 pov.price_prefix,
                 od.name AS option_name,
@@ -267,27 +268,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
               AND od.language_id = '" . (int) $this->config->get('config_language_id') . "'
               AND ovd.language_id = '" . (int) $this->config->get('config_language_id') . "'";
 
-        $option_price_data = $this->cache->get('getproductoptioninfo.' . md5($sql));
 
-        if (!$option_price_data) {
             $query = $this->db->query($sql);
 
-            if ($query->num_rows) {
                 $option_price = ($query->row['price_prefix'] == '+')
                     ? $query->row['price']
                     : -$query->row['price'];
 
-                $option_price_data = [
+                return [
                     'price' => $option_price,
                     'name' => $query->row['option_name'],
                     'value' => $query->row['option_value_name']
                 ];
 
-                $this->cache->set('getproductoptioninfo.' . md5($sql), $option_price_data);
-            }
-        }
 
-        return (array) $option_price_data;
     }
 
     public function getManufacturerNameByProductId($product_id)

@@ -25,18 +25,11 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
     var trackData = ps_dataLayer.getData(eventName, trackId);
 
     if (eventName === 'add_to_cart') {
-      var dataPrice = trackData.ecommerce.items[0].price / trackData.ecommerce.items[0].quantity;
+      var dataPrice = trackData.ecommerce.items[0].price;
 
       trackData.ecommerce.value = dataPrice * newQuantity;
-      trackData.ecommerce.items[0].price = dataPrice;
       trackData.ecommerce.items[0].quantity = newQuantity;
     }
-
-    ps_dataLayer.pushData(eventName, trackData);
-  } else if (eventName === 'add_to_cart') {
-    var trackData = ps_dataLayer.getData(eventName, trackId);
-
-    trackData.ecommerce.items[0].quantity = 1;
 
     ps_dataLayer.pushData(eventName, trackData);
   } else {

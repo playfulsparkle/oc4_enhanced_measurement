@@ -265,6 +265,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -286,6 +292,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
+            unset($item['minimum']);
+
             $ps_merge_items['select_item_' . $product_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
@@ -293,7 +301,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     'items' => [$item],
                 ],
             ];
-            $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+            $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $item['price'],
+                    'items' => [$item],
+                ],
+            ];
+        }
+
+        foreach ($items as $product_id => $item) {
+            $item['quantity'] = $item['minimum'];
+
+            unset($item['minimum']);
+
+            $ps_merge_items['add_to_cart_' . $product_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -513,6 +535,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -534,6 +562,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
+            unset($item['minimum']);
+
             $ps_merge_items['select_item_' . $product_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
@@ -541,7 +571,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     'items' => [$item],
                 ],
             ];
-            $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+            $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $item['price'],
+                    'items' => [$item],
+                ],
+            ];
+        }
+
+        foreach ($items as $product_id => $item) {
+            $item['quantity'] = $item['minimum'];
+
+            unset($item['minimum']);
+
+            $ps_merge_items['add_to_cart_' . $product_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -699,6 +743,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['quantity'] = $product_info['quantity'];
 
+            if ($product_info['minimum']) {
+                $item['minimum'] = $product_info['minimum'];
+            } else {
+                $item['minimum'] = 1;
+            }
+
             $items[(int) $product_info['product_id']] = $item;
 
 
@@ -714,7 +764,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
             foreach ($items as $product_id => $item) { // Add the current product to the merge stack
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -811,11 +877,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
 
             foreach ($items as $product_id => $item) { // Add related prodcuts to the merge stack
+                unset($item['minimum']);
+
                 $ps_merge_items['select_item_' . $product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -823,7 +897,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         'items' => [$item],
                     ],
                 ];
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -884,8 +972,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
+
         $quantity = isset($this->request->post['quantity']) ? (int) $this->request->post['quantity'] : 1;
-        $options = isset($this->request->post['option']) ? $this->request->post['option'] : [];
+        $options = isset($this->request->post['option']) ? array_filter($this->request->post['option']) : [];
 
         if ($product_info) {
             $item = [];
@@ -938,25 +1027,70 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $base_price = $product_info['price'];
+            if ($product_info['variant']) {
+                foreach ($product_info['variant'] as $key => $value) {
+                    $options[$key] = $value;
+                }
+            }
+
+
+            $option_price = 0;
 
             $variant = [];
 
-            foreach ($options as $product_option_id => $product_option_value_ids) {
-                if (is_array($product_option_value_ids)) {
-                    foreach ($product_option_value_ids as $product_option_value_id) {
-                        $product_options_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($product_option_id, $product_option_value_id);
+            foreach ($options as $product_option_id => $value) {
+                $option_query = $this->db->query("SELECT po.`product_option_id`, po.`option_id`, od.`name`, o.`type` FROM `" . DB_PREFIX . "product_option` po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.`option_id` = o.`option_id`) LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.`option_id` = od.`option_id`) WHERE po.`product_option_id` = '" . (int) $product_option_id . "' AND po.`product_id` = '" . (int) $product_info['product_id'] . "' AND od.`language_id` = '" . (int) $this->config->get('config_language_id') . "'");
 
-                        $base_price += $product_options_info['price'];
-                        $variant[] = html_entity_decode($product_options_info['name'] . ': ' . $product_options_info['value'], ENT_QUOTES, 'UTF-8');
+                if ($option_query->num_rows) {
+                    if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'radio') {
+                        $option_value_query = $this->db->query("SELECT pov.`option_value_id`, ovd.`name`, pov.`quantity`, pov.`subtract`, pov.`price`, pov.`price_prefix`, pov.`points`, pov.`points_prefix`, pov.`weight`, pov.`weight_prefix` FROM `" . DB_PREFIX . "product_option_value` pov LEFT JOIN `" . DB_PREFIX . "option_value` ov ON (pov.`option_value_id` = ov.`option_value_id`) LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (ov.`option_value_id` = ovd.`option_value_id`) WHERE pov.`product_option_value_id` = '" . (int) $value . "' AND pov.`product_option_id` = '" . (int) $product_option_id . "' AND ovd.`language_id` = '" . (int) $this->config->get('config_language_id') . "'");
+
+                        if ($option_value_query->num_rows) {
+                            if ($option_value_query->row['price_prefix'] == '+') {
+                                $option_price += $option_value_query->row['price'];
+                            } elseif ($option_value_query->row['price_prefix'] == '-') {
+                                $option_price -= $option_value_query->row['price'];
+                            }
+
+                            $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $option_value_query->row['name'], ENT_QUOTES, 'UTF-8');
+                        }
+                    } elseif ($option_query->row['type'] == 'checkbox' && is_array($value)) {
+                        foreach ($value as $product_option_value_id) {
+                            $option_value_query = $this->db->query("SELECT pov.`option_value_id`, pov.`quantity`, pov.`subtract`, pov.`price`, pov.`price_prefix`, pov.`points`, pov.`points_prefix`, pov.`weight`, pov.`weight_prefix`, ovd.`name` FROM `" . DB_PREFIX . "product_option_value` `pov` LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (pov.`option_value_id` = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int) $product_option_value_id . "' AND pov.product_option_id = '" . (int) $product_option_id . "' AND ovd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
+
+                            if ($option_value_query->num_rows) {
+                                if ($option_value_query->row['price_prefix'] == '+') {
+                                    $option_price += $option_value_query->row['price'];
+                                } elseif ($option_value_query->row['price_prefix'] == '-') {
+                                    $option_price -= $option_value_query->row['price'];
+                                }
+
+                                $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $option_value_query->row['name'], ENT_QUOTES, 'UTF-8');
+                            }
+                        }
+                    } elseif ($option_query->row['type'] == 'text' || $option_query->row['type'] == 'textarea' || $option_query->row['type'] == 'file' || $option_query->row['type'] == 'date' || $option_query->row['type'] == 'datetime' || $option_query->row['type'] == 'time') {
+                        $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $value, ENT_QUOTES, 'UTF-8');
                     }
-                } else {
-                    $product_options_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($product_option_id, $product_option_value_ids);
 
-                    $base_price += $product_options_info['price'];
-                    $variant[] = html_entity_decode($product_options_info['name'] . ': ' . $product_options_info['value'], ENT_QUOTES, 'UTF-8');
                 }
             }
+
+            $base_price = $product_info['price'];
+
+
+            $product_discount_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_discount` WHERE `product_id` = '" . (int)$product_info['product_id'] . "' AND `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "' AND `quantity` <= '" . (int)$quantity . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `quantity` DESC, `priority` ASC, `price` ASC LIMIT 1");
+
+            if ($product_discount_query->num_rows) {
+                $base_price = $product_discount_query->row['price'];
+            }
+
+            // Product Specials
+            $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int)$product_info['product_id'] . "' AND `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
+
+            if ($product_special_query->num_rows) {
+                $base_price = $product_special_query->row['price'];
+            }
+
 
             if ($variant) {
                 $item['item_variant'] = implode(', ', $variant);
@@ -967,11 +1101,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($item_price_tax) {
-                $price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $this->config->get('config_tax'));
-                $total = $this->tax->calculate($base_price * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $price = $this->tax->calculate(($base_price + $option_price), $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $total = $this->tax->calculate(($base_price + $option_price) * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax'));
             } else {
-                $price = $base_price;
-                $total = $base_price * $quantity;
+                $price = ($base_price + $option_price);
+                $total = ($base_price + $option_price) * $quantity;
             }
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
@@ -1128,7 +1262,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-		$this->load->language('checkout/cart');
+        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -1226,13 +1360,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             if ($item_price_tax) {
                 $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $single_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
             } else {
                 $price = $product_info['price'] * $product_info['quantity'];
+                $single_price = $product_info['price'];
             }
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['single_price'] = $this->currency->format($single_price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
+
+            if ($product_info['minimum']) {
+                $item['minimum'] = $product_info['minimum'];
+            } else {
+                $item['minimum'] = 1;
+            }
 
             $items[(int) $product_info['cart_id']] = $item;
         }
@@ -1241,6 +1384,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
+            unset($item['single_price'], $item['minimum']);
+
             $ps_merge_items['select_item_' . $product_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
@@ -1248,7 +1393,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     'items' => [$item],
                 ],
             ];
-            $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['remove_from_cart_' . $product_id] = [
+            $ps_merge_items['remove_from_cart_' . $product_id] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $item['price'],
+                    'items' => [$item],
+                ],
+            ];
+        }
+
+        foreach ($items as $product_id => $item) {
+            $item['price'] = $item['single_price'];
+            $item['quantity'] = $item['minimum'];
+
+            unset($item['single_price'], $item['minimum']);
+
+            $ps_merge_items['add_to_cart_' . $product_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -1273,7 +1433,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-		$this->load->language('checkout/cart');
+        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -1530,6 +1690,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -1537,6 +1703,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
+                unset($item['minimum']);
+
                 $ps_merge_items['select_item_' . $product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -1544,7 +1712,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         'items' => [$item],
                     ],
                 ];
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -1687,6 +1869,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -1694,6 +1882,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
+                unset($item['minimum']);
+
                 $ps_merge_items['select_item_' . $product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -1701,7 +1891,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         'items' => [$item],
                     ],
                 ];
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -1836,6 +2040,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -1843,6 +2053,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
+                unset($item['minimum']);
+
                 $ps_merge_items['select_item_' . $product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -1850,7 +2062,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         'items' => [$item],
                     ],
                 ];
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
@@ -1992,6 +2218,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['quantity'] = $product_info['quantity'];
 
+                if ($product_info['minimum']) {
+                    $item['minimum'] = $product_info['minimum'];
+                } else {
+                    $item['minimum'] = 1;
+                }
+
                 $items[(int) $product_info['product_id']] = $item;
             }
 
@@ -1999,6 +2231,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
+                unset($item['minimum']);
+
                 $ps_merge_items['select_item_' . $product_id] = [
                     'ecommerce' => [
                         'item_list_id' => $item_list_id,
@@ -2006,7 +2240,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         'items' => [$item],
                     ],
                 ];
-                $ps_merge_items['add_to_cart_' . $product_id] = $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $item['minimum'];
+
+                unset($item['minimum']);
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
                         'value' => $item['price'],
