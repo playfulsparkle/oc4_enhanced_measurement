@@ -946,6 +946,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -1078,17 +1079,51 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $base_price = $product_info['price'];
 
 
-            $product_discount_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_discount` WHERE `product_id` = '" . (int)$product_info['product_id'] . "' AND `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "' AND `quantity` <= '" . (int)$quantity . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `quantity` DESC, `priority` ASC, `price` ASC LIMIT 1");
+            $product_discount_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_discount` WHERE `product_id` = '" . (int) $product_info['product_id'] . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND `quantity` <= '" . (int) $quantity . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `quantity` DESC, `priority` ASC, `price` ASC LIMIT 1");
 
             if ($product_discount_query->num_rows) {
                 $base_price = $product_discount_query->row['price'];
             }
 
             // Product Specials
-            $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int)$product_info['product_id'] . "' AND `customer_group_id` = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
+            $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int) $product_info['product_id'] . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
 
             if ($product_special_query->num_rows) {
                 $base_price = $product_special_query->row['price'];
+            }
+
+            if (isset($this->request->post['subscription_plan_id'])) {
+                $subscription_plan_id = (int) $this->request->post['subscription_plan_id'];
+
+                $subscription_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_subscription` ps LEFT JOIN `" . DB_PREFIX . "subscription_plan` sp ON (ps.`subscription_plan_id` = sp.`subscription_plan_id`) LEFT JOIN `" . DB_PREFIX . "subscription_plan_description` spd ON (sp.`subscription_plan_id` = spd.`subscription_plan_id`) WHERE ps.`product_id` = '" . (int) $product_info['product_id'] . "' AND ps.`subscription_plan_id` = '" . (int) $subscription_plan_id . "' AND ps.`customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND spd.`language_id` = '" . (int) $this->config->get('config_language_id') . "' AND sp.`status` = '1'");
+
+                if ($subscription_query->num_rows) {
+                    $base_price = $subscription_query->row['price'];
+
+                    if ($subscription_query->row['trial_status']) {
+                        $base_price = $subscription_query->row['trial_price'];
+                    }
+
+                    $trial_price = $this->currency->format($this->tax->calculate($subscription_query->row['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    $trial_cycle = $subscription_query->row['trial_cycle'];
+                    $trial_frequency = $this->language->get('text_' . $subscription_query->row['trial_frequency']);
+                    $trial_duration = $subscription_query->row['trial_duration'];
+
+                    $subscription_description = sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
+
+                    $cycle = $subscription_query->row['cycle'];
+                    $frequency = $this->language->get('text_' . $subscription_query->row['frequency']);
+                    $duration = $subscription_query->row['duration'];
+                    $subscription_price = $this->currency->format($this->tax->calculate($subscription_query->row['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+
+                    if ($duration) {
+                        $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $cycle, $frequency, $duration);
+                    } else {
+                        $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $cycle, $frequency);
+                    }
+
+                    $variant[] = $subscription_description;
+                }
             }
 
 
