@@ -188,6 +188,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -271,6 +272,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -294,13 +297,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
+
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
@@ -461,6 +475,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -544,6 +559,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -570,13 +587,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
-            $ps_merge_items['select_item_' . $product_id] = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => [$item],
-                ],
-            ];
+            if ($promotions[$product_id]) {
+                $ps_merge_items['select_promotion_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            } else {
+                $ps_merge_items['select_item_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            }
 
             $ps_merge_items['add_to_wishlist_' . $product_id] = [
                 'ecommerce' => [
@@ -684,6 +711,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
+        $promotions = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -767,6 +795,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $minimums[(int) $product_info['product_id']] = 1;
             }
 
+            $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
             $items[(int) $product_info['product_id']] = $item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -790,13 +820,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
-            $ps_merge_items['select_item_' . $product_id] = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => [$item],
-                ],
-            ];
+            if ($promotions[$product_id]) {
+                $ps_merge_items['select_promotion_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            } else {
+                $ps_merge_items['select_item_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            }
 
             $ps_merge_items['add_to_wishlist_' . $product_id] = [
                 'ecommerce' => [
@@ -912,6 +952,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
+        $promotions = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -995,6 +1036,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $minimums[(int) $product_info['product_id']] = 1;
             }
 
+            $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
             $items[(int) $product_info['product_id']] = $item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -1018,13 +1061,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
-            $ps_merge_items['select_item_' . $product_id] = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => [$item],
-                ],
-            ];
+            if ($promotions[$product_id]) {
+                $ps_merge_items['select_promotion_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            } else {
+                $ps_merge_items['select_item_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            }
 
             $ps_merge_items['add_to_wishlist_' . $product_id] = [
                 'ecommerce' => [
@@ -1101,6 +1154,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
+        $promotions = [];
 
         foreach ($wishlist_items as $index => $wishlist_item) {
             $product_info = $this->model_catalog_product->getProduct($wishlist_item['product_id']);
@@ -1187,6 +1241,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -1211,13 +1267,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $product_id => $item) {
-            $ps_merge_items['select_item_' . $product_id] = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => [$item],
-                ],
-            ];
+            if ($promotions[$product_id]) {
+                $ps_merge_items['select_promotion_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            } else {
+                $ps_merge_items['select_item_' . $product_id] = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => [$item],
+                    ],
+                ];
+            }
 
             $ps_merge_items['add_to_wishlist_' . $product_id] = [
                 'ecommerce' => [
@@ -1473,6 +1539,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -1556,6 +1623,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
@@ -1566,13 +1635,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
             foreach ($items as $product_id => $item) { // Add related prodcuts to the merge stack
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
 
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
@@ -2298,6 +2377,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -2381,6 +2461,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
@@ -2395,13 +2477,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
 
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
@@ -2482,6 +2574,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -2565,6 +2658,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
@@ -2579,13 +2674,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
 
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
@@ -2658,6 +2763,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -2741,6 +2847,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
@@ -2755,13 +2863,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
 
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
@@ -2841,6 +2959,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $minimums = [];
+            $promotions = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -2924,6 +3043,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $minimums[(int) $product_info['product_id']] = 1;
                 }
 
+                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+
                 $items[(int) $product_info['product_id']] = $item;
 
                 if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
@@ -2938,13 +3059,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_merge_items = [];
 
             foreach ($items as $product_id => $item) {
-                $ps_merge_items['select_item_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
 
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
