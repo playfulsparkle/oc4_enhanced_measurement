@@ -1035,61 +1035,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
 
-            $option_price = 0;
+            $product_option_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($options, $product_info['product_id']);
 
-            $variant = [];
-
-            foreach ($options as $product_option_id => $value) {
-                $option_query = $this->db->query("SELECT po.`product_option_id`, po.`option_id`, od.`name`, o.`type` FROM `" . DB_PREFIX . "product_option` po LEFT JOIN `" . DB_PREFIX . "option` o ON (po.`option_id` = o.`option_id`) LEFT JOIN `" . DB_PREFIX . "option_description` od ON (o.`option_id` = od.`option_id`) WHERE po.`product_option_id` = '" . (int) $product_option_id . "' AND po.`product_id` = '" . (int) $product_info['product_id'] . "' AND od.`language_id` = '" . (int) $this->config->get('config_language_id') . "'");
-
-                if ($option_query->num_rows) {
-                    if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'radio') {
-                        $option_value_query = $this->db->query("SELECT pov.`option_value_id`, ovd.`name`, pov.`quantity`, pov.`subtract`, pov.`price`, pov.`price_prefix`, pov.`points`, pov.`points_prefix`, pov.`weight`, pov.`weight_prefix` FROM `" . DB_PREFIX . "product_option_value` pov LEFT JOIN `" . DB_PREFIX . "option_value` ov ON (pov.`option_value_id` = ov.`option_value_id`) LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (ov.`option_value_id` = ovd.`option_value_id`) WHERE pov.`product_option_value_id` = '" . (int) $value . "' AND pov.`product_option_id` = '" . (int) $product_option_id . "' AND ovd.`language_id` = '" . (int) $this->config->get('config_language_id') . "'");
-
-                        if ($option_value_query->num_rows) {
-                            if ($option_value_query->row['price_prefix'] == '+') {
-                                $option_price += $option_value_query->row['price'];
-                            } elseif ($option_value_query->row['price_prefix'] == '-') {
-                                $option_price -= $option_value_query->row['price'];
-                            }
-
-                            $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $option_value_query->row['name'], ENT_QUOTES, 'UTF-8');
-                        }
-                    } elseif ($option_query->row['type'] == 'checkbox' && is_array($value)) {
-                        foreach ($value as $product_option_value_id) {
-                            $option_value_query = $this->db->query("SELECT pov.`option_value_id`, pov.`quantity`, pov.`subtract`, pov.`price`, pov.`price_prefix`, pov.`points`, pov.`points_prefix`, pov.`weight`, pov.`weight_prefix`, ovd.`name` FROM `" . DB_PREFIX . "product_option_value` `pov` LEFT JOIN `" . DB_PREFIX . "option_value_description` ovd ON (pov.`option_value_id` = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int) $product_option_value_id . "' AND pov.product_option_id = '" . (int) $product_option_id . "' AND ovd.language_id = '" . (int) $this->config->get('config_language_id') . "'");
-
-                            if ($option_value_query->num_rows) {
-                                if ($option_value_query->row['price_prefix'] == '+') {
-                                    $option_price += $option_value_query->row['price'];
-                                } elseif ($option_value_query->row['price_prefix'] == '-') {
-                                    $option_price -= $option_value_query->row['price'];
-                                }
-
-                                $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $option_value_query->row['name'], ENT_QUOTES, 'UTF-8');
-                            }
-                        }
-                    } elseif ($option_query->row['type'] == 'text' || $option_query->row['type'] == 'textarea' || $option_query->row['type'] == 'file' || $option_query->row['type'] == 'date' || $option_query->row['type'] == 'datetime' || $option_query->row['type'] == 'time') {
-                        $variant[] = html_entity_decode($option_query->row['name'] . ': ' . $value, ENT_QUOTES, 'UTF-8');
-                    }
-
-                }
-            }
+            $option_price = $product_option_info['option_price'];
+            $variant = $product_option_info['variant'];
 
             $base_price = $product_info['price'];
 
 
-            $product_discount_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_discount` WHERE `product_id` = '" . (int) $product_info['product_id'] . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND `quantity` <= '" . (int) $quantity . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `quantity` DESC, `priority` ASC, `price` ASC LIMIT 1");
+            $product_discount_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductDiscount($product_info['product_id'], $quantity);
 
-            if ($product_discount_query->num_rows) {
-                $base_price = $product_discount_query->row['price'];
+            if ($product_discount_info) {
+                $base_price = $product_discount_info;
             }
 
-            // Product Specials
-            $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int) $product_info['product_id'] . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
 
-            if ($product_special_query->num_rows) {
-                $base_price = $product_special_query->row['price'];
+            $product_special_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductSpecial($product_info['product_id']);
+
+            if ($product_special_info) {
+                $base_price = $product_special_info;
             }
 
             if (isset($this->request->post['subscription_plan_id'])) {
@@ -1283,9 +1247,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($item_price_tax) {
-                $price = $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
             } else {
-                $price = $product_info['total'];
+                $price = $product_info['price'];
             }
 
             if ($item_price_tax) {
