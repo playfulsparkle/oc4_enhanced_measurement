@@ -158,7 +158,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $limit = $this->config->get('config_pagination');
         }
 
-
         if (isset($this->request->get['path'])) {
             $parts = explode('_', (string) $this->request->get['path']);
             $category_id = (int) array_pop($parts);
@@ -168,6 +167,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $category_info = null;
         }
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
 
 
         if ($category_info) {
@@ -197,8 +203,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -437,6 +443,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $limit = $this->config->get('config_pagination');
         }
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
 
         if ($search || $tag) {
             if (isset($this->request->get['search'])) {
@@ -484,8 +498,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -692,6 +706,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $limit = $this->config->get('config_pagination');
         }
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
 
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
@@ -720,8 +742,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             if ((float) $product_info['special']) {
@@ -901,6 +923,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -921,8 +952,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             if ((float) $product_info['special']) {
@@ -1138,6 +1169,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $limit = (int) $this->config->get('config_pagination');
         }
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
 
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
@@ -1167,8 +1206,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             if ((float) $product_info['special']) {
@@ -1349,6 +1388,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -1372,8 +1420,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -1579,6 +1627,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $product_id = 0;
         }
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
 
         if (isset($this->request->get['path'])) {
             $parts = explode('_', (string) $this->request->get['path']);
@@ -1618,8 +1674,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             if ((float) $product_info['special']) {
@@ -1761,8 +1817,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -1940,6 +1996,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
 
         $quantity = isset($this->request->post['quantity']) ? (int) $this->request->post['quantity'] : 1;
@@ -1952,8 +2017,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             // $item['discount'] = 0;
@@ -2129,6 +2194,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2148,8 +2222,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -2223,7 +2297,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
-                'coupon' => isset($this->session->data['coupon']) ? $this->session->data['coupon'] : '',
+                'coupon' => $product_coupon ? $product_coupon : '',
                 'payment_type' => isset($this->request->post['payment_method']) ? $this->request->post['payment_method'] : '',
                 'items' => array_values($items),
             ],
@@ -2286,6 +2360,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2305,8 +2388,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -2380,7 +2463,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
-                'coupon' => isset($this->session->data['coupon']) ? $this->session->data['coupon'] : '',
+                'coupon' => $product_coupon ? $product_coupon : '',
                 'shipping_tier' => isset($this->request->post['shipping_method']) ? $this->request->post['shipping_method'] : '',
                 'items' => array_values($items),
             ],
@@ -2424,6 +2507,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2444,8 +2536,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -2579,6 +2671,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2599,8 +2700,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -2694,7 +2795,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         foreach ($totals as $total) {
             if ($total['code'] === 'shipping') {
                 $purchase_data['shipping'] = $total['value'];
-            } else if ($total['code'] === 'tax' && $item_price_tax) {
+            } else if ($total['code'] === 'tax') {
                 $purchase_data['tax'] = $total['value'];
             } else if ($total['code'] === 'total') {
                 $purchase_data['total'] = $total['value'];
@@ -2706,10 +2807,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'transaction_id' => $this->session->data['order_id'],
                 'value' => $this->currency->format($purchase_data['total'] - $purchase_data['shipping'] - $purchase_data['tax'], $currency, 0, false),
-                'tax' => $this->currency->format($purchase_data['tax'], $currency, 0, false),
+                'tax' => $this->currency->format(($item_price_tax ? $purchase_data['tax'] : 0), $currency, 0, false),
                 'shipping' => $this->currency->format($purchase_data['shipping'], $currency, 0, false),
                 'currency' => $currency,
-                'coupon' => isset($this->session->data['coupon']) ? $this->session->data['coupon'] : '',
+                'coupon' => $product_coupon ? $product_coupon : '',
                 'items' => array_values($items),
             ],
         ];
@@ -2756,6 +2857,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2775,8 +2885,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -2902,6 +3012,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -2922,8 +3041,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -3076,6 +3195,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $item_list_name = sprintf(
             $this->language->get('text_x_products'),
             $this->language->get('heading_title')
@@ -3094,8 +3222,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
-            if (isset($this->session->data['coupon'])) {
-                $item['coupon'] = $this->session->data['coupon'];
+            if ($product_coupon) {
+                $item['coupon'] = $product_coupon;
             }
 
             $item['index'] = $index;
@@ -3221,6 +3349,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
         $products = $this->model_extension_opencart_module_bestseller->getBestSellers($setting['limit']);
@@ -3243,8 +3380,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -3410,6 +3547,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
         if (!empty($setting['product'])) {
@@ -3440,8 +3586,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -3607,6 +3753,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
         $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
@@ -3629,8 +3784,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
@@ -3796,6 +3951,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        if (isset($this->session->data['coupon'])) {
+            $product_coupon = $this->session->data['coupon'];
+        } else if (isset($this->session->data['voucher'])) {
+            $product_coupon = $this->session->data['voucher'];
+        } else {
+            $product_coupon = '';
+        }
+
+
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
         $specials_filter_data = [
@@ -3825,8 +3989,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
                 $item['affiliation'] = $affiliation;
 
-                if (isset($this->session->data['coupon'])) {
-                    $item['coupon'] = $this->session->data['coupon'];
+                if ($product_coupon) {
+                    $item['coupon'] = $product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
