@@ -1059,26 +1059,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if (isset($this->request->post['subscription_plan_id'])) {
                 $subscription_plan_id = (int) $this->request->post['subscription_plan_id'];
 
-                $subscription_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_subscription` ps LEFT JOIN `" . DB_PREFIX . "subscription_plan` sp ON (ps.`subscription_plan_id` = sp.`subscription_plan_id`) LEFT JOIN `" . DB_PREFIX . "subscription_plan_description` spd ON (sp.`subscription_plan_id` = spd.`subscription_plan_id`) WHERE ps.`product_id` = '" . (int) $product_info['product_id'] . "' AND ps.`subscription_plan_id` = '" . (int) $subscription_plan_id . "' AND ps.`customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND spd.`language_id` = '" . (int) $this->config->get('config_language_id') . "' AND sp.`status` = '1'");
+                $product_subscription_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductScubscription($product_info['product_id'], $subscription_plan_id);
 
-                if ($subscription_query->num_rows) {
-                    $base_price = $subscription_query->row['price'];
+                if ($product_subscription_info) {
+                    $base_price = $product_subscription_info['price'];
 
-                    if ($subscription_query->row['trial_status']) {
-                        $base_price = $subscription_query->row['trial_price'];
+                    if ($product_subscription_info['trial_status']) {
+                        $base_price = $product_subscription_info['trial_price'];
                     }
 
-                    $trial_price = $this->currency->format($this->tax->calculate($subscription_query->row['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                    $trial_cycle = $subscription_query->row['trial_cycle'];
-                    $trial_frequency = $this->language->get('text_' . $subscription_query->row['trial_frequency']);
-                    $trial_duration = $subscription_query->row['trial_duration'];
+                    $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
+                    $trial_cycle = $product_subscription_info['trial_cycle'];
+                    $trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
+                    $trial_duration = $product_subscription_info['trial_duration'];
 
                     $subscription_description = sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
 
-                    $subscription_cycle = $subscription_query->row['cycle'];
-                    $subscription_frequency = $this->language->get('text_' . $subscription_query->row['frequency']);
-                    $subscription_duration = $subscription_query->row['duration'];
-                    $subscription_price = $this->currency->format($this->tax->calculate($subscription_query->row['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                    $subscription_cycle = $product_subscription_info['cycle'];
+                    $subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);
+                    $subscription_duration = $product_subscription_info['duration'];
+                    $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
 
                     if ($subscription_duration) {
                         $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
@@ -1209,33 +1209,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription']) {
-                $subscription_description = '';
-
-                if ($product_info['subscription']['trial_status']) {
-                    $trial_price = $this->currency->format($this->tax->calculate($product_info['subscription']['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                    $trial_cycle = $product_info['subscription']['trial_cycle'];
-                    $trial_frequency = $this->language->get('text_' . $product_info['subscription']['trial_frequency']);
-                    $trial_duration = $product_info['subscription']['trial_duration'];
-
-                    $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
-                }
-
-                $subscription_price = $this->currency->format($this->tax->calculate($product_info['subscription']['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-
-                $subscription_cycle = $product_info['subscription']['cycle'];
-                $subscription_frequency = $this->language->get('text_' . $product_info['subscription']['frequency']);
-                $subscription_duration = $product_info['subscription']['duration'];
-
-                if ($subscription_duration) {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
-                } else {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
-                }
-
-                if ($subscription_description) {
-                    $variant[] = $subscription_description;
-                }
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+                $variant[] = $subscription_description;
             }
 
             if ($variant) {
@@ -1262,7 +1237,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['product_id']] = $item;
+            $items[(int) $product_info['cart_id']] = $item;
         }
 
 
@@ -1378,33 +1353,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription']) {
-                $subscription_description = '';
-
-                if ($product_info['subscription']['trial_status']) {
-                    $trial_price = $this->currency->format($this->tax->calculate($product_info['subscription']['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                    $trial_cycle = $product_info['subscription']['trial_cycle'];
-                    $trial_frequency = $this->language->get('text_' . $product_info['subscription']['trial_frequency']);
-                    $trial_duration = $product_info['subscription']['trial_duration'];
-
-                    $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
-                }
-
-                $subscription_price = $this->currency->format($this->tax->calculate($product_info['subscription']['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-
-                $subscription_cycle = $product_info['subscription']['cycle'];
-                $subscription_frequency = $this->language->get('text_' . $product_info['subscription']['frequency']);
-                $subscription_duration = $product_info['subscription']['duration'];
-
-                if ($subscription_duration) {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
-                } else {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
-                }
-
-                if ($subscription_description) {
-                    $variant[] = $subscription_description;
-                }
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+                $variant[] = $subscription_description;
             }
 
             if ($variant) {
@@ -1440,17 +1390,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
+        foreach ($items as $cart_id => $item) {
             unset($item['single_price'], $item['minimum']);
 
-            $ps_merge_items['select_item_' . $product_id] = [
+            $ps_merge_items['select_item_' . $cart_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
                     'item_list_name' => $item_list_name,
                     'items' => [$item],
                 ],
             ];
-            $ps_merge_items['remove_from_cart_' . $product_id] = [
+            $ps_merge_items['remove_from_cart_' . $cart_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -1459,13 +1409,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
         }
 
-        foreach ($items as $product_id => $item) {
+        foreach ($items as $cart_id => $item) {
             $item['price'] = $item['single_price'];
             $item['quantity'] = $item['minimum'];
 
             unset($item['single_price'], $item['minimum']);
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
+            $ps_merge_items['add_to_cart_' . $cart_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -1578,33 +1528,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription']) {
-                $subscription_description = '';
-
-                if ($product_info['subscription']['trial_status']) {
-                    $trial_price = $this->currency->format($this->tax->calculate($product_info['subscription']['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-                    $trial_cycle = $product_info['subscription']['trial_cycle'];
-                    $trial_frequency = $this->language->get('text_' . $product_info['subscription']['trial_frequency']);
-                    $trial_duration = $product_info['subscription']['trial_duration'];
-
-                    $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
-                }
-
-                $subscription_price = $this->currency->format($this->tax->calculate($product_info['subscription']['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-
-                $subscription_cycle = $product_info['subscription']['cycle'];
-                $subscription_frequency = $this->language->get('text_' . $product_info['subscription']['frequency']);
-                $subscription_duration = $product_info['subscription']['duration'];
-
-                if ($subscription_duration) {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
-                } else {
-                    $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
-                }
-
-                if ($subscription_description) {
-                    $variant[] = $subscription_description;
-                }
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+                $variant[] = $subscription_description;
             }
 
             if ($variant) {
@@ -1631,15 +1556,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            $ps_merge_items['select_item_' . $product_id] = [
+        foreach ($items as $cart_id => $item) {
+            $ps_merge_items['select_item_' . $cart_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
                     'item_list_name' => $item_list_name,
                     'items' => [$item],
                 ],
             ];
-            $ps_merge_items['remove_from_cart_' . $product_id] = [
+            $ps_merge_items['remove_from_cart_' . $cart_id] = [
                 'ecommerce' => [
                     'currency' => $currency,
                     'value' => $item['price'],
@@ -2353,6 +2278,34 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $output = '<script>ps_dataLayer.merge(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
+    }
+
+    protected function getProductSubscriptionDescription(array $product_info, string $currency)
+    {
+        $subscription_description = '';
+
+        if ($product_info['subscription']['trial_status']) {
+            $trial_price = $this->currency->format($this->tax->calculate($product_info['subscription']['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
+            $trial_cycle = $product_info['subscription']['trial_cycle'];
+            $trial_frequency = $this->language->get('text_' . $product_info['subscription']['trial_frequency']);
+            $trial_duration = $product_info['subscription']['trial_duration'];
+
+            $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
+        }
+
+        $subscription_price = $this->currency->format($this->tax->calculate($product_info['subscription']['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
+
+        $subscription_cycle = $product_info['subscription']['cycle'];
+        $subscription_frequency = $this->language->get('text_' . $product_info['subscription']['frequency']);
+        $subscription_duration = $product_info['subscription']['duration'];
+
+        if ($subscription_duration) {
+            $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
+        } else {
+            $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
+        }
+
+        return $subscription_description;
     }
 
     protected function getCategoryType1(int $product_id): array

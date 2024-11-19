@@ -320,6 +320,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return false;
     }
 
+    public function getProductScubscription($productId, $subscriptionPlanId)
+    {
+        $subscription_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product_subscription` ps LEFT JOIN `" . DB_PREFIX . "subscription_plan` sp ON (ps.`subscription_plan_id` = sp.`subscription_plan_id`) LEFT JOIN `" . DB_PREFIX . "subscription_plan_description` spd ON (sp.`subscription_plan_id` = spd.`subscription_plan_id`) WHERE ps.`product_id` = '" . (int) $productId . "' AND ps.`subscription_plan_id` = '" . (int) $subscriptionPlanId . "' AND ps.`customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND spd.`language_id` = '" . (int) $this->config->get('config_language_id') . "' AND sp.`status` = '1'");
+
+        if ($subscription_query->num_rows) {
+            return $subscription_query->row;
+        }
+
+        return false;
+    }
+
     public function getManufacturerNameByProductId($product_id)
     {
         $query = $this->db->query("
