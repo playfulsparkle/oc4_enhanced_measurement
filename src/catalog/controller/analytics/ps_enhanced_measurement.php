@@ -1506,7 +1506,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item'] = null;
+            $args['ps_view_promotion'] = null;
+
+            if ((float) $product_info['special']) {
+                $args['ps_view_promotion'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            } else {
+                $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            }
 
 
             foreach ($items as $product_id => $item) { // Add the current product to the merge stack
@@ -1677,6 +1684,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item'] = null;
+            $args['ps_view_promotion'] = null;
             $args['ps_merge_items'] = null;
         }
 

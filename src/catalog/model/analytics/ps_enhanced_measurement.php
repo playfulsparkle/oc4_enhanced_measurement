@@ -219,6 +219,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{% if products %}',
             'replace' => <<<HTML
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_promotion %}<script>ps_dataLayer.pushData('view_promotion', {{ ps_view_promotion }});</script>{% endif %}
             {% if ps_view_item %}<script>ps_dataLayer.pushData('view_item', {{ ps_view_item }});</script>{% endif %}
             {% if products %}
             HTML
