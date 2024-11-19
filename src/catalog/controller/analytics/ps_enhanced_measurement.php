@@ -128,12 +128,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if (isset($this->request->get['path'])) {
-            $path = (string) $this->request->get['path'];
-        } else {
-            $path = '';
-        }
-
         if (isset($this->request->get['filter'])) {
             $filter = $this->request->get['filter'];
         } else {
@@ -165,11 +159,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $parts = explode('_', $path);
+        if (isset($this->request->get['path'])) {
+            $parts = explode('_', (string) $this->request->get['path']);
+            $category_id = (int) array_pop($parts);
+            $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
+        } else {
+            $category_id = 0;
+            $category_info = null;
+        }
 
-        $category_id = (int) array_pop($parts);
 
-        $category_info = $this->model_catalog_category->getCategory($category_id);
 
         if ($category_info) {
             $item_list_name = sprintf($this->language->get('text_x_products'), html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'));
@@ -689,15 +688,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             if (isset($this->request->get['path'])) {
                 $parts = explode('_', (string) $this->request->get['path']);
-
                 $category_id = (int) array_pop($parts);
+                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
             } else if (isset($this->request->get['category_id'])) {
                 $category_id = (int) $this->request->get['category_id'];
+                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
             } else {
                 $category_id = 0;
+                $category_info = null;
             }
-
-            $category_info = $this->model_catalog_category->getCategory($category_id);
 
             if ($item_category_option === 0) {
                 $categories = $this->getCategoryType1($product_info['product_id']);
@@ -1000,11 +999,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             if (isset($this->request->post['category_id'])) {
                 $category_id = (int) $this->request->post['category_id'];
+                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
             } else {
                 $category_id = 0;
+                $category_info = null;
             }
-
-            $category_info = $this->model_catalog_category->getCategory($category_id);
 
             if ($item_category_option === 0) {
                 $categories = $this->getCategoryType1($product_info['product_id']);
@@ -1038,7 +1037,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $product_option_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($options, $product_info['product_id']);
 
             $option_price = $product_option_info['option_price'];
-            $variant = $product_option_info['variant'];
+            $variants = $product_option_info['variant'];
 
 
             $base_price = $product_info['price'];
@@ -1070,13 +1069,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     }
 
                     if ($subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $currency)) {
-                        $variant[] = $subscription_description;
+                        $variants[] = $subscription_description;
                     }
                 }
             }
 
-            if ($variant) {
-                $item['item_variant'] = implode(', ', $variant);
+            if ($variants) {
+                $item['item_variant'] = implode(', ', $variants);
             }
 
             if ($location_id) {
@@ -1187,18 +1186,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $variant = [];
+            $variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
             if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
-                $variant[] = $subscription_description;
+                $variants[] = $subscription_description;
             }
 
-            if ($variant) {
-                $item['item_variant'] = implode(', ', $variant);
+            if ($variants) {
+                $item['item_variant'] = implode(', ', $variants);
             }
 
             if ($location_id) {
@@ -1331,18 +1330,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_list_id'] = $item_list_id;
             $item['item_list_name'] = $item_list_name;
 
-            $variant = [];
+            $variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
             if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
-                $variant[] = $subscription_description;
+                $variants[] = $subscription_description;
             }
 
-            if ($variant) {
-                $item['item_variant'] = implode(', ', $variant);
+            if ($variants) {
+                $item['item_variant'] = implode(', ', $variants);
             }
 
             if ($location_id) {
@@ -1506,18 +1505,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['item_list_id'] = $item_list_id;
             $item['item_list_name'] = $item_list_name;
 
-            $variant = [];
+            $variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
             if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
-                $variant[] = $subscription_description;
+                $variants[] = $subscription_description;
             }
 
-            if ($variant) {
-                $item['item_variant'] = implode(', ', $variant);
+            if ($variants) {
+                $item['item_variant'] = implode(', ', $variants);
             }
 
             if ($location_id) {
