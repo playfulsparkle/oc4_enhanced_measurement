@@ -1068,28 +1068,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $base_price = $product_subscription_info['trial_price'];
                     }
 
-                    $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
-                    $trial_cycle = $product_subscription_info['trial_cycle'];
-                    $trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
-                    $trial_duration = $product_subscription_info['trial_duration'];
-
-                    $subscription_description = sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
-
-                    $subscription_cycle = $product_subscription_info['cycle'];
-                    $subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);
-                    $subscription_duration = $product_subscription_info['duration'];
-                    $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
-
-                    if ($subscription_duration) {
-                        $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
-                    } else {
-                        $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
+                    if ($subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $currency)) {
+                        $variant[] = $subscription_description;
                     }
-
-                    $variant[] = $subscription_description;
                 }
             }
-
 
             if ($variant) {
                 $item['item_variant'] = implode(', ', $variant);
@@ -1209,7 +1192,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
                 $variant[] = $subscription_description;
             }
 
@@ -1353,7 +1336,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
                 $variant[] = $subscription_description;
             }
 
@@ -1528,7 +1511,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variant[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info, $currency)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency)) {
                 $variant[] = $subscription_description;
             }
 
@@ -2280,24 +2263,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    protected function getProductSubscriptionDescription(array $product_info, string $currency)
+    protected function getProductSubscriptionDescription(array $product_subscription_info, int $taxClassId, string $currency)
     {
         $subscription_description = '';
 
-        if ($product_info['subscription']['trial_status']) {
-            $trial_price = $this->currency->format($this->tax->calculate($product_info['subscription']['trial_price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
-            $trial_cycle = $product_info['subscription']['trial_cycle'];
-            $trial_frequency = $this->language->get('text_' . $product_info['subscription']['trial_frequency']);
-            $trial_duration = $product_info['subscription']['trial_duration'];
+        if ($product_subscription_info['trial_status']) {
+            $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $taxClassId, $this->config->get('config_tax')), $currency);
+            $trial_cycle = $product_subscription_info['trial_cycle'];
+            $trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
+            $trial_duration = $product_subscription_info['trial_duration'];
 
             $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
         }
 
-        $subscription_price = $this->currency->format($this->tax->calculate($product_info['subscription']['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $currency);
+        $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $taxClassId, $this->config->get('config_tax')), $currency);
 
-        $subscription_cycle = $product_info['subscription']['cycle'];
-        $subscription_frequency = $this->language->get('text_' . $product_info['subscription']['frequency']);
-        $subscription_duration = $product_info['subscription']['duration'];
+        $subscription_cycle = $product_subscription_info['cycle'];
+        $subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);
+        $subscription_duration = $product_subscription_info['duration'];
 
         if ($subscription_duration) {
             $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
