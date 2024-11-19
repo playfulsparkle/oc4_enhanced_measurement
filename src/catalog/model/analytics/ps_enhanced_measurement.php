@@ -156,6 +156,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewProductManufacturerInfoBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewAccountWishlistListBefore(array $args): array
     {
         $views = [];
