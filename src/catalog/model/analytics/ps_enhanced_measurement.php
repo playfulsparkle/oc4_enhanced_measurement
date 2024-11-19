@@ -140,6 +140,32 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewProductCompareBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}">',
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" id="button-confirm"',
+            'replace' => '<button type="submit" id="button-confirm" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
+        ];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewAccountWishlistBefore(array $args): array
     {
         $views = [];
