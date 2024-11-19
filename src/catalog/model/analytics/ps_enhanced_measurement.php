@@ -76,12 +76,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => '<a href="{{ href }}">',
-            'replace' => '<a href="{{ href }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="select_item">'
+            'replace' => '<a href="{{ href }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if special %}select_promotion{% else %}select_item{% endif %}">'
         ];
 
         $views[] = [
             'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="' . ($args['has_options'] ? 'select_item' : 'add_to_cart') . '"'
+            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if has_options %}{% if special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
         ];
 
         $views[] = [
@@ -178,12 +178,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => '<a href="{{ product.href }}">',
-            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="select_item">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}">',
         ];
 
         $views[] = [
             'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.has_options %}select_item{% else %}add_to_cart{% endif %}"'
+            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
         ];
 
         return $views;
