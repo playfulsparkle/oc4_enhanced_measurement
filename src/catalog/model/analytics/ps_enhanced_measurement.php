@@ -124,6 +124,55 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewProductSpecialBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{% if products %}',
+            'replace' => <<<HTML
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if products %}
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewAccountWishlistBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<div id="wishlist">{{ list }}</div>',
+            'replace' => <<<HTML
+            <div id="wishlist">{{ list }}</div>
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewAccountWishlistListBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="select_item">',
+        ];
+
+        $views[] = [
+            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.has_options %}select_item{% else %}add_to_cart{% endif %}"'
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewProductProductBefore(array $args): array
     {
         $views = [];
