@@ -1977,6 +1977,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
+        $single_prices = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -2049,7 +2050,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
-            $item['single_price'] = $this->currency->format($single_price, $currency, 0, false);
+
+            $single_prices[(int) $product_info['cart_id']] = $this->currency->format($single_price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -2066,8 +2068,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $cart_id => $item) {
-            unset($item['single_price']);
-
             $ps_merge_items['select_item_' . $cart_id] = [
                 'ecommerce' => [
                     'item_list_id' => $item_list_id,
@@ -2085,10 +2085,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         foreach ($items as $cart_id => $item) {
-            $item['price'] = $item['single_price'];
+            $item['price'] = $single_prices[$cart_id];
             $item['quantity'] = $minimums[$cart_id];
-
-            unset($item['single_price']);
 
             $ps_merge_items['add_to_cart_' . $cart_id] = [
                 'ecommerce' => [
