@@ -271,6 +271,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                ];
             }
 
 
@@ -543,6 +548,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                ];
             }
 
 
@@ -657,6 +667,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
+
+        if (isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][$product_id])) {
+            $ps_item_list_info = $this->session->data['ps_item_list_info'][$product_id];
+
+            $item_list_id = $ps_item_list_info['item_list_id'];
+            $item_list_name = $ps_item_list_info['item_list_name'];
+
+            unset($this->session->data['ps_item_list_info']);
+        } else {
+            $item_list_id = null;
+            $item_list_name = null;
+        }
+
+
         $product_info = $this->model_catalog_product->getProduct($product_id);
 
         if ($product_info) {
@@ -722,6 +746,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
                 }
+            }
+
+            if ($item_list_id && $item_list_name) {
+                $item['item_list_id'] = $item_list_id;
+                $item['item_list_name'] = $item_list_name;
             }
 
             if ($location_id) {
@@ -873,6 +902,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                ];
             }
 
 
@@ -1106,6 +1140,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -1131,6 +1166,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $affiliation = $this->config->get('config_name');
         }
 
+
+        $item_list_name = sprintf(
+            $this->language->get('text_x_products'),
+            $this->language->get('heading_title')
+        );
+        $item_list_id = $this->formatListId($item_list_name);
 
         $products = $this->model_checkout_cart->getProducts();
 
@@ -1178,6 +1219,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
+            $item['item_list_id'] = $item_list_id;
+            $item['item_list_name'] = $item_list_name;
+
             $variants = [];
 
             foreach ($product_info['option'] as $option) {
@@ -1213,6 +1257,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item['quantity'] = $product_info['quantity'];
 
             $items[(int) $product_info['cart_id']] = $item;
+
+            $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                'item_list_id' => $item_list_id,
+                'item_list_name' => $item_list_name,
+            ];
         }
 
 
@@ -1683,6 +1732,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                    $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                    ];
+                }
             }
 
 
@@ -1864,6 +1920,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                    $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                    ];
+                }
             }
 
 
@@ -2037,6 +2100,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                    $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                    ];
+                }
             }
 
 
@@ -2217,6 +2287,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 $items[(int) $product_info['product_id']] = $item;
+
+                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                    $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                    ];
+                }
             }
 
 
