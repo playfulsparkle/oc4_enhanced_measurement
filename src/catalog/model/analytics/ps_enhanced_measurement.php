@@ -254,6 +254,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewCheckoutSuccessBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{{ text_message }}',
+            'replace' => <<<HTML
+            {{ text_message }}
+            {% if ps_purchase %}<script>ps_dataLayer.pushData('purchase', {{ ps_purchase }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewCheckoutPaymentMethodBefore(array $args): array
     {
         $views = [];
