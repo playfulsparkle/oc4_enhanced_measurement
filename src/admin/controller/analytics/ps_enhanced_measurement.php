@@ -236,6 +236,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/account/wishlist/before', 'actionName' => 'eventCatalogViewAccountWishlistBefore'],
             ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
 
+            ['trigger' => 'catalog/view/checkout/payment_method/before', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodBefore'],
+            ['trigger' => 'catalog/controller/checkout/payment_method.save/after', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodSaveAfter'],
+
+            ['trigger' => 'catalog/view/checkout/shipping_method/before', 'actionName' => 'eventCatalogViewCheckoutShippingMethodBefore'],
+            ['trigger' => 'catalog/controller/checkout/shipping_method.save/after', 'actionName' => 'eventCatalogViewCheckoutShippingMethodSaveAfter'],
+
+            ['trigger' => 'catalog/view/checkout/checkout/before', 'actionName' => 'eventCatalogViewCheckoutCheckoutBefore'],
             ['trigger' => 'catalog/view/checkout/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartBefore'],
             ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
 

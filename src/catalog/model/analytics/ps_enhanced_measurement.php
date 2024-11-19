@@ -233,8 +233,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => 'if (json[\'success\']) {',
             'replace' => <<<HTML
-            if (json['add_to_cart']) {
-                ps_dataLayer.pushData('add_to_cart', json['add_to_cart']);
+            if (json['ps_add_to_cart']) {
+                ps_dataLayer.pushData('add_to_cart', json['ps_add_to_cart']);
             }
 
             if (json['success']) {
@@ -249,6 +249,55 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_view_item %}<script>ps_dataLayer.pushData('view_item', {{ ps_view_item }});</script>{% endif %}
             {% if products %}
             HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutPaymentMethodBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => 'if (json[\'success\']) {',
+            'replace' => <<<HTML
+            if (json['ps_add_payment_info']) {
+                ps_dataLayer.pushData('add_payment_info', json['ps_add_payment_info']);
+            }
+
+            if (json['success']) {
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutShippingMethodBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => 'if (json[\'success\']) {',
+            'replace' => <<<HTML
+            if (json['ps_add_shipping_info']) {
+                ps_dataLayer.pushData('add_shipping_info', json['ps_add_shipping_info']);
+            }
+
+            if (json['success']) {
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutCheckoutBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<h1>{{ heading_title }}</h1>',
+            'replace' => '<h1>{{ heading_title }}</h1>
+            {% if ps_begin_checkout %}<script>ps_dataLayer.pushData(\'begin_checkout\', {{ ps_begin_checkout }});</script>{% endif %}'
         ];
 
         return $views;
