@@ -1040,8 +1040,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $option_price = $product_option_info['option_price'];
             $variant = $product_option_info['variant'];
 
-            $base_price = $product_info['price'];
 
+            $base_price = $product_info['price'];
 
             $product_discount_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductDiscount($product_info['product_id'], $quantity);
 
@@ -1057,9 +1057,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if (isset($this->request->post['subscription_plan_id'])) {
-                $subscription_plan_id = (int) $this->request->post['subscription_plan_id'];
-
-                $product_subscription_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductScubscription($product_info['product_id'], $subscription_plan_id);
+                $product_subscription_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductScubscription(
+                    $product_info['product_id'],
+                    (int) $this->request->post['subscription_plan_id']
+                );
 
                 if ($product_subscription_info) {
                     $base_price = $product_subscription_info['price'];
