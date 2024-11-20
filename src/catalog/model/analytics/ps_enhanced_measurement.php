@@ -166,6 +166,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewAccountAllBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{{ footer }}',
+            'replace' => <<<HTML
+            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
+            {{ footer }}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewAccountWishlistBefore(array $args): array
     {
         $views = [];
@@ -175,7 +190,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             <div id="wishlist">{{ list }}</div>
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
             {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             HTML
         ];
@@ -315,7 +329,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<h2>{{ text_my_account }}</h2>',
             'replace' => <<<HTML
             <h2>{{ text_my_account }}</h2>
-            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
             {% if ps_generate_lead_newsletter %}<script>ps_dataLayer.pushData('generate_lead', {{ ps_generate_lead_newsletter }});</script>{% endif %}
             HTML
         ];

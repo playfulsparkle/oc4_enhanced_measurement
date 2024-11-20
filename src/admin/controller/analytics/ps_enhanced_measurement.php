@@ -233,6 +233,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/product/compare/before', 'actionName' => 'eventCatalogViewProductCompareBefore'],
             ['trigger' => 'catalog/view/product/manufacturer_info/before', 'actionName' => 'eventCatalogViewProductManufacturerInfoBefore'],
 
+            ['trigger' => 'catalog/view/account/*/before', 'actionName' => 'eventCatalogViewAccountAllBefore'],
+
             ['trigger' => 'catalog/view/account/wishlist/before', 'actionName' => 'eventCatalogViewAccountWishlistBefore'],
             ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
 

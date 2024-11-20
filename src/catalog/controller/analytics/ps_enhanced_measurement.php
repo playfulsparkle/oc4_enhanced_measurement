@@ -1373,6 +1373,37 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
+    public function eventCatalogViewAccountAllBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+
+        if (isset($this->session->data['ps_login_event'])) {
+            $ps_login = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+
+            if (!in_array($route, ['account/address_list', 'account/wishlist_list'])) {
+                unset($this->session->data['ps_login_event']);
+            }
+        } else {
+            $ps_login = null;
+        }
+
+        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAllBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
     public function eventCatalogViewAccountWishlistBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
@@ -1578,20 +1609,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
-
-        if (isset($this->session->data['ps_login_event'])) {
-            $ps_login = [
-                'method' => 'Website',
-                'user_id' => $this->customer->getId(),
-            ];
-
-            unset($this->session->data['ps_login_event']);
-        } else {
-            $ps_login = null;
-        }
-
-        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistBefore($args);
@@ -2081,20 +2098,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
-
-        if (isset($this->session->data['ps_login_event'])) {
-            $ps_login = [
-                'method' => 'Website',
-                'user_id' => $this->customer->getId(),
-            ];
-
-            unset($this->session->data['ps_login_event']);
-        } else {
-            $ps_login = null;
-        }
-
-        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
