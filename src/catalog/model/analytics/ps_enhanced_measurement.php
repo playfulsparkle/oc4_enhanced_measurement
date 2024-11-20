@@ -254,6 +254,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewAccountSuccessBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '{{ text_message }}',
+            'replace' => <<<HTML
+            {{ text_message }}
+            {% if ps_sign_up %}<script>ps_dataLayer.pushData('sign_up', {{ ps_sign_up }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewCheckoutSuccessBefore(array $args): array
     {
         $views = [];
@@ -263,6 +278,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             {{ text_message }}
             {% if ps_purchase %}<script>ps_dataLayer.pushData('purchase', {{ ps_purchase }});</script>{% endif %}
+            HTML
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutRegisterBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => 'if (json[\'success\']) {',
+            'replace' => <<<HTML
+            if (json['ps_sign_up']) {
+                ps_dataLayer.pushData('sign_up', json['ps_sign_up']);
+            }
+
+            if (json['success']) {
             HTML
         ];
 

@@ -84,6 +84,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        unset($this->session->data['ps_sign_up_sent']);
+
+
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
         $template = $this->replaceViews($route, $template, $headerViews);
@@ -2668,6 +2671,80 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
+    }
+
+    public function eventCatalogViewAccountSuccessBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!isset($this->request->get['route'])) {
+            return;
+        }
+
+        if ($this->request->get['route'] !== 'account/success') {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+
+        if ($this->customer->isLogged()) {
+            $ps_sign_up = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+        } else {
+            $ps_sign_up = null;
+        }
+
+        $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountSuccessBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
+    public function eventCatalogViewCheckoutRegisterBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutRegisterBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
+    public function eventCatalogControllerCheckoutRegisterSaveAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response)) {
+            return;
+        }
+
+        if (!isset($this->session->data['ps_sign_up_sent']) && isset($json_response['success']) && $this->customer->isLogged()) {
+            $this->session->data['ps_sign_up_sent'] = 1;
+
+            $json_response['ps_sign_up'] = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+
+            $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        }
     }
 
     public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
