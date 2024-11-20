@@ -295,6 +295,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 ps_dataLayer.pushData('sign_up', json['ps_sign_up']);
             }
 
+            if (json['ps_generate_lead_newsletter']) {
+                ps_dataLayer.pushData('generate_lead', json['ps_generate_lead_newsletter']);
+            }
+
             if (json['success']) {
             HTML
         ];
