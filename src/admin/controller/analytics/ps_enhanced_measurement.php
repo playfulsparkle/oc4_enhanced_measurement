@@ -224,8 +224,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $events = [
             ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
-            ['trigger' => 'catalog/view/product/thumb/before', 'actionName' => 'eventCatalogViewProductThumbBefore'],
 
+            ['trigger' => 'catalog/view/product/thumb/before', 'actionName' => 'eventCatalogViewProductThumbBefore'],
             ['trigger' => 'catalog/view/product/category/before', 'actionName' => 'eventCatalogViewProductCategoryBefore'],
             ['trigger' => 'catalog/view/product/search/before', 'actionName' => 'eventCatalogViewProductSearchBefore'],
             ['trigger' => 'catalog/view/product/special/before', 'actionName' => 'eventCatalogViewProductSpecialBefore'],
@@ -234,43 +234,35 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/product/manufacturer_info/before', 'actionName' => 'eventCatalogViewProductManufacturerInfoBefore'],
 
             ['trigger' => 'catalog/view/account/*/before', 'actionName' => 'eventCatalogViewAccountAllBefore'],
-
             ['trigger' => 'catalog/view/account/wishlist/before', 'actionName' => 'eventCatalogViewAccountWishlistBefore'],
             ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
+            ['trigger' => 'catalog/view/account/account/before', 'actionName' => 'eventCatalogViewAccountAccountBefore'],
+            ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewAccountSuccessBefore'],
+            ['trigger' => 'catalog/controller/account/login.login/after', 'actionName' => 'eventCatalogControllerAccountLoginLoginAfter'],
+            ['trigger' => 'catalog/controller/account/newsletter.save/after', 'actionName' => 'eventCatalogControllerAccountNewsletterSaveAfter'],
 
             ['trigger' => 'catalog/view/checkout/payment_method/before', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodBefore'],
-            ['trigger' => 'catalog/controller/checkout/payment_method.save/after', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodSaveAfter'],
-
             ['trigger' => 'catalog/view/checkout/shipping_method/before', 'actionName' => 'eventCatalogViewCheckoutShippingMethodBefore'],
-            ['trigger' => 'catalog/controller/checkout/shipping_method.save/after', 'actionName' => 'eventCatalogViewCheckoutShippingMethodSaveAfter'],
-
             ['trigger' => 'catalog/view/checkout/confirm/before', 'actionName' => 'eventCatalogViewCheckoutConfirmBefore'],
             ['trigger' => 'catalog/view/checkout/checkout/before', 'actionName' => 'eventCatalogViewCheckoutCheckoutBefore'],
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewCheckoutSuccessBefore'],
             ['trigger' => 'catalog/view/checkout/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartBefore'],
             ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
-
             ['trigger' => 'catalog/view/checkout/cart_info/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'], // cart button widget
             ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'], // standard cart page
-
+            ['trigger' => 'catalog/view/checkout/register/before', 'actionName' => 'eventCatalogViewCheckoutRegisterBefore'],
+            ['trigger' => 'catalog/controller/checkout/payment_method.save/after', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodSaveAfter'],
+            ['trigger' => 'catalog/controller/checkout/shipping_method.save/after', 'actionName' => 'eventCatalogViewCheckoutShippingMethodSaveAfter'],
             ['trigger' => 'catalog/controller/checkout/cart.add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
+            ['trigger' => 'catalog/controller/checkout/register.save/after', 'actionName' => 'eventCatalogControllerCheckoutRegisterSaveAfter'],
 
             ['trigger' => 'catalog/controller/extension/opencart/module/bestseller/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleBestsellerAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/featured/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleFeaturedAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/latest/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleLatestAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/special/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleSpecialAfter'],
 
-            ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewAccountSuccessBefore'],
-            ['trigger' => 'catalog/view/checkout/register/before', 'actionName' => 'eventCatalogViewCheckoutRegisterBefore'],
-            ['trigger' => 'catalog/controller/checkout/register.save/after', 'actionName' => 'eventCatalogControllerCheckoutRegisterSaveAfter'],
-
-            ['trigger' => 'catalog/controller/account/login.login/after', 'actionName' => 'eventCatalogControllerAccountLoginLoginAfter'],
-            ['trigger' => 'catalog/view/account/account/before', 'actionName' => 'eventCatalogViewAccountAccountBefore'],
-
             ['trigger' => 'catalog/controller/information/contact.send/after', 'actionName' => 'eventCatalogControllerInformationContactSendAfter'],
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewInformationContactSuccessBefore'],
-
-            ['trigger' => 'catalog/controller/account/newsletter.save/after', 'actionName' => 'eventCatalogControllerAccountNewsletterSaveAfter'],
         ];
 
         $result = 0;
