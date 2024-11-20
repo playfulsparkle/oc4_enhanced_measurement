@@ -230,6 +230,32 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewAccountOrderInfoBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}"{% if product.product_id %} data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}"{% endif %}>',
+        ];
+
+        $views[] = [
+            'search' => '<a href="{{ product.reorder }}"',
+            'replace' => '<a href="{{ product.reorder }}"{% if product.product_id %} data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"{% endif %}'
+        ];
+
+        $views[] = [
+            'search' => '{{ footer }}',
+            'replace' => <<<HTML
+            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {{ footer }}
+            HTML
+        ];
+
+        return $views;
+    }
+
     public function replaceCatalogViewProductProductBefore(array $args): array
     {
         $views = [];

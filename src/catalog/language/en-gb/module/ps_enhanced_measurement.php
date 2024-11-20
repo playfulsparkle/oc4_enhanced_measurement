@@ -2,7 +2,7 @@
 // Text
 $_['text_x_products']            = '%s products';
 $_['text_x_related_products']    = '%s related products';
-$_['text_checkout_success']      = 'Purchased products';
+$_['text_purchased_products']      = 'Purchased products';
 $_['text_checkout_products']     = 'Checkout products';
 $_['text_cart_products']         = 'Cart products';
 $_['text_x_search_products']     = '%s - search products';
