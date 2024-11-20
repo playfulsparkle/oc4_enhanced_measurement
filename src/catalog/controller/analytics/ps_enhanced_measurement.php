@@ -85,7 +85,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         unset($this->session->data['ps_sign_up_event']);
-        unset($this->session->data['ps_generate_lead_newsletter_event']);
 
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
@@ -1985,7 +1984,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (isset($json_response['redirect'])) {
+        if (
+            isset($json_response['redirect']) &&
+            isset($this->request->post['newsletter']) &&
+            $this->request->post['newsletter'] === '1'
+        ) {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
     }
@@ -2861,17 +2864,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (isset($json_response['success']) && $this->customer->isLogged()) {
-            if (!isset($this->session->data['ps_sign_up_event'])) {
-                $this->session->data['ps_sign_up_event'] = 1;
+        if (!isset($this->session->data['ps_sign_up_event']) && isset($json_response['success']) && $this->customer->isLogged()) {
+            $this->session->data['ps_sign_up_event'] = 1;
 
-                $json_response['ps_sign_up'] = [
-                    'method' => 'Website',
-                    'user_id' => $this->customer->getId(),
-                ];
-            }
+            $json_response['ps_sign_up'] = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
 
-            if (!isset($this->session->data['ps_generate_lead_newsletter_event'])) {
+            if (
+                isset($this->request->post['newsletter']) &&
+                $this->request->post['newsletter'] === '1'
+            ) {
                 $this->session->data['ps_generate_lead_newsletter_event'] = 1;
 
                 $json_response['ps_generate_lead_newsletter'] = [
