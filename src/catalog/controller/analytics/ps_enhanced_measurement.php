@@ -1580,6 +1580,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
+        if (isset($this->session->data['ps_login_event'])) {
+            $ps_login = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+
+            unset($this->session->data['ps_login_event']);
+        } else {
+            $ps_login = null;
+        }
+
+        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
@@ -2074,26 +2088,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
             ];
+
+            unset($this->session->data['ps_login_event']);
         } else {
             $ps_login = null;
         }
 
         $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
-        unset($this->session->data['ps_login_event']);
-
 
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             $ps_generate_lead_newsletter = [
                 'lead_type' => 'newsletter',
             ];
+
+            unset($this->session->data['ps_generate_lead_newsletter_event']);
         } else {
             $ps_generate_lead_newsletter = null;
         }
 
         $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
-        unset($this->session->data['ps_generate_lead_newsletter_event']);
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAccountBefore($args);

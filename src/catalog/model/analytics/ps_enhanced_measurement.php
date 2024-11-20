@@ -175,6 +175,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             <div id="wishlist">{{ list }}</div>
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
             {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             HTML
         ];
