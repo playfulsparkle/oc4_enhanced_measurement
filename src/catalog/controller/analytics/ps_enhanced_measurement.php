@@ -84,7 +84,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        unset($this->session->data['ps_sign_up_sent']);
+        unset($this->session->data['ps_sign_up_event']);
 
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
@@ -1972,6 +1972,131 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
+    public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response)) {
+            return;
+        }
+
+        if (isset($json_response['redirect'])) {
+            $this->session->data['ps_generate_lead_newsletter_event'] = 1;
+        }
+    }
+
+    public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response)) {
+            return;
+        }
+
+        if (isset($json_response['redirect'])) {
+            $this->session->data['ps_generate_lead_contact_form_event'] = 1;
+        }
+    }
+
+    public function eventCatalogViewInformationContactSuccessBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!isset($this->request->get['route'])) {
+            return;
+        }
+
+        if ($this->request->get['route'] !== 'information/contact.success') {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
+            $ps_generate_lead_contact_form = [
+                'lead_type' => 'contact_form',
+            ];
+        } else {
+            $ps_generate_lead_contact_form = null;
+        }
+
+        $args['ps_generate_lead_contact_form'] = $ps_generate_lead_contact_form ? json_encode($ps_generate_lead_contact_form, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+        unset($this->session->data['ps_generate_lead_contact_form_event']);
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewInformationContactSuccessBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
+    public function eventCatalogControllerAccountLoginLoginAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response)) {
+            return;
+        }
+
+        if (isset($json_response['redirect']) && $this->customer->isLogged()) {
+            $this->session->data['ps_login_event'] = 1;
+        }
+    }
+
+    public function eventCatalogViewAccountAccountBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+
+        if (isset($this->session->data['ps_login_event'])) {
+            $ps_login = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+        } else {
+            $ps_login = null;
+        }
+
+        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+        unset($this->session->data['ps_login_event']);
+
+
+        if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
+            $ps_generate_lead_newsletter = [
+                'lead_type' => 'newsletter',
+            ];
+        } else {
+            $ps_generate_lead_newsletter = null;
+        }
+
+        $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+        unset($this->session->data['ps_generate_lead_newsletter_event']);
+
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAccountBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
+    }
+
     public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string &$output = null)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
@@ -2735,8 +2860,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!isset($this->session->data['ps_sign_up_sent']) && isset($json_response['success']) && $this->customer->isLogged()) {
-            $this->session->data['ps_sign_up_sent'] = 1;
+        if (!isset($this->session->data['ps_sign_up_event']) && isset($json_response['success']) && $this->customer->isLogged()) {
+            $this->session->data['ps_sign_up_event'] = 1;
 
             $json_response['ps_sign_up'] = [
                 'method' => 'Website',
