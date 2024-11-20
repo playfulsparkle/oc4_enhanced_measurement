@@ -72,6 +72,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
+
+        $args['ps_user_id'] = null;
+
+        if ($this->customer->isLogged()) {
+            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
+                $args['ps_user_id'] = "gtag('set', 'user_id', " . $this->customer->getId() . ");";
+            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
+                $args['ps_user_id'] = "dataLayer = window.dataLayer || [];" . PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ");";
+            }
+        }
+
+
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
         $template = $this->replaceViews($route, $template, $headerViews);
@@ -455,21 +467,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($search || $tag) {
             if (isset($this->request->get['search'])) {
                 $item_list_name = sprintf(
-                    $this->language->get('text_x_products'),
-                    $this->language->get('heading_title') . ' - ' . $this->request->get['search']
+                    $this->language->get('text_x_search_products'),
+                    $this->request->get['search']
                 );
                 $item_list_id = $this->formatListId($item_list_name);
             } elseif (isset($this->request->get['tag'])) {
                 $item_list_name = sprintf(
-                    $this->language->get('text_x_products'),
-                    $this->language->get('heading_title') . ' - ' . $this->language->get('heading_tag') . $this->request->get['tag']
+                    $this->language->get('text_x_tag_products'),
+                    $this->request->get['tag']
                 );
                 $item_list_id = $this->formatListId($item_list_name);
             } else {
-                $item_list_name = sprintf(
-                    $this->language->get('text_x_products'),
-                    $this->language->get('heading_title')
-                );
+                $item_list_name = $this->language->get('text_search_products');
                 $item_list_id = $this->formatListId($item_list_name);
             }
 
@@ -593,55 +602,75 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
 
             $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-        } else {
-            $args['ps_view_item_list'] = null;
-        }
 
 
-        $ps_merge_items = [];
-
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
-                $ps_merge_items['select_promotion_' . $product_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
+            if (isset($this->request->get['tag'])) {
+                $ps_search = [
+                    'search_term' => $this->request->get['tag'],
+                    'search_type' => 'site_search',
+                    'search_results' => count($items),
+                ];
+            } elseif (isset($this->request->get['search'])) {
+                $ps_search = [
+                    'search_term' => $this->request->get['search'],
+                    'search_type' => 'site_search',
+                    'search_results' => count($items),
                 ];
             } else {
-                $ps_merge_items['select_item_' . $product_id] = [
+                $ps_search = null;
+            }
+
+            $args['ps_search'] = $ps_search ? json_encode($ps_search, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+
+            $ps_merge_items = [];
+
+            foreach ($items as $product_id => $item) {
+                if ($promotions[$product_id]) {
+                    $ps_merge_items['select_promotion_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                } else {
+                    $ps_merge_items['select_item_' . $product_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
+
+                $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
+                        'currency' => $currency,
+                        'value' => $item['price'],
                         'items' => [$item],
                     ],
                 ];
             }
 
-            $ps_merge_items['add_to_wishlist_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'],
-                    'items' => [$item],
-                ],
-            ];
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
+
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
+
+            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+            $args['ps_search'] = null;
+            $args['ps_merge_items'] = null;
         }
-
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
-
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
-        }
-
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSearchBefore($args);
 
@@ -656,7 +685,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('product/special');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -715,10 +743,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_special_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -897,7 +922,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('product/compare');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -932,10 +956,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_compare_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -1112,7 +1133,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('product/manufacturer');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/manufacturer');
@@ -1178,10 +1198,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_manufacturer_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -1361,7 +1378,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('account/wishlist');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('account/wishlist');
@@ -1397,10 +1413,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_wishlist_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2167,7 +2180,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -2203,10 +2215,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_checkout_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2293,12 +2302,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $total_price = $this->getCartTotalPrice($item_price_tax);
 
+        $payment_type = '';
+
+        if (isset($this->request->post['payment_method'])) {
+            $this->load->model('setting/extension');
+
+            $code = substr($this->request->post['payment_method'], 0, strpos($this->request->post['payment_method'], '.'));
+
+            if ($extension_info = $this->model_setting_extension->getExtensionByCode('payment', $code)) {
+                $this->load->language('extension/' . $extension_info['extension'] . '/payment/' . $extension_info['code'], 'extension');
+
+                $payment_type = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+            }
+        }
+
         $json_response['ps_add_payment_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
-                'payment_type' => isset($this->request->post['payment_method']) ? $this->request->post['payment_method'] : '',
+                'payment_type' => $payment_type,
                 'items' => array_values($items),
             ],
         ];
@@ -2333,7 +2356,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -2369,10 +2391,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_checkout_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2459,17 +2478,44 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $total_price = $this->getCartTotalPrice($item_price_tax);
 
+        $shipping_tier = '';
+
+        if (isset($this->request->post['shipping_method'])) {
+            $this->load->model('setting/extension');
+
+            $code = substr($this->request->post['shipping_method'], 0, strpos($this->request->post['shipping_method'], '.'));
+
+            if ($extension_info = $this->model_setting_extension->getExtensionByCode('shipping', $code)) {
+                $this->load->language('extension/' . $extension_info['extension'] . '/shipping/' . $extension_info['code'], 'extension');
+
+                $shipping_tier = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+            }
+        }
+
         $json_response['ps_add_shipping_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
-                'shipping_tier' => isset($this->request->post['shipping_method']) ? $this->request->post['shipping_method'] : '',
+                'shipping_tier' => $shipping_tier,
                 'items' => array_values($items),
             ],
         ];
 
         $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+    }
+
+    public function eventCatalogViewCheckoutConfirmBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutConfirmBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
     }
 
     public function eventCatalogViewCheckoutCheckoutBefore(string &$route, array &$args, string &$template): void
@@ -2480,7 +2526,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -2516,10 +2561,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_checkout_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2644,7 +2686,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -2680,10 +2721,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_checkout_success');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2830,7 +2868,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -2866,10 +2903,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_cart_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -2985,7 +3019,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -3021,10 +3054,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_cart_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 
@@ -3168,7 +3198,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('catalog/category');
@@ -3204,10 +3233,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $item_list_name = sprintf(
-            $this->language->get('text_x_products'),
-            $this->language->get('heading_title')
-        );
+        $item_list_name = $this->language->get('text_cart_products');
         $item_list_id = $this->formatListId($item_list_name);
 
 

@@ -19,52 +19,51 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<body>',
             'replace' => <<<HTML
-    <body>
-    {% if ps_enhanced_measurement_status and (ps_enhanced_measurement_implementation == 'gtm') %}
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-        <iframe src="https://www.googletagmanager.com/ns.html?id={{ ps_enhanced_measurement_gtm_id }}" height="0" width="0" style="display:none; visibility:hidden;"></iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    {% endif %}
-    HTML
+            <body>
+            {% if ps_enhanced_measurement_status and (ps_enhanced_measurement_implementation == 'gtm') %}
+            <!-- Google Tag Manager (noscript) -->
+            <noscript>
+                <iframe src="https://www.googletagmanager.com/ns.html?id={{ ps_enhanced_measurement_gtm_id }}" height="0" width="0" style="display:none; visibility:hidden;"></iframe>
+            </noscript>
+            <!-- End Google Tag Manager (noscript) -->
+            {% endif %}
+            HTML
         ];
 
         $views[] = [
             'search' => '</head>',
             'replace' => <<<HTML
-    {% if ps_enhanced_measurement_status %}
-    <script>
-        var ps_dataLayer = {
-            data: {},
-            getData: function(eventName, productId) {
-                return this.data.hasOwnProperty(eventName + '_' + productId) ? this.data[eventName + '_' + productId] : null;
-            },
-            merge: function(data) {
-                this.data = Object.assign({}, this.data, data);
-            },
-            push: function(eventName, productId) {
-                if (this.data.hasOwnProperty(eventName + '_' + productId)) {
-                    this.pushData(eventName, this.data[eventName + '_' + productId]);
-                } else {
-                    console.error('`' + eventName + '_' + productId + '` does not exists in dataset!');
-                }
-            },
-            pushData: function(eventName, data) {
-                {% if ps_enhanced_measurement_implementation == 'gtag' %}
-                    gtag('event', eventName, data);
-                {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
-                    dataLayer.push({ ecommerce: null });
-                    dataLayer.push({ event: eventName, ...data });
-                {% endif %}
+                {% if ps_enhanced_measurement_status %}<script>
+                var ps_dataLayer = {
+                    data: {},
+                    getData: function(eventName, productId) {
+                        return this.data.hasOwnProperty(eventName + '_' + productId) ? this.data[eventName + '_' + productId] : null;
+                    },
+                    merge: function(data) {
+                        this.data = Object.assign({}, this.data, data);
+                    },
+                    push: function(eventName, productId) {
+                        if (this.data.hasOwnProperty(eventName + '_' + productId)) {
+                            this.pushData(eventName, this.data[eventName + '_' + productId]);
+                        } else {
+                            console.error('`' + eventName + '_' + productId + '` does not exists in dataset!');
+                        }
+                    },
+                    pushData: function(eventName, data) {
+                        {% if ps_enhanced_measurement_implementation == 'gtag' %}
+                            gtag('event', eventName, data);
+                        {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
+                            dataLayer.push({ ecommerce: null });
+                            dataLayer.push({ event: eventName, ...data });
+                        {% endif %}
 
-                console.log(JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));
-            }
-        };
-    </script>
-    {% endif %}
-    </head>
-    HTML
+                        console.log(JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));
+                    }
+                };
+            </script>{% endif %}
+            {% if ps_user_id %}<script>{{ ps_user_id }}</script>{% endif %}
+            </head>
+            HTML
         ];
 
         return $views;
@@ -116,6 +115,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{% if products %}',
             'replace' => <<<HTML
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_search %}<script>ps_dataLayer.pushData('search', {{ ps_search }});</script>{% endif %}
             {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
@@ -394,6 +394,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<button type="button" data-bs-toggle="dropdown"',
             'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
             <button type="button" data-bs-toggle="dropdown"'
+        ];
+
+        return $views;
+    }
+
+    public function replaceCatalogViewCheckoutConfirmBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ product.href }}">',
+            'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="select_item">',
         ];
 
         return $views;
