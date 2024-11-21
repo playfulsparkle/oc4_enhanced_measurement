@@ -381,6 +381,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $items = [];
             $total = 0;
+            $sub_total = 0;
 
             foreach ($products as $index => $product) {
                 if ((int) $product['order_product_id'] === $order_product_id) {
@@ -436,15 +437,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $price = $product['price'];
                     }
 
-                    if ($item_price_tax) {
-                        $total += $product['total'] + ($product['tax'] * $product['quantity']);
-                    } else {
-                        $total += $product['total'];
-                    }
+                    $total += $price * $quantity;
+
+                    $sub_total += (($product['price'] + $product['tax']) * $quantity) - ($product['tax'] * $quantity);
+
 
                     $item['price'] = $this->currency->format($price, $currency, 0, false);
 
-                    $item['quantity'] = $product['quantity'];
+                    $item['quantity'] = $quantity;
 
                     $items[] = $item;
 
@@ -453,30 +453,35 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             } // end foreach
 
 
-            $fees = 0;
+            $total_fees = 0;
+            $shipping = 0;
 
             $order_totals = $this->model_sale_order->getTotals($order_id);
 
-            foreach ($order_totals as $total) {
-                if (in_array($total['code'], ['sub_total', 'tax', 'total'])) {
+            foreach ($order_totals as $order_total) {
+                if (in_array($order_total['code'], ['sub_total', 'tax', 'total'])) {
                     continue;
                 }
 
-                $fees += $total['value'];
-            }
-            echo $fees;
+                if ($order_total['code'] === 'shipping') {
+                    $shipping = $order_total['value'];
+                    continue;
+                }
 
-            // $json['ps_refund'] = [
-            //     'ecommerce' => [
-            //         'currency' => $currency,
-            //         'transaction_id' => $order_id,
-            //         'value' => $this->currency->format($total, $currency, 0, false),
-            //         'tax' => $this->currency->format(0, $currency, 0, false),
-            //         'shipping' => $this->currency->format(0, $currency, 0, false),
-            //         'coupon' => $product_coupon ? $product_coupon : '',
-            //         'items' => array_values($items),
-            //     ],
-            // ];
+                $total_fees += $order_total['value'];
+            }
+
+            $json['ps_refund'] = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'transaction_id' => $order_id,
+                    'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
+                    'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
+                    'shipping' => $this->currency->format($shipping, $currency, 0, false),
+                    'coupon' => $product_coupon ? $product_coupon : '',
+                    'items' => array_values($items),
+                ],
+            ];
         }
 
 
