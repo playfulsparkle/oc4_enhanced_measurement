@@ -66,6 +66,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                             if (json['success']) {
                                 $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                                if (json['ps_refund']) {
+
+                                }
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -95,6 +99,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
     public function uninstall()
     {
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ps_refund_order`");
+    }
+
+    public function getClientIdByOrderId($orderId): string
+    {
+        $query = $this->db->query("SELECT `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "'");
+
+        if ($query->num_rows) {
+            return $query->row['client_id'];
+        }
+
+        return '';
     }
 
     public function getCategories(int $product_id): array
