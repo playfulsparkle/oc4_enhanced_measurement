@@ -3317,6 +3317,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
+
+
+        if (isset($this->request->cookie['_ga'])) {
+            $gaCookie = $this->request->cookie['_ga'];
+
+            $parts = explode('.', $gaCookie);
+
+            if (count($parts) >= 4) {
+                $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveGA4ClientId($this->session->data['order_id'], $parts[2] . '.' . $parts[3]);
+            }
+        }
     }
 
     public function eventCatalogViewCheckoutCartBefore(string &$route, array &$args, string &$template): void

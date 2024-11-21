@@ -34,6 +34,10 @@ $_['text_category_option_type_2']      = 'All categories, category names separat
 $_['text_category_option_type_3']      = 'Current category names associated with the product';
 $_['text_category_option_type_4']      = 'The last segment of current category name associated with the product';
 $_['text_multi_currency']              = 'Multi-currency';
+$_['text_refund_quantity']               = 'Quantity';
+
+// Column
+$_['column_refund_quantity']             = 'Refund quantity';
 
 // Tab
 $_['tab_general']                      = 'General';
@@ -53,6 +57,7 @@ $_['entry_currency']                   = 'Currency';
 
 // Button
 $_['button_fix_event_handler']         = 'Fix Event Handler';
+$_['button_refund']                    = 'Refund';
 
 // Help
 $_['help_google_tag_id_locate']        = 'To find your Google tag ID, log in to your <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">Analytics account</a>. Go to the Admin section, select the property you want to track, and find your Google tag ID. It will start with "G-" followed by a unique combination of letters and numbers, like "G-XXXXXXXXXX." <a href="https://support.google.com/analytics/answer/9539598?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';

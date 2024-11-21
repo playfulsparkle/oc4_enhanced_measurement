@@ -519,6 +519,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function saveGA4ClientId($orderId, $clientId): void
+    {
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "ps_refund_order` (`refund_id`, `order_id`, `client_id`) VALUES (NULL, '" . (int) $orderId . "', '" . $this->db->escape($clientId) . "')");
+    }
+
     public function hasOptions(int $product_id): bool
     {
         $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int) $product_id . "'");
