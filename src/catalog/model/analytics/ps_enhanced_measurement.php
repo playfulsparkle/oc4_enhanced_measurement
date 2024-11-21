@@ -66,6 +66,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             HTML
         ];
 
+        $views[] = [
+            'search' => '</head>',
+            'replace' => <<<HTML
+            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
+            </head>
+            HTML
+        ];
+
         return $views;
     }
 
@@ -160,21 +168,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
             {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
-            HTML
-        ];
-
-        return $views;
-    }
-
-    public function replaceCatalogViewAccountAllBefore(array $args): array
-    {
-        $views = [];
-
-        $views[] = [
-            'search' => '{{ footer }}',
-            'replace' => <<<HTML
-            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
-            {{ footer }}
             HTML
         ];
 

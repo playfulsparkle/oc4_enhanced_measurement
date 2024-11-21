@@ -87,6 +87,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         unset($this->session->data['ps_sign_up_event']);
 
 
+        if (isset($this->session->data['ps_login_event'])) {
+            $ps_login = [
+                'method' => 'Website',
+                'user_id' => $this->customer->getId(),
+            ];
+        } else {
+            $ps_login = null;
+        }
+
+        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+        unset($this->session->data['ps_login_event']);
+
+
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
         $template = $this->replaceViews($route, $template, $headerViews);
@@ -1371,39 +1385,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductManufacturerInfoBefore($args);
-
-        $template = $this->replaceViews($route, $template, $views);
-    }
-
-    public function eventCatalogViewAccountAllBefore(string &$route, array &$args, string &$template): void
-    {
-        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
-            return;
-        }
-
-        if (in_array($route, ['account/address_list', 'account/wishlist_list'])) {
-            return;
-        }
-
-        if (!isset($this->session->data['ps_login_event'])) {
-            return;
-        }
-
-        unset($this->session->data['ps_login_event']);
-
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
-
-        $ps_login = [
-            'method' => 'Website',
-            'user_id' => $this->customer->getId(),
-        ];
-
-        $args['ps_login'] = json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
-
-
-        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAllBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
     }
