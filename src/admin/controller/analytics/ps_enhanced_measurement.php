@@ -255,6 +255,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/checkout/shipping_method/before', 'actionName' => 'eventCatalogViewCheckoutShippingMethodBefore'],
             ['trigger' => 'catalog/view/checkout/confirm/before', 'actionName' => 'eventCatalogViewCheckoutConfirmBefore'],
             ['trigger' => 'catalog/view/checkout/checkout/before', 'actionName' => 'eventCatalogViewCheckoutCheckoutBefore'],
+            ['trigger' => 'catalog/controller/checkout/success/before', 'actionName' => 'eventCatalogControllerCheckoutSuccessBefore'],
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewCheckoutSuccessBefore'],
             ['trigger' => 'catalog/view/checkout/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartBefore'],
             ['trigger' => 'catalog/view/checkout/cart_list/before', 'actionName' => 'eventCatalogViewCheckoutCartListBefore'],
@@ -303,7 +304,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function sendRefund(): void
     {
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('sale/order');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
+        $this->load->model('catalog/product');
 
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
@@ -325,19 +330,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         if (isset($this->request->get['order_id'])) {
-            $order_id = $this->request->get['order_id'];
+            $order_id = (int) $this->request->get['order_id'];
         } else {
             $order_id = 0;
         }
 
         if (isset($this->request->get['quantity'])) {
-            $quantity = $this->request->get['quantity'];
+            $quantity = (int) $this->request->get['quantity'];
         } else {
             $quantity = 1;
         }
 
         if (isset($this->request->get['order_product_id'])) {
-            $order_product_id = $this->request->get['order_product_id'];
+            $order_product_id = (int) $this->request->get['order_product_id'];
         } else {
             $order_product_id = 0;
         }
@@ -347,48 +352,133 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         if ($order_id && $order_product_id) {
+            $order_total_data['total_coupon'] = null;
+            $order_total_data['total_voucher'] = null;
+
+            if ($order_id) {
+                $order_totals = $this->model_sale_order->getTotals($order_id);
+
+                foreach ($order_totals as $order_total) {
+                    $start = strpos($order_total['title'], '(') + 1;
+                    $end = strrpos($order_total['title'], ')');
+
+                    if ($start && $end) {
+                        $order_total_data['total_' . $order_total['code']] = substr($order_total['title'], $start, $end - $start);
+                    }
+                }
+            }
+
+            if ($order_total_data['total_coupon']) {
+                $product_coupon = $order_total_data['total_coupon'];
+            } else if (isset($this->session->order_total_data['voucher'])) {
+                $product_coupon = $order_total_data['total_voucher'];
+            } else {
+                $product_coupon = '';
+            }
+
+
             $products = $this->model_sale_order->getProducts($order_id);
 
             $items = [];
+            $total = 0;
 
-            foreach ($products as $index => $product_info) {
-                print_r($product_info);
-                $item = [];
+            foreach ($products as $index => $product) {
+                if ((int) $product['order_product_id'] === $order_product_id) {
+                    $product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
+                    $item = [];
+
+                    $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                    $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                    $item['affiliation'] = $affiliation;
+
+                    if ($product_coupon) {
+                        $item['coupon'] = $product_coupon;
+                    }
+
+                    $item['index'] = 0;
+
+                    $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+                    if ($manufacturer_info) {
+                        $item['item_brand'] = $manufacturer_info['name'];
+                    }
+
+                    switch ($item_category_option) {
+                        case 0:
+                            $categories = $this->getCategoryType1($product_info['product_id']);
+                            break;
+                        case 1:
+                            $categories = $this->getCategoryType2($product_info['product_id']);
+                            break;
+                        default:
+                            $categories = $this->getCategoryType1($product_info['product_id']);
+                            break;
+                    }
+
+                    $total_categories = count($categories);
+
+                    foreach ($categories as $category_index => $category_name) {
+                        if ($total_categories === 0 || $category_index === 0) {
+                            $item['item_category'] = $category_name;
+                        } else {
+                            $item['item_category' . ($category_index + 1)] = $category_name;
+                        }
+                    }
+
+                    if ($location_id) {
+                        $item['location_id'] = $location_id;
+                    }
+
+                    if ($item_price_tax) {
+                        $price = $product['price'] + $product['tax'];
+                    } else {
+                        $price = $product['price'];
+                    }
+
+                    if ($item_price_tax) {
+                        $total += $product['total'] + ($product['tax'] * $product['quantity']);
+                    } else {
+                        $total += $product['total'];
+                    }
+
+                    $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+                    $item['quantity'] = $product['quantity'];
+
+                    $items[] = $item;
+
+                    break;
+                }
+            } // end foreach
+
+
+            $fees = 0;
+
+            $order_totals = $this->model_sale_order->getTotals($order_id);
+
+            foreach ($order_totals as $total) {
+                if (in_array($total['code'], ['sub_total', 'tax', 'total'])) {
+                    continue;
+                }
+
+                $fees += $total['value'];
             }
+            echo $fees;
+
+            // $json['ps_refund'] = [
+            //     'ecommerce' => [
+            //         'currency' => $currency,
+            //         'transaction_id' => $order_id,
+            //         'value' => $this->currency->format($total, $currency, 0, false),
+            //         'tax' => $this->currency->format(0, $currency, 0, false),
+            //         'shipping' => $this->currency->format(0, $currency, 0, false),
+            //         'coupon' => $product_coupon ? $product_coupon : '',
+            //         'items' => array_values($items),
+            //     ],
+            // ];
         }
 
-
-        // $purchase_data = [
-        //     'tax' => 0,
-        //     'shipping' => 0,
-        //     'total' => 0,
-        // ];
-
-        // $order_totals = $this->model_sale_order->getTotals($order_id);
-
-        // foreach ($order_totals as $total) {
-        //     if ($total['code'] === 'shipping') {
-        //         $purchase_data['shipping'] = $total['value'];
-        //     } else if ($total['code'] === 'tax') {
-        //         $purchase_data['tax'] = $total['value'];
-        //     } else if ($total['code'] === 'total') {
-        //         $purchase_data['total'] = $total['value'];
-        //     }
-        // }
-
-
-        // $json['ps_refund'] = [
-        //     'ecommerce' => [
-        //         'currency' => $currency,
-        //         'transaction_id' => $order_id,
-        //         'value' => $this->currency->format($purchase_data['total'] - $purchase_data['shipping'] - $purchase_data['tax'], $currency, 0, false),
-        //         'tax' => $this->currency->format(($item_price_tax ? $purchase_data['tax'] : 0), $currency, 0, false),
-        //         'shipping' => $this->currency->format($purchase_data['shipping'], $currency, 0, false),
-        //         // 'coupon' => $product_coupon ? $product_coupon : '',
-        //         'items' => array_values($items),
-        //     ],
-        // ];
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json));
@@ -433,6 +523,44 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $string = preg_replace('/\s+/', ' ', $string);
 
         return str_replace(' ', '_', trim($string));
+    }
+
+    protected function getCategoryType1(int $product_id): array
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
+
+            if ($category_info) {
+                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getCategoryType2(int $product_id): array
+    {
+        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+
+        $result = [];
+
+        foreach ($categories as $category_id) {
+            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
+
+            if ($category_info) {
+                if ($category_info['path']) {
+                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
+                } else {
+                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

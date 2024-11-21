@@ -3110,16 +3110,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
+    public function eventCatalogControllerCheckoutSuccessBefore(string &$route, array &$args): void
     {
-        if (!isset($this->request->get['route'])) {
-            return;
-        }
-
-        if ($this->request->get['route'] !== 'checkout/success') {
-            return;
-        }
-
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
@@ -3293,11 +3285,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $args['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
-        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
-
-        $template = $this->replaceViews($route, $template, $views);
+        $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
         if (isset($this->request->cookie['_ga'])) {
@@ -3309,6 +3297,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveGA4ClientId($this->session->data['order_id'], $parts[2] . '.' . $parts[3]);
             }
         }
+    }
+
+    public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
+    {
+        if (!isset($this->request->get['route'])) {
+            return;
+        }
+
+        if ($this->request->get['route'] !== 'checkout/success') {
+            return;
+        }
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+
+        $args['ps_purchase'] = isset($this->session->data['ps_purchase']) ? $this->session->data['ps_purchase'] : null;
+
+        unset($this->session->data['ps_purchase']);
+
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
+
+        $template = $this->replaceViews($route, $template, $views);
     }
 
     public function eventCatalogViewCheckoutCartBefore(string &$route, array &$args, string &$template): void
