@@ -34,8 +34,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <td class="text-start">
                 <div class="input-group">
                     <div class="input-group-text">{{ ps_text_refund_quantity }}</div>
-                    <input type="number" id="ps-refund-quantity-{{ order_product.order_product_id }}" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;">
-                    <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-refund-quantity="ps-refund-quantity-{{ order_product.order_product_id }}" data-refund-order-product-id="{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-reply"></i></button>
+                    <input type="number" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;">
+                    <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-refund-order-product-id="{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-reply"></i></button>
                 </div>
             </td>',
             'positions' => [1],
@@ -51,41 +51,37 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             <script type="text/javascript"><!--
             {% if ps_google_tag_id and ps_mp_api_secret %}
-                $('input[id^="ps-refund-quantity"]').on('change', function() {
+                $('input[name^="refund_quantity"]').on('change', function() {
                     var inputValue = parseInt($(this).val()) ?? 0;
 
                     $(this).next('button').prop('disabled', inputValue <= 0);
                 });
 
                 $('button[id^="ps-refund-button"], #ps-refund-all-button').on('click', function () {
-                    var quantity = $('#' + $(this).attr('data-refund-quantity')).val();
-                    var order_product_id =  $(this).attr('data-refund-order-product-id');
+                    var element = $(this);
+                    var quantity = element.prev('input[name^="refund_quantity"]');
+                    var order_product_id =  element.attr('data-refund-order-product-id');
 
                     var url = 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}&order_id={{ order_id }}';
 
-                    if (quantity && order_product_id) {
-                        url += '&quantity=' + quantity + '&order_product_id=' + order_product_id;
+                    if (typeof quantity !== 'undefined' && typeof order_product_id !== 'undefined') {
+                        url += '&quantity=' + quantity.val() + '&order_product_id=' + order_product_id;
                     }
 
+                    element.prop('disabled', true);
+
                     fetch(url)
-                        .then(response => {
-                            return response.json();
-                        })
+                        .then(response => { return response.json(); })
                         .then(data => {
                             if (data.error) {
                                 $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
                             }
 
                             if (data.event_data) {
-                                return fetch("https://www.google-analytics.com/mp/collect?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", {
-                                    method: "POST",
-                                    body: JSON.stringify(data.event_data)
-                                });
+                                return fetch("https://www.google-analytics.com/mp/collect?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", { method: "POST", body: JSON.stringify(data.event_data) });
                             }
                         })
-                        .then(ga_response => {
-                            return ga_response;
-                        })
+                        .then(ga_response => { return ga_response; })
                         .then(ga_response_data => {
                             if (ga_response_data.status) {
                                 $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_refund_successfully_sent }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
@@ -94,10 +90,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                                 console.error(ga_response_data.statusText);
                             }
+
+                            if (typeof quantity !== 'undefined') {
+                                quantity.val(0);
+                            }
+
+                            element.prop('disabled', false);
                         })
-                        .catch(error => {
-                            console.error(error);
-                        });
+                        .catch(error => { console.error(error); });
                 });
             {% endif %}
             HTML
