@@ -17,6 +17,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views = [];
 
         $views[] = [
+            'search' => '<div class="float-end">',
+            'replace' => '<div class="float-end">
+            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id %} disabled{% endif %}><i class="fa-solid fa-reply"></i> {{ ps_button_refund_all }}</button> '
+        ];
+
+        $views[] = [
             'search' => '<td class="text-end">{{ column_quantity }}</td>',
             'replace' => '<td class="text-end">{{ column_quantity }}</td>
             <td class="text-start">{{ ps_column_refund_quantity }}</td>'
@@ -60,6 +66,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             return response.json();
                         })
                         .then(data => {
+                            if (data.error) {
+                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                            }
+
                             if (data.event_data) {
                                 return fetch("https://www.google-analytics.com/mp/collect?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", {
                                     method: "POST",

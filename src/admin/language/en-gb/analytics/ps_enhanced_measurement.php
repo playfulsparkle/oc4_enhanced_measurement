@@ -60,6 +60,7 @@ $_['entry_currency']                        = 'Currency';
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
 $_['button_refund']                         = 'Refund';
+$_['button_refund_all']                     = 'Refund All';
 
 // Help
 $_['help_google_tag_id_locate']             = 'To find your Google tag ID, log in to your <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">Analytics account</a>. Go to the Admin section, select the property you want to track, and find your Google tag ID. It will start with "G-" followed by a unique combination of letters and numbers, like "G-XXXXXXXXXX." <a href="https://support.google.com/analytics/answer/9539598?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';
@@ -78,3 +79,6 @@ $_['error_gtm_id_invalid']                  = 'The GTM ID format is incorrect. E
 $_['error_mp_api_secret']                   = 'The Measurement Protocol API secret field is required. Please enter your Measurement Protocol API secret';
 $_['error_mp_api_secret_invalid']           = 'The Measurement Protocol API secret format is incorrect. Ensure it follows the format XXXXXXX-XXXXXXX-XXXXXX.';
 $_['error_measurement_implementation']      = 'Measurement implementation is not configured. Please select either Global Site Tag or Google Tag Manager.';
+$_['error_client_id']                       = 'Warning: Client ID was not saved during checkout. ';
+$_['error_order_product_id']                = 'Warning: The product ID associated with this order was not found.';
+$_['error_request_parameters']              = 'Warning: Required request parameters are missing or incomplete.';

@@ -308,6 +308,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function sendRefund(): void
     {
+        $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('sale/order');
         $this->load->model('catalog/category');
@@ -359,16 +361,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $order_total_data['total_coupon'] = null;
             $order_total_data['total_voucher'] = null;
 
-            if ($order_id) {
-                $order_totals = $this->model_sale_order->getTotals($order_id);
+            $order_totals = $this->model_sale_order->getTotals($order_id);
 
-                foreach ($order_totals as $order_total) {
-                    $start = strpos($order_total['title'], '(') + 1;
-                    $end = strrpos($order_total['title'], ')');
+            foreach ($order_totals as $order_total) {
+                $start = strpos($order_total['title'], '(') + 1;
+                $end = strrpos($order_total['title'], ')');
 
-                    if ($start && $end) {
-                        $order_total_data['total_' . $order_total['code']] = substr($order_total['title'], $start, $end - $start);
-                    }
+                if ($start && $end) {
+                    $order_total_data['total_' . $order_total['code']] = substr($order_total['title'], $start, $end - $start);
                 }
             }
 
@@ -457,52 +457,54 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             } // end foreach
 
 
-            $total_fees = 0;
-            $shipping = 0;
+            if ($items) {
+                $total_fees = 0;
+                $shipping = 0;
 
-            $order_totals = $this->model_sale_order->getTotals($order_id);
+                foreach ($order_totals as $order_total) {
+                    if (in_array($order_total['code'], ['sub_total', 'tax', 'total'])) {
+                        continue;
+                    }
 
-            foreach ($order_totals as $order_total) {
-                if (in_array($order_total['code'], ['sub_total', 'tax', 'total'])) {
-                    continue;
+                    if ($order_total['code'] === 'shipping') {
+                        $shipping = $order_total['value'];
+                        continue;
+                    }
+
+                    $total_fees += $order_total['value'];
                 }
 
-                if ($order_total['code'] === 'shipping') {
-                    $shipping = $order_total['value'];
-                    continue;
-                }
 
-                $total_fees += $order_total['value'];
-            }
+                $cliendId = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
-
-            $cliendId = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
-
-            if ($cliendId) {
-                $json['event_data'] = [
-                    'client_id' => $cliendId,
-                    'events' => [
-                        [
-                            'name' => 'refund',
-                            'params' => [
-                                'engagement_time_msec' => 1200,
-                                'debug_mode' => true,
-                                'currency' => $currency,
-                                'transaction_id' => $order_id,
-                                'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
-                                'coupon' => $product_coupon ? $product_coupon : '',
-                                'shipping' => $this->currency->format($shipping, $currency, 0, false),
-                                'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
-                                'items' => array_values($items),
+                if ($cliendId) {
+                    $json['event_data'] = [
+                        'client_id' => $cliendId,
+                        'events' => [
+                            [
+                                'name' => 'refund',
+                                'params' => [
+                                    'engagement_time_msec' => 1200,
+                                    'debug_mode' => true,
+                                    'currency' => $currency,
+                                    'transaction_id' => $order_id,
+                                    'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
+                                    'coupon' => $product_coupon ? $product_coupon : '',
+                                    'shipping' => $this->currency->format($shipping, $currency, 0, false),
+                                    'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
+                                    'items' => array_values($items),
+                                ],
                             ],
                         ],
-                    ],
-                ];
+                    ];
+                } else {
+                    $json['error'] = $this->language->get('error_client_id');
+                }
             } else {
-                $json['error'] = 'no client_id error';
+                $json['error'] = $this->language->get('error_order_product_id');
             }
         } else {
-            $json['error'] = 'error';
+            $json['error'] = $this->language->get('error_request_parameters');
         }
 
 
@@ -525,6 +527,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_text_refund_quantity'] = $this->language->get('ps_text_refund_quantity');
         $args['ps_column_refund_quantity'] = $this->language->get('ps_column_refund_quantity');
         $args['ps_button_refund'] = $this->language->get('ps_button_refund');
+        $args['ps_button_refund_all'] = $this->language->get('ps_button_refund_all');
         $args['ps_text_refund_successfully_sent'] = $this->language->get('ps_text_refund_successfully_sent');
         $args['ps_error_refund_send_error'] = $this->language->get('ps_error_refund_send_error');
 
