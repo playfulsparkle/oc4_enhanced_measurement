@@ -464,9 +464,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
 
-                $cliendId = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
+                $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
-                if ($cliendId) {
+                if ($client_info) {
                     $params = [
                         'currency' => $currency,
                         'transaction_id' => $order_id,
@@ -483,7 +483,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     }
 
                     $json['event_data'] = [
-                        'client_id' => $cliendId,
+                        'client_id' => $client_info['client_id'],
+                        'user_id' => $client_info['user_id'],
                         'events' => [
                             [
                                 'name' => 'purchase',
@@ -745,9 +746,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
 
-                $cliendId = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
+                $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
-                if ($cliendId) {
+                if ($client_info) {
                     $params = [
                         'currency' => $currency,
                         'transaction_id' => $order_id,
@@ -764,7 +765,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     }
 
                     $json['event_data'] = [
-                        'client_id' => $cliendId,
+                        'client_id' => $client_info['client_id'],
+                        'user_id' => $client_info['user_id'],
                         'events' => [
                             [
                                 'name' => 'refund',

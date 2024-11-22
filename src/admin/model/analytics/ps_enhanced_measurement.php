@@ -144,6 +144,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         CREATE TABLE `" . DB_PREFIX . "ps_refund_order` (
             `refund_id` int(11) NOT NULL AUTO_INCREMENT,
             `order_id` int(11) NOT NULL,
+            `user_id` int(11) NOT NULL,
             `client_id` varchar(50) NOT NULL,
             PRIMARY KEY (`refund_id`),
             KEY `order_id` (`order_id`)
@@ -156,15 +157,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ps_refund_order`");
     }
 
-    public function getClientIdByOrderId($orderId): string
+    public function getClientIdByOrderId($orderId)
     {
-        $query = $this->db->query("SELECT `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "'");
+        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "'");
 
         if ($query->num_rows) {
-            return $query->row['client_id'];
+            return $query->row;
         }
 
-        return '';
+        return null;
     }
 
     public function getCategories(int $product_id): array
