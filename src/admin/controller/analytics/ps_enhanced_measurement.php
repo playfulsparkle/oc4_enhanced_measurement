@@ -808,12 +808,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_error_refund_send'] = $this->language->get('ps_error_refund_send');
         $args['ps_text_order_resubmit_success'] = $this->language->get('ps_text_order_resubmit_success');
         $args['ps_error_order_resubmit'] = $this->language->get('ps_error_order_resubmit');
+        $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
-            $args['ps_ga_server_url'] = 'https://www.google-analytics.com/debug/mp/collect';
-        } else {
-            $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
-        }
+        // $args['ps_ga_server_url'] = 'https://www.google-analytics.com/debug/mp/collect';
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
