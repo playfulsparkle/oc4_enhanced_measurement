@@ -795,6 +795,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (isset($this->request->get['order_id'])) {
+            $order_id = (int) $this->request->get['order_id'];
+        } else {
+            $order_id = 0;
+        }
+
         $args['ps_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $args['ps_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
 
@@ -810,11 +816,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_error_refund_send'] = $this->language->get('ps_error_refund_send');
         $args['ps_text_order_resubmit_success'] = $this->language->get('ps_text_order_resubmit_success');
         $args['ps_error_order_resubmit'] = $this->language->get('ps_error_order_resubmit');
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
+
+        $args['ps_client_info'] = is_array($client_info);
+
         $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
 
         // $args['ps_ga_server_url'] = 'https://www.google-analytics.com/debug/mp/collect';
 
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);
 
