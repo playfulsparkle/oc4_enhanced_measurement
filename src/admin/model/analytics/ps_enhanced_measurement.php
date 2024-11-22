@@ -71,7 +71,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             }
 
                             if (data.event_data) {
-                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", { method: "POST", body: JSON.stringify(data.event_data) });
+                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
                             }
                         })
                         .then(ga_response => { return ga_response; })
@@ -110,7 +110,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             }
 
                             if (data.event_data) {
-                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", { method: "POST", body: JSON.stringify(data.event_data) });
+                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
                             }
                         })
                         .then(ga_response => { return ga_response; })
