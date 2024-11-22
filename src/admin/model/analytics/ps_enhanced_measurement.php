@@ -19,8 +19,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<div class="float-end">',
             'replace' => '<div class="float-end">
-            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-reply"></i> {{ ps_button_refund_all }}</button>
-            <button type="button" id="ps-resubmit-order-button" data-bs-toggle="tooltip" title="{{ ps_button_resubmit_order }}" class="btn btn-primary"{% if not order_id or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-rotate-right"></i> {{ ps_button_resubmit_order }}</button> '
+            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-reply"></i> {{ ps_button_refund_all }}</button> '
         ];
 
         $views[] = [
@@ -56,37 +55,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     var inputValue = parseInt($(this).val()) ?? 0;
 
                     $(this).next('button').prop('disabled', inputValue <= 0);
-                });
-
-                $('#ps-resubmit-order-button').on('click', function () {
-                    var element = $(this);
-
-                    element.prop('disabled', true);
-
-                    fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.reSubmitOrder&user_token={{ user_token }}&order_id={{ order_id }}')
-                        .then(response => { return response.json(); })
-                        .then(data => {
-                            if (data.error) {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            }
-
-                            if (data.event_data) {
-                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
-                            }
-                        })
-                        .then(ga_response => { return ga_response; })
-                        .then(ga_response_data => {
-                            if (ga_response_data.status) {
-                                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_order_resubmit_success }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            } else {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_order_resubmit }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-
-                                console.error(ga_response_data.statusText);
-                            }
-
-                            element.prop('disabled', false);
-                        })
-                        .catch(error => { console.error(error); });
                 });
 
                 $('button[id^="ps-refund-button"], #ps-refund-all-button').on('click', function () {

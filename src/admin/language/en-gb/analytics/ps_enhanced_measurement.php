@@ -36,7 +36,6 @@ $_['text_category_option_type_4']           = 'The last segment of current categ
 $_['text_multi_currency']                   = 'Multi-currency';
 $_['text_refund_quantity']                  = 'Quantity';
 $_['text_refund_successfully_sent']         = 'Success: Refund data has been successfully sent to Google Analytics.';
-$_['text_order_resubmit_success']           = 'Success: Order data has been successfully resubmitted to Google Analytics.';
 
 // Column
 $_['column_refund_quantity']                = 'Refund quantity';
@@ -63,7 +62,6 @@ $_['entry_debug_mode']                      = 'Debug Mode';
 $_['button_fix_event_handler']              = 'Fix Event Handler';
 $_['button_refund']                         = 'Refund';
 $_['button_refund_all']                     = 'Refund All';
-$_['button_resubmit_order']                 = 'Resubmit Order';
 
 // Help
 $_['help_google_tag_id_locate']             = 'To find your Google tag ID, log in to your <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">Analytics account</a>. Go to the Admin section, select the property you want to track, and find your Google tag ID. It will start with "G-" followed by a unique combination of letters and numbers, like "G-XXXXXXXXXX." <a href="https://support.google.com/analytics/answer/9539598?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';
@@ -75,7 +73,6 @@ $_['help_location_id']                      = 'The physical location of the item
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
 $_['error_refund_send']                     = 'Warning: Failed to send refund data to Google Analytics (GA4). Please check your settings and try again.';
-$_['error_order_resubmit']                  = 'Warning: Failed to resubmit order data to Google Analytics.';
 $_['error_google_tag_id']                   = 'The Google tag ID field is required. Please enter your Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'The Google tag ID format is incorrect. Ensure it follows the format G-XXXXXXXXXX.';
 $_['error_gtm_id']                          = 'The GTM ID field is required. Please enter your Measurement ID';
