@@ -26,7 +26,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 function gtag() { dataLayer.push(arguments); }
 
                 gtag('js', new Date());
-                gtag('config', '{$google_tag_id}', {'cookie_flags': 'SameSite=None;Secure'});
+                gtag('config', '{$google_tag_id}', { 'debug_mode': true }); // , {'cookie_flags': 'SameSite=None;Secure'}
             </script>
             HTML;
         } else if ($measurement_implementation === 'gtm') {

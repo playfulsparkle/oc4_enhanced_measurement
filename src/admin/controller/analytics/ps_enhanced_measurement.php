@@ -487,7 +487,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         [
                             'name' => 'refund',
                             'params' => [
-                                'debug_mode' => true,
                                 'currency' => $currency,
                                 'transaction_id' => $order_id,
                                 'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
@@ -495,6 +494,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                                 'shipping' => $this->currency->format($shipping, $currency, 0, false),
                                 'coupon' => $product_coupon ? $product_coupon : '',
                                 'items' => array_values($items),
+                                'debug_mode' => true,
+                                'engagement_time_msec' => 1200
                             ]
                         ]
                     ]
@@ -518,7 +519,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if (curl_errno($ch)) {
                     $json['error'] = 'Error: ' . curl_error($ch);
                 } else {
-                    $json['success'] = var_export($response, true);
+                    $json['success'] = json_decode($response, true);
                 }
 
                 curl_close($ch);

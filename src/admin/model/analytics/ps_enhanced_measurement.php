@@ -66,10 +66,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                             if (json['success']) {
                                 $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-
-                                if (json['ps_refund']) {
-
-                                }
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
