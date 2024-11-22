@@ -472,21 +472,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
 
-
-
-
             $cliendId = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
             if ($cliendId) {
-
-                $url = "https://www.google-analytics.com/debug/mp/collect?measurement_id=G-Y4GWM7EXYH&api_secret=DYqTfnk-SeGp8z3-Sh7oLg";
-
-                $data = [
+                $json['event_data'] = [
                     'client_id' => $cliendId,
                     'events' => [
                         [
                             'name' => 'refund',
                             'params' => [
+                                'engagement_time_msec' => 1200,
+                                'debug_mode' => true,
                                 'currency' => $currency,
                                 'transaction_id' => $order_id,
                                 'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
@@ -494,35 +490,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                                 'shipping' => $this->currency->format($shipping, $currency, 0, false),
                                 'coupon' => $product_coupon ? $product_coupon : '',
                                 'items' => array_values($items),
-                                'debug_mode' => true,
-                                'engagement_time_msec' => 1200
-                            ]
-                        ]
-                    ]
+                            ],
+                        ],
+                    ],
                 ];
-
-                $options = [
-                    CURLOPT_URL => $url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => json_encode($data),
-                    CURLOPT_HTTPHEADER => [
-                        'Content-Type: application/json'
-                    ]
-                ];
-
-                $ch = curl_init();
-                curl_setopt_array($ch, $options);
-
-                $response = curl_exec($ch);
-
-                if (curl_errno($ch)) {
-                    $json['error'] = 'Error: ' . curl_error($ch);
-                } else {
-                    $json['success'] = json_decode($response, true);
-                }
-
-                curl_close($ch);
             } else {
                 $json['error'] = 'no client_id error';
             }

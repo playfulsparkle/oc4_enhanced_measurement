@@ -48,30 +48,31 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     var quantity = $('#' + $(this).attr('data-refund-quantity')).val();
                     var order_product_id =  $(this).attr('data-refund-order-product-id');
 
-                    $.ajax({
-                        url: 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}&order_id={{ order_id }}&quantity=' + quantity + '&order_product_id=' + order_product_id,
-                        dataType: 'json',
-                        beforeSend: function () {
-                            $('#button-invoice').button('loading');
-                        },
-                        complete: function () {
-                            $('#button-invoice').button('reset');
-                        },
-                        success: function (json) {
-                            $('.alert-dismissible').remove();
-
-                            if (json['error']) {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + json['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                    fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}&order_id={{ order_id }}&quantity=' + quantity + '&order_product_id=' + order_product_id)
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.event_data) {
+                                return fetch("https://www.google-analytics.com/mp/collect?measurement_id=G-Y4GWM7EXYH&api_secret=DYqTfnk-SeGp8z3-Sh7oLg", {
+                                    method: "POST",
+                                    body: JSON.stringify(data.event_data)
+                                });
                             }
-
-                            if (json['success']) {
-                                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                        })
+                        .then(ga_response => {
+                            return ga_response;
+                        })
+                        .then(ga_response_data => {
+                            if (ga_response_data.status) {
+                                console.log('OK');
+                            } else {
+                                console.error(ga_response_data.statusText);
                             }
-                        },
-                        error: function (xhr, ajaxOptions, thrownError) {
-                            console.log(thrownError + "\\r\\n" + xhr.statusText + "\\r\\n" + xhr.responseText);
-                        }
-                    });
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
                 });
             HTML
         ];
