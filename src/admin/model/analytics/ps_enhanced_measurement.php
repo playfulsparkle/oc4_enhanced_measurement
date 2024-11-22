@@ -57,7 +57,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     $(this).next('button').prop('disabled', inputValue <= 0);
                 });
 
-                $('button[id^="ps-refund-button"]').on('click', function () {
+                $('button[id^="ps-refund-button"], #ps-refund-all-button').on('click', function () {
                     var quantity = $('#' + $(this).attr('data-refund-quantity')).val();
                     var order_product_id =  $(this).attr('data-refund-order-product-id');
 

@@ -357,7 +357,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json = [];
 
 
-        if ($order_id && $order_product_id) {
+        if ($order_id) {
             $order_total_data['total_coupon'] = null;
             $order_total_data['total_voucher'] = null;
 
@@ -384,11 +384,81 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $products = $this->model_sale_order->getProducts($order_id);
 
             $items = [];
+            $index = 0;
             $total = 0;
             $sub_total = 0;
 
-            foreach ($products as $index => $product) {
-                if ((int) $product['order_product_id'] === $order_product_id) {
+            if ($order_product_id > 0) {
+                foreach ($products as $product) {
+                    if ((int) $product['order_product_id'] === $order_product_id) {
+                        $product_info = $this->model_catalog_product->getProduct($product['product_id']);
+
+                        $item = [];
+
+                        $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                        $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                        $item['affiliation'] = $affiliation;
+
+                        if ($product_coupon) {
+                            $item['coupon'] = $product_coupon;
+                        }
+
+                        $item['index'] = $index;
+
+                        $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+
+                        if ($manufacturer_info) {
+                            $item['item_brand'] = $manufacturer_info['name'];
+                        }
+
+                        switch ($item_category_option) {
+                            case 0:
+                                $categories = $this->getCategoryType1($product_info['product_id']);
+                                break;
+                            case 1:
+                                $categories = $this->getCategoryType2($product_info['product_id']);
+                                break;
+                            default:
+                                $categories = $this->getCategoryType1($product_info['product_id']);
+                                break;
+                        }
+
+                        $total_categories = count($categories);
+
+                        foreach ($categories as $category_index => $category_name) {
+                            if ($total_categories === 0 || $category_index === 0) {
+                                $item['item_category'] = $category_name;
+                            } else {
+                                $item['item_category' . ($category_index + 1)] = $category_name;
+                            }
+                        }
+
+                        if ($location_id) {
+                            $item['location_id'] = $location_id;
+                        }
+
+                        if ($item_price_tax) {
+                            $price = $product['price'] + $product['tax'];
+                        } else {
+                            $price = $product['price'];
+                        }
+
+                        $total += $price * $quantity;
+
+                        $sub_total += (($product['price'] + $product['tax']) * $quantity) - ($product['tax'] * $quantity);
+
+
+                        $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+                        $item['quantity'] = $quantity;
+
+                        $items[(int) $product['order_product_id']] = $item;
+
+                        break;
+                    }
+                } // end foreach
+            } else {
+                foreach ($products as $product) {
                     $product_info = $this->model_catalog_product->getProduct($product['product_id']);
 
                     $item = [];
@@ -401,7 +471,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $item['coupon'] = $product_coupon;
                     }
 
-                    $item['index'] = 0;
+                    $item['index'] = $index;
 
                     $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
 
@@ -441,20 +511,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $price = $product['price'];
                     }
 
-                    $total += $price * $quantity;
+                    $total += $price * $product['quantity'];
 
-                    $sub_total += (($product['price'] + $product['tax']) * $quantity) - ($product['tax'] * $quantity);
+                    $sub_total += (($product['price'] + $product['tax']) * $product['quantity']) - ($product['tax'] * $product['quantity']);
 
 
                     $item['price'] = $this->currency->format($price, $currency, 0, false);
 
-                    $item['quantity'] = $quantity;
+                    $item['quantity'] = $product['quantity'];
 
-                    $items[] = $item;
+                    $items[(int) $product['order_product_id']] = $item;
 
-                    break;
-                }
-            } // end foreach
+                    $index++;
+                } // end foreach
+            }
 
 
             if ($items) {
