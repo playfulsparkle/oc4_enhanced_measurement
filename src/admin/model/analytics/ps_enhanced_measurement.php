@@ -61,7 +61,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     var quantity = $('#' + $(this).attr('data-refund-quantity')).val();
                     var order_product_id =  $(this).attr('data-refund-order-product-id');
 
-                    fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}&order_id={{ order_id }}&quantity=' + quantity + '&order_product_id=' + order_product_id)
+                    var url = 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}&order_id={{ order_id }}';
+
+                    if (quantity && order_product_id) {
+                        url += '&quantity=' + quantity + '&order_product_id=' + order_product_id;
+                    }
+
+                    fetch(url)
                         .then(response => {
                             return response.json();
                         })
