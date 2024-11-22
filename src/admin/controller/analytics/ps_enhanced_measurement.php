@@ -54,6 +54,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+        $data['analytics_ps_enhanced_measurement_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
         $data['analytics_ps_enhanced_measurement_item_id'] = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $data['analytics_ps_enhanced_measurement_item_category_option'] = $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $data['analytics_ps_enhanced_measurement_item_price_tax'] = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -61,8 +62,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_location_id'] = $this->config->get('analytics_ps_enhanced_measurement_location_id');
         $data['analytics_ps_enhanced_measurement_currency'] = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        $data['gtm_id_visibility'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
-        $data['google_tag_id_visibility'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag';
+        $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
 
         $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
 
@@ -130,20 +130,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (!$json) {
-            if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtag') {
-                if (!isset($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
-                    $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
-                } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
-                    $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
-                }
+            if (empty($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
+                $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
+            } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
+                $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
             }
 
             if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtm') {
-                if (!isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
+                if (empty($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
-                } elseif (preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                } elseif (isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id']) && preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
                 }
+            }
+
+            if (empty($this->request->post['analytics_ps_enhanced_measurement_mp_api_secret'])) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_mp_api_secret');
+            } elseif (preg_match('/^[A-Za-z0-9]{7}-[A-Za-z0-9]{7}-[A-Za-z0-9]{6}$/', $this->request->post['analytics_ps_enhanced_measurement_mp_api_secret']) !== 1) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_mp_api_secret_invalid');
             }
         }
 
@@ -486,9 +490,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                                 'currency' => $currency,
                                 'transaction_id' => $order_id,
                                 'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
-                                'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
-                                'shipping' => $this->currency->format($shipping, $currency, 0, false),
                                 'coupon' => $product_coupon ? $product_coupon : '',
+                                'shipping' => $this->currency->format($shipping, $currency, 0, false),
+                                'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
                                 'items' => array_values($items),
                             ],
                         ],
@@ -512,12 +516,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $args['ps_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+        $args['ps_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
+
 
         $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement', 'ps');
 
         $args['ps_text_refund_quantity'] = $this->language->get('ps_text_refund_quantity');
         $args['ps_column_refund_quantity'] = $this->language->get('ps_column_refund_quantity');
         $args['ps_button_refund'] = $this->language->get('ps_button_refund');
+        $args['ps_text_refund_successfully_sent'] = $this->language->get('ps_text_refund_successfully_sent');
+        $args['ps_error_refund_send_error'] = $this->language->get('ps_error_refund_send_error');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 

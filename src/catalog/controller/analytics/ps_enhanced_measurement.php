@@ -2265,7 +2265,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
             $ps_generate_lead_contact_form = [
-                'lead_type' => 'contact_form',
+                'lead_source' => 'contact_form',
             ];
         } else {
             $ps_generate_lead_contact_form = null;
@@ -2308,7 +2308,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             $ps_generate_lead_newsletter = [
-                'lead_type' => 'newsletter',
+                'lead_source' => 'newsletter',
             ];
 
             unset($this->session->data['ps_generate_lead_newsletter_event']);
@@ -3013,6 +3013,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
+                'coupon' => $product_coupon ? $product_coupon : '',
                 'items' => array_values($items),
             ],
         ];
@@ -3102,7 +3103,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $this->session->data['ps_generate_lead_newsletter_event'] = 1;
 
                 $json_response['ps_generate_lead_newsletter'] = [
-                    'lead_type' => 'newsletter',
+                    'lead_source' => 'newsletter',
                 ];
             }
         }

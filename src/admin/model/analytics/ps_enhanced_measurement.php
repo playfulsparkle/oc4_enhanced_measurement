@@ -28,8 +28,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <td class="text-start">
                 <div class="input-group">
                     <div class="input-group-text">{{ ps_text_refund_quantity }}</div>
-                    <input type="number" id="ps-refund-quantity-{{ order_product.order_product_id }}" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control">
-                    <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-refund-quantity="ps-refund-quantity-{{ order_product.order_product_id }}" data-refund-order-product-id="{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary"><i class="fa-solid fa-reply"></i></button>
+                    <input type="number" id="ps-refund-quantity-{{ order_product.order_product_id }}" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;">
+                    <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-refund-quantity="ps-refund-quantity-{{ order_product.order_product_id }}" data-refund-order-product-id="{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-reply"></i></button>
                 </div>
             </td>',
             'positions' => [1],
@@ -37,13 +37,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => 'product[\'quantity\'] + \'</td>\';',
-            'replace' => 'product[\'quantity\'] + \'</td>\'; html += \'<td class="text-start"></td>\';',
+            'replace' => 'product[\'quantity\'] + \'</td>\'; html += \'<td class="text-start">&nbsp;</td>\';',
         ];
 
         $views[] = [
             'search' => '<script type="text/javascript"><!--',
             'replace' => <<<HTML
             <script type="text/javascript"><!--
+            {% if ps_google_tag_id and ps_mp_api_secret %}
+                $('input[id^="ps-refund-quantity"]').on('change', function() {
+                    var inputValue = parseInt($(this).val()) ?? 0;
+
+                    $(this).next('button').prop('disabled', inputValue <= 0);
+                });
+
                 $('button[id^="ps-refund-button"]').on('click', function () {
                     var quantity = $('#' + $(this).attr('data-refund-quantity')).val();
                     var order_product_id =  $(this).attr('data-refund-order-product-id');
@@ -54,7 +61,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         })
                         .then(data => {
                             if (data.event_data) {
-                                return fetch("https://www.google-analytics.com/mp/collect?measurement_id=G-Y4GWM7EXYH&api_secret=DYqTfnk-SeGp8z3-Sh7oLg", {
+                                return fetch("https://www.google-analytics.com/mp/collect?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}", {
                                     method: "POST",
                                     body: JSON.stringify(data.event_data)
                                 });
@@ -65,8 +72,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         })
                         .then(ga_response_data => {
                             if (ga_response_data.status) {
-                                console.log('OK');
+                                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_refund_successfully_sent }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
                             } else {
+                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_refund_send_error }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
                                 console.error(ga_response_data.statusText);
                             }
                         })
@@ -74,6 +83,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             console.error(error);
                         });
                 });
+            {% endif %}
             HTML
         ];
 
