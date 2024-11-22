@@ -19,7 +19,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<div class="float-end">',
             'replace' => '<div class="float-end">
-            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-reply"></i> {{ ps_button_refund_all }}</button> '
+            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or not ps_is_refundable %} disabled{% endif %}><i class="fa-solid fa-reply"></i> {{ ps_button_refund_all }}</button> '
         ];
 
         $views[] = [
@@ -34,7 +34,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <td class="text-start">
                 <div class="input-group">
                     <div class="input-group-text">{{ ps_text_refund_quantity }}</div>
-                    <input type="number" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or not ps_client_info %} disabled{% endif %}>
+                    <input type="number" name="refund_quantity[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or not ps_is_refundable %} disabled{% endif %}>
                     <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-refund-order-product-id="{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-reply"></i></button>
                 </div>
             </td>',
@@ -57,7 +57,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     $(this).next('button').prop('disabled', inputValue <= 0);
                 });
 
-                $('button[id^="ps-refund-button"], #ps-refund-all-button').on('click', function () {
+                var ps_refund_btns = $('button[id^="ps-refund-button"], #ps-refund-all-button');
+
+                ps_refund_btns.on('click', function () {
                     var element = $(this);
                     var quantity = element.prev('input[name^="refund_quantity"]');
                     var order_product_id =  element.attr('data-refund-order-product-id');
@@ -68,7 +70,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         url += '&quantity=' + quantity.val() + '&order_product_id=' + order_product_id;
                     }
 
-                    element.prop('disabled', true);
+                    ps_refund_btns.prop('disabled', true);
 
                     fetch(url)
                         .then(response => { return response.json(); })
@@ -93,8 +95,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                             if (quantity.length !== 0) {
                                 quantity.val(0);
-                            } else {
-                                element.prop('disabled', false);
                             }
                         })
                         .catch(error => { console.error(error); });
@@ -114,6 +114,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             `order_id` int(11) NOT NULL,
             `user_id` int(11) NOT NULL,
             `client_id` varchar(50) NOT NULL,
+            `refunded` tinyint(1) NOT NULL DEFAULT 0,
+            `date_added` datetime NOT NULL DEFAULT
             PRIMARY KEY (`refund_id`),
             KEY `order_id` (`order_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -127,13 +129,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function getClientIdByOrderId($orderId)
     {
-        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "'");
+        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "' AND `client_id` != ''");
 
         if ($query->num_rows) {
             return $query->row;
         }
 
         return null;
+    }
+
+    public function isRefundableByOrderId($orderId)
+    {
+        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "' AND `client_id` != '' AND `refunded` != '1'");
+
+        return $query->num_rows > 0;
+    }
+
+    public function saveRefundedState($orderId): void
+    {
+        $this->db->query("UPDATE `" . DB_PREFIX . "ps_refund_order` SET `refunded` = '1' WHERE `order_id` = '" . (int) $orderId . "'");
     }
 
     public function getCategories(int $product_id): array

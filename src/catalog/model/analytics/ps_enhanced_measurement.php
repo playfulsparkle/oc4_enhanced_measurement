@@ -514,7 +514,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function saveGA4ClientId($orderId, $clientId): void
     {
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "ps_refund_order` (`refund_id`, `order_id`, `user_id`, `client_id`) VALUES (NULL, '" . (int) $orderId . "', '" . $this->customer->getId() . "', '" . $this->db->escape($clientId) . "')");
+        $this->db->query("INSERT INTO `" . DB_PREFIX . "ps_refund_order` (`refund_id`, `order_id`, `user_id`, `client_id`, `refunded`, `date_added`) VALUES (NULL, '" . (int) $orderId . "', '" . $this->customer->getId() . "', '" . $this->db->escape($clientId) . "', '0', NOW())");
     }
 
     public function hasOptions(int $product_id): bool

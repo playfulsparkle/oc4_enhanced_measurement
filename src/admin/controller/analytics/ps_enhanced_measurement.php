@@ -567,6 +567,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $json['event_data'] = [
                         'client_id' => $client_info['client_id'],
                         'user_id' => $client_info['user_id'],
+                        'non_personalized_ads' => false,
                         'events' => [
                             [
                                 'name' => 'refund',
@@ -574,6 +575,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                             ],
                         ],
                     ];
+
+                    $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
                 } else {
                     $json['error'] = $this->language->get('error_client_id');
                 }
@@ -586,7 +589,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json));
+        $this->response->setOutput(json_encode($json, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
     }
 
     public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void
@@ -617,9 +620,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
-
-        $args['ps_client_info'] = is_array($client_info);
+        $args['ps_is_refundable'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id);
 
         $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
 
