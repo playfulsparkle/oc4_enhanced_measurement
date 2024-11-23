@@ -1185,6 +1185,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $args['ps_track_add_to_cart'] = $ps_track_add_to_cart;
+
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCompareBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
@@ -1897,6 +1900,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $args['ps_track_add_to_cart'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistListBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);
@@ -2274,6 +2280,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $args['ps_track_add_to_wishlist'] = $ps_track_add_to_wishlist;
+        $args['ps_track_add_to_cart'] = $ps_track_add_to_cart;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductBefore($args);

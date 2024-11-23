@@ -96,10 +96,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<a href="{{ href }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if special %}select_promotion{% else %}select_item{% endif %}">'
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if ps_has_options %}{% if special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
-        ];
+        if ($args['ps_track_add_to_cart']) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if ps_has_options %}{% if special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
+            ];
+        }
 
         if ($args['ps_track_add_to_wishlist']) {
             $views[] = [
@@ -169,10 +171,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}">',
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" id="button-confirm"',
-            'replace' => '<button type="submit" id="button-confirm" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
-        ];
+        if ($args['ps_track_add_to_cart']) {
+            $views[] = [
+                'search' => '<button type="submit" id="button-confirm"',
+                'replace' => '<button type="submit" id="button-confirm" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
+            ];
+        }
 
         $views[] = [
             'search' => '{% if products %}',
@@ -227,10 +231,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<a href="{{ product.href }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}">',
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
-        ];
+        if ($args['ps_track_add_to_cart']) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
+            ];
+        }
 
         return $views;
     }
@@ -244,10 +250,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<a href="{{ product.href }}"{% if product.product_id %} data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.special %}select_promotion{% else %}select_item{% endif %}"{% endif %}>',
         ];
 
-        $views[] = [
-            'search' => '<a href="{{ product.reorder }}"',
-            'replace' => '<a href="{{ product.reorder }}"{% if product.product_id %} data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"{% endif %}'
-        ];
+        if ($args['ps_track_add_to_cart']) {
+            $views[] = [
+                'search' => '<a href="{{ product.reorder }}"',
+                'replace' => '<a href="{{ product.reorder }}"{% if product.product_id %} data-ps-track-id="{{ product.product_id }}" data-ps-track-event="{% if product.ps_has_options %}{% if product.special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"{% endif %}'
+            ];
+        }
 
         $views[] = [
             'search' => '{{ footer }}',
@@ -272,22 +280,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         ];
 
         if ($args['ps_track_add_to_wishlist']) {
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
-        ];
-    }
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
+            ];
+        }
 
-        $views[] = [
-            'search' => 'if (json[\'success\']) {',
-            'replace' => <<<HTML
-            if (json['ps_add_to_cart']) {
-                ps_dataLayer.pushEventData('add_to_cart', json['ps_add_to_cart']);
-            }
+        if ($args['ps_track_add_to_cart']) {
+            $views[] = [
+                'search' => 'if (json[\'success\']) {',
+                'replace' => <<<HTML
+                if (json['ps_add_to_cart']) {
+                    ps_dataLayer.pushEventData('add_to_cart', json['ps_add_to_cart']);
+                }
 
-            if (json['success']) {
-            HTML
-        ];
+                if (json['success']) {
+                HTML
+            ];
+        }
 
         $views[] = [
             'search' => '{% if products %}',
@@ -534,9 +544,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function hasOptions(int $product_id): bool
     {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int)$product_id . "' AND `required` = '1'");
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int) $product_id . "' AND `required` = '1'");
 
-        return (int)$query->row['total'] > 0;
+        if ((int) $query->row['total'] > 0) {
+            return true;
+        }
+
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_subscription` WHERE `product_id` = '" . (int) $product_id . "'");
+
+        if ((int) $query->row['total'] > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public function getProductOptionInfo($options, $productId): array
