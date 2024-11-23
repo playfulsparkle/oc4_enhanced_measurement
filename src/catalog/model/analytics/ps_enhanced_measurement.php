@@ -563,17 +563,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<input type="text" id="product-quantity-{{ product.cart_id }}" name="quantity"',
         ];
 
-        if ($args['ps_track_add_to_cart']) {
+        if ($args['ps_track_add_to_cart'] || $args['ps_track_remove_from_cart']) {
             $views[] = [
                 'search' => '<button type="submit" formaction="{{ product_edit }}"',
                 'replace' => '<button type="submit" formaction="{{ product_edit }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="update_cart"',
             ];
         }
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ product_remove }}"',
-            'replace' => '<button type="submit" formaction="{{ product_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
-        ];
+        if ($args['ps_track_remove_from_cart']) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ product_remove }}"',
+                'replace' => '<button type="submit" formaction="{{ product_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
+            ];
+        }
 
         $views[] = [
             'search' => '<div class="table-responsive">',
@@ -601,10 +603,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             ];
         }
 
-        $views[] = [
-            'search' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}"',
-            'replace' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
-        ];
+        if ($args['ps_track_remove_from_cart']) {
+            $views[] = [
+                'search' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}"',
+                'replace' => '<button type="submit" data-bs-toggle="tooltip" title="{{ button_remove }}" data-ps-track-id="{{ product.cart_id }}" data-ps-track-event="remove_from_cart"',
+            ];
+        }
 
         $views[] = [
             'search' => '<button type="button" data-bs-toggle="dropdown"',
