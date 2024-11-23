@@ -101,10 +101,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<button type="submit" formaction="{{ add_to_cart }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="{% if has_options %}{% if special %}select_promotion{% else %}select_item{% endif %}{% else %}add_to_cart{% endif %}"'
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
-        ];
+        if ($args['ps_track_add_to_wishlist']) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
+            ];
+        }
 
         return $views;
     }
@@ -269,10 +271,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <button type="submit" id="button-cart"'
         ];
 
+        if ($args['ps_track_add_to_wishlist']) {
         $views[] = [
             'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
             'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}" data-ps-track-id="{{ product_id }}" data-ps-track-event="add_to_wishlist"'
         ];
+    }
 
         $views[] = [
             'search' => 'if (json[\'success\']) {',
