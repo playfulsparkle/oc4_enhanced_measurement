@@ -12,10 +12,10 @@ $_['heading_contact']                       = 'Contact Support';
 $_['text_extension']                        = 'Extensions';
 $_['text_edit']                             = 'Edit (GA4) Enhanced Measurement';
 $_['text_success']                          = 'Success: You have modified (GA4) Enhanced Measurement!';
-$_['text_getting_started']                  = '<p><strong>Overview:</strong> ?</p><p><strong>Requirements:</strong> ?</p>';
-$_['text_setup']                            = '<p>?</p>';
-$_['text_troubleshot']                      = '<ul><li><strong>?</strong> ?</li></ul>';
-$_['text_faq']                              = '<details><summary>?</summary> ?</details>';
+$_['text_getting_started']                  = '<p><strong>Overview:</strong> The Playful Sparkle - (GA4) Enhanced Measurement for OpenCart 4 extension provides advanced tracking capabilities for your eCommerce store. It supports multiple event tracking options, including user interactions, cart activities, and purchase events. Additionally, it enables integration with Google Tag Manager or Global Site Tag, giving you flexibility in implementing measurement solutions.</p><p><strong>Requirements:</strong> OpenCart 4.x, a valid Google Analytics GA4 account, and the appropriate Google Tag ID or Measurement ID. Ensure no other analytics extensions are enabled to prevent code conflicts.</p>';
+$_['text_setup']                            = '<p>To set up the extension:</p><ul><li>Select your preferred Measurement Implementation (Global Site Tag or Google Tag Manager).</li><li>If using Global Site Tag, enter your Google Tag ID and Measurement Protocol API secret. For Google Tag Manager, enter your Measurement ID.</li><li>Configure the tracking events you want to enable, such as login, purchase, or add-to-cart tracking.</li><li>Verify that no other extensions injecting tracking codes (e.g., Tag Manager or Global Site Tag) are active to avoid conflicts.</li><li>Save the settings and test the implementation using the Google Analytics debug tools.</li></ul>';
+$_['text_troubleshot']                      = '<ul><li><strong>Issue:</strong> Events are not visible in the Google Analytics dashboard. <strong>Solution:</strong> Confirm the Measurement ID or Tag ID is correctly entered and matches your GA4 property.</li><li><strong>Issue:</strong> Duplicate events tracked. <strong>Solution:</strong> Check if other analytics extensions are injecting tracking code and disable them if necessary.</li><li><strong>Issue:</strong> Tracking does not work for multiple stores. <strong>Solution:</strong> Ensure the correct Tag ID or Measurement ID is configured for each store.</li></ul>';
+$_['text_faq']                              = '<details><summary>What events can I track?</summary> This extension supports a variety of events, including "Add to Cart," "Begin Checkout," "View Promotion," "Purchase," "Search," and more. Customize the events based on your store’s needs.</details><details><summary>Does the extension support multi-store and multi-language setups?</summary> The extension supports multi-store configurations but does not include multi-language support.</details><details><summary>What is the difference between Global Site Tag and Google Tag Manager?</summary> Global Site Tag (gtag.js) requires entering the Google Tag ID and API secret, while Google Tag Manager uses a Measurement ID and provides more advanced configuration options.</details>';
 $_['text_contact']                          = '<p>For further assistance, please reach out to our support team:</p><ul><li><strong>Contact:</strong> <a href="mailto:%s">%s</a></li><li><strong>Documentation:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">User Documentation</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
@@ -37,12 +37,17 @@ $_['text_category_option_type_4']           = 'The last segment of current categ
 $_['text_multi_currency']                   = 'Multi-currency';
 $_['text_refund_quantity']                  = 'Quantity';
 $_['text_refund_successfully_sent']         = 'Success: Refund data has been successfully sent to Google Analytics.';
+$_['text_group_ad_settings']                = 'Ad Settings';
+$_['text_group_analytics_settings']         = 'Analytics Settings';
+$_['text_group_security_settings']          = 'Security Settings';
+$_['text_group_advanced_settings']          = 'Advanced Settings';
 
 // Column
 $_['column_refund_quantity']                = 'Refund quantity';
 
 // Tab
 $_['tab_general']                           = 'General';
+$_['tab_gcm']                               = 'Google Conset Mode (GCM)';
 $_['tab_track_events']                      = 'Tracking events';
 $_['tab_help_and_support']                  = 'Help &amp; Support';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
@@ -81,6 +86,21 @@ $_['entry_add_payment_info']                = 'Track Add Payment Info event';
 $_['entry_add_shipping_info']               = 'Track Add Shipping Info event';
 $_['entry_purchase']                        = 'Track Purchase event';
 $_['entry_user_id']                         = 'Send User ID';
+$_['entry_gcm_status']                      = 'Enable GCM';
+$_['entry_ad_storage']                      = 'Ad Storage';
+$_['entry_ad_user_data']                    = 'Ad User Data';
+$_['entry_ad_personalization']              = 'Ad Personalization';
+$_['entry_analytics_storage']               = 'Analytics Storage';
+$_['entry_functionality_storage']           = 'Functionality Storage';
+$_['entry_personalization_storage']         = 'Personalization Storage';
+$_['entry_security_storage']                = 'Security Storage';
+$_['entry_wait_for_update']                 = 'Wait for Update';
+$_['entry_ads_data_redaction']              = 'Ads Data Redaction';
+$_['entry_url_passthrough']                 = 'URL Passthrough';
+$_['entry_strict']                          = 'Strict';
+$_['entry_balanced']                        = 'Balanced';
+$_['entry_custom']                          = 'Custom';
+$_['entry_gcm_profiles']                    = 'GCM Profiles';
 
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
@@ -112,6 +132,17 @@ $_['help_add_payment_info']                 = 'This event signifies a user has s
 $_['help_add_shipping_info']                = 'This event signifies a user has submitted their shipping information in an ecommerce checkout process.';
 $_['help_purchase']                         = 'This event signifies when one or more items is purchased by a user.';
 $_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behavior across sessions and devices, providing more accurate and detailed analytics.';
+$_['help_ad_storage']                       = 'Controls whether data storage is allowed for ad-related purposes, such as tracking ad clicks or conversions.';
+$_['help_ad_user_data']                     = 'Determines if data about users interacting with ads is stored, enhancing ad targeting capabilities.';
+$_['help_ad_personalization']               = 'Allows ads to be personalized based on user data, providing more relevant advertisements to users.';
+$_['help_analytics_storage']                = 'Enables storage of data used for analytics purposes, helping to track site performance and user behavior.';
+$_['help_functionality_storage']            = 'Allows data storage to support functionality, like user preferences or site features that enhance user experience.';
+$_['help_personalization_storage']          = 'Controls storage of data for personalizing the user experience, such as recommended content or settings.';
+$_['help_security_storage']                 = 'Ensures storage of security-related data, such as for fraud prevention and secure access control.';
+$_['help_wait_for_update']                  = 'Sets the time (in milliseconds) to delay before updating consent status, ensuring all settings are applied.';
+$_['help_ads_data_redaction']               = 'Redacts user data related to ads, ensuring privacy by hiding certain identifiable information.';
+$_['help_url_passthrough']                  = 'Allows the URL to pass through consent checks, useful for tracking specific user paths without storing personal data.';
+$_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behavior based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';

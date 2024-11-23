@@ -83,14 +83,51 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info');
         $data['analytics_ps_enhanced_measurement_track_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
 
-
         $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
+
+        $data['analytics_ps_enhanced_measurement_gcm_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
+        $data['analytics_ps_enhanced_measurement_ad_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
+        $data['analytics_ps_enhanced_measurement_ad_user_data'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
+        $data['analytics_ps_enhanced_measurement_ad_personalization'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
+        $data['analytics_ps_enhanced_measurement_analytics_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
+        $data['analytics_ps_enhanced_measurement_functionality_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
+        $data['analytics_ps_enhanced_measurement_personalization_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
+        $data['analytics_ps_enhanced_measurement_security_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
+        $data['analytics_ps_enhanced_measurement_wait_for_update'] = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
+        $data['analytics_ps_enhanced_measurement_ads_data_redaction'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
+        $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
+
+        $data['analytics_ps_enhanced_measurement_gcm_profiles'] = 0;
+
+        if (
+            !$data['analytics_ps_enhanced_measurement_ad_storage'] &&
+            !$data['analytics_ps_enhanced_measurement_ad_user_data'] &&
+            !$data['analytics_ps_enhanced_measurement_ad_personalization'] &&
+            !$data['analytics_ps_enhanced_measurement_analytics_storage'] &&
+            $data['analytics_ps_enhanced_measurement_functionality_storage'] &&
+            $data['analytics_ps_enhanced_measurement_personalization_storage'] &&
+            $data['analytics_ps_enhanced_measurement_security_storage']
+        ) {
+            $data['analytics_ps_enhanced_measurement_gcm_profiles'] = 1;
+        }
+
+        if (
+            $data['analytics_ps_enhanced_measurement_ad_storage'] &&
+            $data['analytics_ps_enhanced_measurement_ad_user_data'] &&
+            !$data['analytics_ps_enhanced_measurement_ad_personalization'] &&
+            $data['analytics_ps_enhanced_measurement_analytics_storage'] &&
+            $data['analytics_ps_enhanced_measurement_functionality_storage'] &&
+            $data['analytics_ps_enhanced_measurement_personalization_storage'] &&
+            $data['analytics_ps_enhanced_measurement_security_storage']
+        ) {
+            $data['analytics_ps_enhanced_measurement_gcm_profiles'] = 2;
+        }
 
         $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
 
         $data['measurement_implementations'] = [
             '' => $this->language->get('text_none'),
-            'gtag' => $this->language->get('text_gtag'),
+            'gtag' => $this->language->get('text_gtag') . ' ' . $this->language->get('text_default'),
             'gtm' => $this->language->get('text_gtm'),
         ];
 
@@ -110,6 +147,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->language->get('text_category_option_type_2'),
             $this->language->get('text_category_option_type_3'),
             $this->language->get('text_category_option_type_4'),
+        ];
+
+        $data['gcm_profiles'] = [
+            $this->language->get('entry_custom'),
+            $this->language->get('entry_strict'),
+            $this->language->get('entry_balanced'),
         ];
 
         $this->load->model('localisation/currency');
@@ -195,6 +238,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('setting/setting');
 
             $data = [
+                'analytics_ps_enhanced_measurement_implementation' => 'gtm',
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => 1,
@@ -220,6 +264,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
+                'analytics_ps_enhanced_measurement_wait_for_update' => 500,
             ];
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
