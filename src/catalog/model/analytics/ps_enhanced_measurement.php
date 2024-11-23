@@ -534,9 +534,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function hasOptions(int $product_id): bool
     {
-        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int) $product_id . "'");
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "product_option` WHERE `product_id` = '" . (int)$product_id . "' AND `required` = '1'");
 
-        return (int) $query->row['total'] > 0;
+        return (int)$query->row['total'] > 0;
     }
 
     public function getProductOptionInfo($options, $productId): array
