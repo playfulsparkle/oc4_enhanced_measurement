@@ -138,6 +138,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $args['ps_track_add_to_wishlist'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $args['ps_track_add_to_cart'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $args['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($args['product_id']);
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductThumbBefore($args);
@@ -161,6 +162,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -383,16 +385,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -423,6 +427,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -697,16 +702,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -737,6 +744,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -941,16 +949,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -977,6 +987,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -1150,16 +1161,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -1194,6 +1207,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -1405,16 +1419,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -1441,6 +1457,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('catalog/product');
 
 
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -1624,16 +1641,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -1661,6 +1680,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -1838,18 +1858,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        foreach ($items as $product_id => $item) {
-            $item['quantity'] = $minimums[$product_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $product_id => $item) {
+                $item['quantity'] = $minimums[$product_id];
 
-            $ps_merge_items['add_to_cart_' . $product_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'] * $minimums[$product_id],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $product_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'] * $minimums[$product_id],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
-
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
@@ -1897,6 +1918,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -2082,13 +2104,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ];
                 }
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
-                    ],
-                ];
+                if ($ps_track_add_to_cart) {
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
 
@@ -2228,16 +2252,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -3598,6 +3624,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('checkout/cart');
 
 
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -3740,17 +3767,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
         }
 
-        foreach ($items as $cart_id => $item) {
-            $item['price'] = $single_prices[$cart_id];
-            $item['quantity'] = $minimums[$cart_id];
+        if ($ps_track_add_to_cart) {
+            foreach ($items as $cart_id => $item) {
+                $item['price'] = $single_prices[$cart_id];
+                $item['quantity'] = $minimums[$cart_id];
 
-            $ps_merge_items['add_to_cart_' . $cart_id] = [
-                'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $item['price'],
-                    'items' => [$item],
-                ],
-            ];
+                $ps_merge_items['add_to_cart_' . $cart_id] = [
+                    'ecommerce' => [
+                        'currency' => $currency,
+                        'value' => $item['price'],
+                        'items' => [$item],
+                    ],
+                ];
+            }
         }
 
         $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
@@ -3929,6 +3958,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -4098,16 +4128,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($items) {
@@ -4130,6 +4162,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -4307,16 +4340,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($items) {
@@ -4339,6 +4374,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -4508,16 +4544,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($items) {
@@ -4540,6 +4578,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $ps_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
+        $ps_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
@@ -4716,16 +4755,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            if ($ps_track_add_to_cart) {
+                foreach ($items as $product_id => $item) {
+                    $item['quantity'] = $minimums[$product_id];
 
-                $ps_merge_items['add_to_cart_' . $product_id] = [
-                    'ecommerce' => [
-                        'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
-                    ],
-                ];
+                    $ps_merge_items['add_to_cart_' . $product_id] = [
+                        'ecommerce' => [
+                            'currency' => $currency,
+                            'value' => $item['price'] * $minimums[$product_id],
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($items) {
