@@ -90,16 +90,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
 
 
+        $args['ps_user_id'] = null;
+
         if ($this->config->get('analytics_ps_enhanced_track_user_id') && $this->customer->isLogged()) {
             if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
                 $args['ps_user_id'] = "gtag('set', 'user_id', " . $this->customer->getId() . ");";
             } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
                 $args['ps_user_id'] = "dataLayer = window.dataLayer || [];" . PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ");";
-            } else {
-                $args['ps_user_id'] = null;
             }
-        } else {
-            $args['ps_user_id'] = null;
         }
 
 
