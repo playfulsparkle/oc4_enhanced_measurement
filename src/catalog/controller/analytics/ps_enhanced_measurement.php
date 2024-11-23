@@ -3078,18 +3078,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if (isset($this->session->data['ps_sign_up_event'])) {
-            $ps_sign_up = [
-                'method' => 'Website',
-                'user_id' => $this->customer->getId(),
-            ];
+        if ($this->config->get('analytics_ps_enhanced_track_sign_up')) {
+            if (isset($this->session->data['ps_sign_up_event'])) {
+                $ps_sign_up = [
+                    'method' => 'Website',
+                    'user_id' => $this->customer->getId(),
+                ];
 
-            unset($this->session->data['ps_sign_up_event']);
+                unset($this->session->data['ps_sign_up_event']);
+            } else {
+                $ps_sign_up = null;
+            }
+
+            $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
         } else {
-            $ps_sign_up = null;
+            $args['ps_sign_up'] = null;
         }
-
-        $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
         if ($this->config->get('analytics_ps_enhanced_track_generate_lead')) {
@@ -3140,7 +3144,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_track_sign_up') && $this->customer->isLogged()) {
             $json_response['ps_sign_up'] = [
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
@@ -3170,7 +3174,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_track_sign_up') && $this->customer->isLogged()) {
             $this->session->data['ps_sign_up_event'] = 1;
         }
 
