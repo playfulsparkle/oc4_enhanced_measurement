@@ -37,8 +37,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             if ($this->request->server['HTTPS']) {
                 $gtag_config['cookie_flags'] = 'SameSite=None;Secure';
-            } else {
-                $gtag_config['cookie_flags'] = 'SameSite=None';
             }
 
             $gtag_config = json_encode($gtag_config);
