@@ -43,6 +43,7 @@ $_['column_refund_quantity']                = 'Refund quantity';
 
 // Tab
 $_['tab_general']                           = 'General';
+$_['tab_track_events']                      = 'Tracking events';
 $_['tab_help_and_support']                  = 'Help &amp; Support';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager';
@@ -61,6 +62,25 @@ $_['entry_location_id']                     = 'Location ID';
 $_['entry_item_price_tax']                  = 'Show prices with tax';
 $_['entry_currency']                        = 'Currency';
 $_['entry_debug_mode']                      = 'Debug Mode';
+$_['entry_generate_lead']                   = 'Track Generate Lead event';
+$_['entry_sign_up']                         = 'Track Sign Up event';
+$_['entry_login']                           = 'Track Login event';
+$_['entry_add_to_wishlist']                 = 'Track Add to Wishlist event';
+$_['entry_add_to_cart']                     = 'Track Add to Cart event';
+$_['entry_remove_from_cart']                = 'Track Remove from Cart event';
+$_['entry_search']                          = 'Track Search event';
+$_['entry_view_item_list']                  = 'Track View Item List event';
+$_['entry_select_item']                     = 'Track Select Item event';
+$_['entry_view_item']                       = 'Track View Item event';
+$_['entry_select_promotion']                = 'Track Select Promotion event';
+$_['entry_view_promotion']                  = 'Track View Promotion event';
+$_['entry_view_cart']                       = 'Track View Cart event';
+$_['entry_begin_checkout']                  = 'Track Begin Checkout event';
+$_['entry_add_payment_info']                = 'Track Add Payment Info event';
+$_['entry_add_shipping_info']               = 'Track Add Shipping Info event';
+$_['entry_purchase']                        = 'Track Purchase event';
+$_['entry_refund']                          = 'Track Refund event';
+$_['entry_user_id']                         = 'Send User ID';
 
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
@@ -74,6 +94,25 @@ $_['help_mp_api_secret_locate']             = 'To find your Measurement Protocol
 $_['help_affiliation']                      = 'Enter the store name or department for the <strong>affiliation</strong> part of ecommerce tracking. If you leave this blank, it will automatically use the default store name from the settings.';
 $_['help_location_id']                      = 'The physical location of the item, like the store where it’s sold. It’s best to use the <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> for that location, but you can also use a custom location ID.';
 $_['help_tracking_delay']                   = 'Specify the delay (in milliseconds) to wait before executing the default action (e.g., navigating to a link or submitting a form) after the GA4 event is sent. This ensures the event is tracked properly before the action completes. Leave empty to use the default value.';
+$_['help_generate_lead']                    = 'This event measures when a lead has been generated, specifically tracking newsletter subscriptions and contact form submissions. Use this to understand the effectiveness of your marketing campaigns and how many customers re-engage with your business after remarketing.';
+$_['help_sign_up']                          = 'This event indicates that a user has signed up for an account. Use this to understand the different behaviors of logged-in and logged-out users.';
+$_['help_login']                            = 'Send this event to signify that a user has logged in to your website or app.';
+$_['help_add_to_wishlist']                  = 'This event signifies that an item was added to a wishlist. Use this to identify popular gift items in your app.';
+$_['help_add_to_cart']                      = 'This event signifies that an item was added to a cart for purchase.';
+$_['help_remove_from_cart']                 = 'This event signifies that an item was removed from a cart.';
+$_['help_search']                           = 'Log this event to indicate when the user has performed a search. Use this to identify what users are searching for on your website or app. For example, send this event when a user views a search results page after performing a search.';
+$_['help_view_item_list']                   = 'Log this event when the user has been presented with a list of items of a certain category.';
+$_['help_select_item']                      = 'This event signifies an item was selected from a list.';
+$_['help_view_item']                        = 'This event signifies that some content was shown to the user. Use this to discover the most popular items viewed.';
+$_['help_select_promotion']                 = 'This event signifies a promotion was selected from a list.';
+$_['help_view_promotion']                   = 'This event signifies a promotion was viewed from a list.';
+$_['help_view_cart']                        = 'This event signifies that a user viewed their cart.';
+$_['help_begin_checkout']                   = 'This event signifies that a user has begun a checkout process.';
+$_['help_add_payment_info']                 = 'This event signifies a user has submitted their payment information in an ecommerce checkout process.';
+$_['help_add_shipping_info']                = 'This event signifies a user has submitted their shipping information in an ecommerce checkout process.';
+$_['help_purchase']                         = 'This event signifies when one or more items is purchased by a user.';
+$_['help_refund']                           = 'This event signifies when one or more items is refunded to a user.';
+$_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behavior across sessions and devices, providing more accurate and detailed analytics.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';

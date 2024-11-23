@@ -64,6 +64,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_currency'] = $this->config->get('analytics_ps_enhanced_measurement_currency');
         $data['analytics_ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
         $data['analytics_ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
+        $data['analytics_ps_enhanced_track_user_id'] = $this->config->get('analytics_ps_enhanced_track_user_id');
+        $data['analytics_ps_enhanced_track_generate_lead'] = $this->config->get('analytics_ps_enhanced_track_generate_lead');
+        $data['analytics_ps_enhanced_track_sign_up'] = $this->config->get('analytics_ps_enhanced_track_sign_up');
+        $data['analytics_ps_enhanced_track_login'] = $this->config->get('analytics_ps_enhanced_track_login');
+        $data['analytics_ps_enhanced_track_add_to_wishlist'] = $this->config->get('analytics_ps_enhanced_track_add_to_wishlist');
+        $data['analytics_ps_enhanced_track_add_to_cart'] = $this->config->get('analytics_ps_enhanced_track_add_to_cart');
+        $data['analytics_ps_enhanced_track_remove_from_cart'] = $this->config->get('analytics_ps_enhanced_track_remove_from_cart');
+        $data['analytics_ps_enhanced_track_search'] = $this->config->get('analytics_ps_enhanced_track_search');
+        $data['analytics_ps_enhanced_track_view_item_list'] = $this->config->get('analytics_ps_enhanced_track_view_item_list');
+        $data['analytics_ps_enhanced_track_select_item'] = $this->config->get('analytics_ps_enhanced_track_select_item');
+        $data['analytics_ps_enhanced_track_view_item'] = $this->config->get('analytics_ps_enhanced_track_view_item');
+        $data['analytics_ps_enhanced_track_select_promotion'] = $this->config->get('analytics_ps_enhanced_track_select_promotion');
+        $data['analytics_ps_enhanced_track_view_promotion'] = $this->config->get('analytics_ps_enhanced_track_view_promotion');
+        $data['analytics_ps_enhanced_track_view_cart'] = $this->config->get('analytics_ps_enhanced_track_view_cart');
+        $data['analytics_ps_enhanced_track_begin_checkout'] = $this->config->get('analytics_ps_enhanced_track_begin_checkout');
+        $data['analytics_ps_enhanced_track_add_payment_info'] = $this->config->get('analytics_ps_enhanced_track_add_payment_info');
+        $data['analytics_ps_enhanced_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_track_add_shipping_info');
+        $data['analytics_ps_enhanced_track_purchase'] = $this->config->get('analytics_ps_enhanced_track_purchase');
+        $data['analytics_ps_enhanced_track_refund'] = $this->config->get('analytics_ps_enhanced_track_refund');
+
 
         $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
 
@@ -183,6 +203,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_gtag_debug_mode' => 0,
                 'analytics_ps_enhanced_measurement_currency' => $this->language->get('text_default'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
+                'analytics_ps_enhanced_track_user_id' => 1,
+                'analytics_ps_enhanced_track_generate_lead' => 1,
+                'analytics_ps_enhanced_track_sign_up' => 1,
+                'analytics_ps_enhanced_track_login' => 1,
+                'analytics_ps_enhanced_track_add_to_wishlist' => 1,
+                'analytics_ps_enhanced_track_add_to_cart' => 1,
+                'analytics_ps_enhanced_track_remove_from_cart' => 1,
+                'analytics_ps_enhanced_track_search' => 1,
+                'analytics_ps_enhanced_track_view_item_list' => 1,
+                'analytics_ps_enhanced_track_select_item' => 1,
+                'analytics_ps_enhanced_track_view_item' => 1,
+                'analytics_ps_enhanced_track_select_promotion' => 1,
+                'analytics_ps_enhanced_track_view_promotion' => 1,
+                'analytics_ps_enhanced_track_view_cart' => 1,
+                'analytics_ps_enhanced_track_begin_checkout' => 1,
+                'analytics_ps_enhanced_track_add_payment_info' => 1,
+                'analytics_ps_enhanced_track_add_shipping_info' => 1,
+                'analytics_ps_enhanced_track_purchase' => 1,
+                'analytics_ps_enhanced_track_refund' => 1,
             ];
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);

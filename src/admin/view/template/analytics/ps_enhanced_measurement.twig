@@ -23,6 +23,7 @@
 
 					<ul class="nav nav-tabs">
 						<li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ tab_general }}</a></li>
+						<li class="nav-item"><a href="#tab-track-events" data-bs-toggle="tab" class="nav-link">{{ tab_track_events }}</a></li>
 						<li class="nav-item"><a href="#tab-support" data-bs-toggle="tab" class="nav-link">{{ tab_help_and_support }}</a></li>
 					</ul>
 
@@ -48,15 +49,6 @@
 										{% endfor %}
 									</select>
 									<div id="error-input-measurement-implementation" class="invalid-feedback"></div>
-								</div>
-							</div>
-
-							<div id="group-gtm" class="row mb-3">
-								<label for="input-tracking-delay" class="col-sm-2 col-form-label">{{ entry_tracking_delay }}</label>
-								<div class="col-sm-10">
-									<input type="text" name="analytics_ps_enhanced_measurement_tracking_delay" value="{{ analytics_ps_enhanced_measurement_tracking_delay | default(800) }}" placeholder="{{ entry_tracking_delay }}" id="input-tracking-delay" class="form-control" />
-									<div id="error-input-tracking-delay" class="invalid-feedback"></div>
-									<div class="form-text">{{ help_tracking_delay }}</div>
 								</div>
 							</div>
 
@@ -189,6 +181,227 @@
 								</div>
 
 							</fieldset>
+
+						</div>
+						<div id="tab-track-events" class="tab-pane">
+
+							<div id="group-gtm" class="row mb-3">
+								<label for="input-tracking-delay" class="col-sm-2 col-form-label">{{ entry_tracking_delay }}</label>
+								<div class="col-sm-10">
+									<input type="text" name="analytics_ps_enhanced_measurement_tracking_delay" value="{{ analytics_ps_enhanced_measurement_tracking_delay | default(800) }}" placeholder="{{ entry_tracking_delay }}" id="input-tracking-delay" class="form-control" />
+									<div id="error-input-tracking-delay" class="invalid-feedback"></div>
+									<div class="form-text">{{ help_tracking_delay }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-user-id" class="col-sm-2 col-form-label">{{ entry_user_id }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_user_id" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_user_id" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_user_id %} checked{% endif %} id="input-user-id" />
+									</div>
+									<div class="form-text">{{ help_user_id }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-generate-lead" class="col-sm-2 col-form-label">{{ entry_generate_lead }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_generate_lead" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_generate_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_generate_lead %} checked{% endif %} id="input-generate-lead" />
+									</div>
+									<div class="form-text">{{ help_generate_lead }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-sign-up" class="col-sm-2 col-form-label">{{ entry_sign_up }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_sign_up" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_sign_up" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_sign_up %} checked{% endif %} id="input-sign-up" />
+									</div>
+									<div class="form-text">{{ help_sign_up }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-login" class="col-sm-2 col-form-label">{{ entry_login }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_login" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_login" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_login %} checked{% endif %} id="input-login" />
+									</div>
+									<div class="form-text">{{ help_login }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-add-to-wishlist" class="col-sm-2 col-form-label">{{ entry_add_to_wishlist }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_add_to_wishlist" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_add_to_wishlist" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_add_to_wishlist %} checked{% endif %} id="input-add-to-wishlist" />
+									</div>
+									<div class="form-text">{{ help_add_to_wishlist }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-add-to-cart" class="col-sm-2 col-form-label">{{ entry_add_to_cart }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_add_to_cart" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_add_to_cart" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_add_to_cart %} checked{% endif %} id="input-add-to-cart" />
+									</div>
+									<div class="form-text">{{ help_add_to_cart }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-remove-from-cart" class="col-sm-2 col-form-label">{{ entry_remove_from_cart }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_remove_from_cart" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_remove_from_cart" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_remove_from_cart %} checked{% endif %} id="input-remove-from-cart" />
+									</div>
+									<div class="form-text">{{ help_remove_from_cart }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-search" class="col-sm-2 col-form-label">{{ entry_search }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_search" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_search" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_search %} checked{% endif %} id="input-search" />
+									</div>
+									<div class="form-text">{{ help_search }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-view-item-list" class="col-sm-2 col-form-label">{{ entry_view_item_list }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_view_item_list" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_view_item_list" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_view_item_list %} checked{% endif %} id="input-view-item-list" />
+									</div>
+									<div class="form-text">{{ help_view_item_list }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-select-item" class="col-sm-2 col-form-label">{{ entry_select_item }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_select_item" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_select_item" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_select_item %} checked{% endif %} id="input-select-item" />
+									</div>
+									<div class="form-text">{{ help_select_item }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-view-item" class="col-sm-2 col-form-label">{{ entry_view_item }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_view_item" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_view_item" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_view_item %} checked{% endif %} id="input-view-item" />
+									</div>
+									<div class="form-text">{{ help_view_item }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-select-promotion" class="col-sm-2 col-form-label">{{ entry_select_promotion }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_select_promotion" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_select_promotion" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_select_promotion %} checked{% endif %} id="input-select-promotion" />
+									</div>
+									<div class="form-text">{{ help_select_promotion }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-view-promotion" class="col-sm-2 col-form-label">{{ entry_view_promotion }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_view_promotion" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_view_promotion" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_view_promotion %} checked{% endif %} id="input-view-promotion" />
+									</div>
+									<div class="form-text">{{ help_view_promotion }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-view-cart" class="col-sm-2 col-form-label">{{ entry_view_cart }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_view_cart" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_view_cart" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_view_cart %} checked{% endif %} id="input-view-cart" />
+									</div>
+									<div class="form-text">{{ help_view_cart }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-begin-checkout" class="col-sm-2 col-form-label">{{ entry_begin_checkout }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_begin_checkout" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_begin_checkout" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_begin_checkout %} checked{% endif %} id="input-begin-checkout" />
+									</div>
+									<div class="form-text">{{ help_begin_checkout }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-add-payment-info" class="col-sm-2 col-form-label">{{ entry_add_payment_info }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_add_payment_info" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_add_payment_info" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_add_payment_info %} checked{% endif %} id="input-add-payment-info" />
+									</div>
+									<div class="form-text">{{ help_add_payment_info }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-add-shipping-info" class="col-sm-2 col-form-label">{{ entry_add_shipping_info }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_add_shipping_info" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_add_shipping_info" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_add_shipping_info %} checked{% endif %} id="input-add-shipping-info" />
+									</div>
+									<div class="form-text">{{ help_add_shipping_info }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-purchase" class="col-sm-2 col-form-label">{{ entry_purchase }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_purchase" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_purchase" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_purchase %} checked{% endif %} id="input-purchase" />
+									</div>
+									<div class="form-text">{{ help_purchase }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-refund" class="col-sm-2 col-form-label">{{ entry_refund }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_track_refund" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_track_refund" value="1" class="form-check-input" {% if analytics_ps_enhanced_track_refund %} checked{% endif %} id="input-refund" />
+									</div>
+									<div class="form-text">{{ help_refund }}</div>
+								</div>
+							</div>
 
 						</div>
 						<div id="tab-support" class="tab-pane">
