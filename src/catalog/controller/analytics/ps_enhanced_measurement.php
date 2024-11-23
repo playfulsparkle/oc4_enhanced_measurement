@@ -2183,7 +2183,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            
+
             $args['ps_view_item'] = null;
             $args['ps_view_promotion'] = null;
 
@@ -2732,6 +2732,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info')) {
+            return;
+        }
+
         $json_response = json_decode($this->response->getOutput(), true);
 
         if (empty($json_response) || !isset($json_response['success'])) {
@@ -2905,6 +2909,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogViewCheckoutShippingMethodSaveAfter(string &$route, array &$args, string &$output = null)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info')) {
             return;
         }
 
@@ -3085,6 +3093,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogViewCheckoutCheckoutBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout')) {
             return;
         }
 
@@ -3364,6 +3376,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_purchase')) {
+            return;
+        }
+
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
 
@@ -3573,6 +3589,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogViewCheckoutCartBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_view_cart')) {
             return;
         }
 

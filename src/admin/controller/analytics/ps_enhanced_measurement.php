@@ -82,7 +82,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_track_add_payment_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info');
         $data['analytics_ps_enhanced_measurement_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info');
         $data['analytics_ps_enhanced_measurement_track_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
-        $data['analytics_ps_enhanced_measurement_track_refund'] = $this->config->get('analytics_ps_enhanced_measurement_track_refund');
 
 
         $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
@@ -221,7 +220,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
-                'analytics_ps_enhanced_measurement_track_refund' => 1,
             ];
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);

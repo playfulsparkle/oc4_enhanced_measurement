@@ -62,6 +62,7 @@ $_['entry_location_id']                     = 'Location ID';
 $_['entry_item_price_tax']                  = 'Show prices with tax';
 $_['entry_currency']                        = 'Currency';
 $_['entry_debug_mode']                      = 'Debug Mode';
+$_['entry_gtag_debug_mode']                 = 'Debug Global Site Tag';
 $_['entry_generate_lead']                   = 'Track Generate Lead event';
 $_['entry_sign_up']                         = 'Track Sign Up event';
 $_['entry_login']                           = 'Track Login event';
@@ -79,7 +80,6 @@ $_['entry_begin_checkout']                  = 'Track Begin Checkout event';
 $_['entry_add_payment_info']                = 'Track Add Payment Info event';
 $_['entry_add_shipping_info']               = 'Track Add Shipping Info event';
 $_['entry_purchase']                        = 'Track Purchase event';
-$_['entry_refund']                          = 'Track Refund event';
 $_['entry_user_id']                         = 'Send User ID';
 
 // Button
@@ -111,7 +111,6 @@ $_['help_begin_checkout']                   = 'This event signifies that a user 
 $_['help_add_payment_info']                 = 'This event signifies a user has submitted their payment information in an ecommerce checkout process.';
 $_['help_add_shipping_info']                = 'This event signifies a user has submitted their shipping information in an ecommerce checkout process.';
 $_['help_purchase']                         = 'This event signifies when one or more items is purchased by a user.';
-$_['help_refund']                           = 'This event signifies when one or more items is refunded to a user.';
 $_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behavior across sessions and devices, providing more accurate and detailed analytics.';
 
 // Error
