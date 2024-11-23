@@ -36,9 +36,9 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
       trackData.ecommerce.items[0].quantity = newQuantity;
     }
 
-    ps_dataLayer.pushData(eventName, trackData);
+    ps_dataLayer.pushEventData(eventName, trackData);
   } else {
-    ps_dataLayer.push(eventName, trackId);
+    ps_dataLayer.onClick(eventName, trackId);
   }
 
   var elementType = self.prop("nodeName");

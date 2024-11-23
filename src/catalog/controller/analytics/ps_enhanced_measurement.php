@@ -30,7 +30,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $gtag_config['cookie_flags'] = 'SameSite=None';
             }
 
-            $gtag_config = json_encode($gtag_config);
+            $gtag_config = json_encode($gtag_config, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
 
             return <<<HTML
             <!-- Google tag (gtag.js) -->
@@ -4020,7 +4020,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.merge(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
@@ -4226,7 +4226,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.merge(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
@@ -4424,7 +4424,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.merge(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
@@ -4629,7 +4629,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.merge(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }

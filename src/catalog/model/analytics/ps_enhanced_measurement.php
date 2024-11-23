@@ -38,19 +38,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
                     data: {},
                     getData: function(eventName, productId) {
-                        return this.data.hasOwnProperty(eventName + '_' + productId) ? this.data[eventName + '_' + productId] : null;
+                        var dataId = eventName + '_' + productId;
+
+                        if (this.data.hasOwnProperty(dataId)) {
+                            return this.data[dataId];
+                        }{% if ps_enhanced_measurement_debug_mode %} else {
+                            console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
+                        }{% endif %}
+
+                        return null;
                     },
-                    merge: function(data) {
+                    setData: function(data) {
                         this.data = Object.assign({}, this.data, data);
                     },
-                    push: function(eventName, productId) {
-                        if (this.data.hasOwnProperty(eventName + '_' + productId)) {
-                            this.pushData(eventName, this.data[eventName + '_' + productId]);
+                    onClick: function(eventName, productId) {
+                        var dataId = eventName + '_' + productId;
+
+                        if (this.data.hasOwnProperty(dataId)) {
+                            this.pushEventData(eventName, this.data[dataId]);
                         }{% if ps_enhanced_measurement_debug_mode %} else {
-                            console.error('Enhanced Measurement (Error): `' + eventName + '_' + productId + '` dataset does not exists!');
+                            console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
                         }{% endif %}
                     },
-                    pushData: function(eventName, data) {
+                    pushEventData: function(eventName, data) {
                         {% if ps_enhanced_measurement_implementation == 'gtag' %}
                             gtag('event', eventName, data);
                         {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
@@ -69,7 +79,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '</head>',
             'replace' => <<<HTML
-            {% if ps_login %}<script>ps_dataLayer.pushData('login', {{ ps_login }});</script>{% endif %}
+            {% if ps_login %}<script>ps_dataLayer.pushEventData('login', {{ ps_login }});</script>{% endif %}
             </head>
             HTML
         ];
@@ -106,8 +116,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -122,9 +132,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_search %}<script>ps_dataLayer.pushData('search', {{ ps_search }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_search %}<script>ps_dataLayer.pushEventData('search', {{ ps_search }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -139,8 +149,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -165,8 +175,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -182,8 +192,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<div id="wishlist">{{ list }}</div>',
             'replace' => <<<HTML
             <div id="wishlist">{{ list }}</div>
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             HTML
         ];
 
@@ -197,8 +207,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -240,8 +250,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{{ footer }}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_item_list %}<script>ps_dataLayer.pushData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_item_list %}<script>ps_dataLayer.pushEventData('view_item_list', {{ ps_view_item_list }});</script>{% endif %}
             {{ footer }}
             HTML
         ];
@@ -268,7 +278,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => 'if (json[\'success\']) {',
             'replace' => <<<HTML
             if (json['ps_add_to_cart']) {
-                ps_dataLayer.pushData('add_to_cart', json['ps_add_to_cart']);
+                ps_dataLayer.pushEventData('add_to_cart', json['ps_add_to_cart']);
             }
 
             if (json['success']) {
@@ -278,9 +288,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '{% if products %}',
             'replace' => <<<HTML
-            {% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
-            {% if ps_view_promotion %}<script>ps_dataLayer.pushData('view_promotion', {{ ps_view_promotion }});</script>{% endif %}
-            {% if ps_view_item %}<script>ps_dataLayer.pushData('view_item', {{ ps_view_item }});</script>{% endif %}
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {% if ps_view_promotion %}<script>ps_dataLayer.pushEventData('view_promotion', {{ ps_view_promotion }});</script>{% endif %}
+            {% if ps_view_item %}<script>ps_dataLayer.pushEventData('view_item', {{ ps_view_item }});</script>{% endif %}
             {% if products %}
             HTML
         ];
@@ -296,7 +306,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{{ text_message }}',
             'replace' => <<<HTML
             {{ text_message }}
-            {% if ps_sign_up %}<script>ps_dataLayer.pushData('sign_up', {{ ps_sign_up }});</script>{% endif %}
+            {% if ps_sign_up %}<script>ps_dataLayer.pushEventData('sign_up', {{ ps_sign_up }});</script>{% endif %}
             HTML
         ];
 
@@ -311,7 +321,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{{ text_message }}',
             'replace' => <<<HTML
             {{ text_message }}
-            {% if ps_purchase %}<script>ps_dataLayer.pushData('purchase', {{ ps_purchase }});</script>{% endif %}
+            {% if ps_purchase %}<script>ps_dataLayer.pushEventData('purchase', {{ ps_purchase }});</script>{% endif %}
             HTML
         ];
 
@@ -326,11 +336,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => 'if (json[\'success\']) {',
             'replace' => <<<HTML
             if (json['ps_sign_up']) {
-                ps_dataLayer.pushData('sign_up', json['ps_sign_up']);
+                ps_dataLayer.pushEventData('sign_up', json['ps_sign_up']);
             }
 
             if (json['ps_generate_lead_newsletter']) {
-                ps_dataLayer.pushData('generate_lead', json['ps_generate_lead_newsletter']);
+                ps_dataLayer.pushEventData('generate_lead', json['ps_generate_lead_newsletter']);
             }
 
             if (json['success']) {
@@ -348,7 +358,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<h2>{{ text_my_account }}</h2>',
             'replace' => <<<HTML
             <h2>{{ text_my_account }}</h2>
-            {% if ps_generate_lead_newsletter %}<script>ps_dataLayer.pushData('generate_lead', {{ ps_generate_lead_newsletter }});</script>{% endif %}
+            {% if ps_generate_lead_newsletter %}<script>ps_dataLayer.pushEventData('generate_lead', {{ ps_generate_lead_newsletter }});</script>{% endif %}
             HTML
         ];
 
@@ -363,7 +373,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{{ text_message }}',
             'replace' => <<<HTML
             {{ text_message }}
-            {% if ps_generate_lead_contact_form %}<script>ps_dataLayer.pushData('generate_lead', {{ ps_generate_lead_contact_form }});</script>{% endif %}
+            {% if ps_generate_lead_contact_form %}<script>ps_dataLayer.pushEventData('generate_lead', {{ ps_generate_lead_contact_form }});</script>{% endif %}
             HTML
         ];
 
@@ -378,7 +388,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => 'if (json[\'success\']) {',
             'replace' => <<<HTML
             if (json['ps_add_payment_info']) {
-                ps_dataLayer.pushData('add_payment_info', json['ps_add_payment_info']);
+                ps_dataLayer.pushEventData('add_payment_info', json['ps_add_payment_info']);
             }
 
             if (json['success']) {
@@ -396,7 +406,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => 'if (json[\'success\']) {',
             'replace' => <<<HTML
             if (json['ps_add_shipping_info']) {
-                ps_dataLayer.pushData('add_shipping_info', json['ps_add_shipping_info']);
+                ps_dataLayer.pushEventData('add_shipping_info', json['ps_add_shipping_info']);
             }
 
             if (json['success']) {
@@ -413,7 +423,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<h1>{{ heading_title }}</h1>',
             'replace' => '<h1>{{ heading_title }}</h1>
-            {% if ps_begin_checkout %}<script>ps_dataLayer.pushData(\'begin_checkout\', {{ ps_begin_checkout }});</script>{% endif %}'
+            {% if ps_begin_checkout %}<script>ps_dataLayer.pushEventData(\'begin_checkout\', {{ ps_begin_checkout }});</script>{% endif %}'
         ];
 
         return $views;
@@ -426,7 +436,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<div id="shopping-cart">{{ list }}</div>',
             'replace' => '<div id="shopping-cart">{{ list }}</div>
-            {% if ps_view_cart %}<script>ps_dataLayer.pushData(\'view_cart\', {{ ps_view_cart }});</script>{% endif %}'
+            {% if ps_view_cart %}<script>ps_dataLayer.pushEventData(\'view_cart\', {{ ps_view_cart }});</script>{% endif %}'
         ];
 
         return $views;
@@ -464,7 +474,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => '<div class="table-responsive">',
-            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
             <div class="table-responsive">'
         ];
 
@@ -493,7 +503,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
         $views[] = [
             'search' => '<button type="button" data-bs-toggle="dropdown"',
-            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.merge({{ ps_merge_items }});</script>{% endif %}
+            'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
             <button type="button" data-bs-toggle="dropdown"'
         ];
 
