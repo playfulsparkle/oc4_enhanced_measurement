@@ -170,6 +170,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
+		$this->load->model('setting/extension');
+
+        $extensions = $this->model_setting_extension->getExtensionsByType('analytics');
+
+        $enabled_extensions = 0;
+
+        foreach ($extensions as $extension) {
+            if ($extension['code'] === 'ps_enhanced_measurement') {
+                continue;
+            }
+
+            if ($this->config->get('analytics_' . $extension['code'] . '_status')) {
+                $enabled_extensions++;
+            }
+        }
+
+        $data['enabled_extensions'] = $enabled_extensions;
+
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
