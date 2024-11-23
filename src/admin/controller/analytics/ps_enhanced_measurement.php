@@ -304,6 +304,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewAccountSuccessBefore'],
             ['trigger' => 'catalog/controller/account/login.login/after', 'actionName' => 'eventCatalogControllerAccountLoginLoginAfter'],
             ['trigger' => 'catalog/controller/account/newsletter.save/after', 'actionName' => 'eventCatalogControllerAccountNewsletterSaveAfter'],
+            ['trigger' => 'catalog/controller/account/register.register/after', 'actionName' => 'eventCatalogControllerAccountRegisterRegisterAfter'],
 
             ['trigger' => 'catalog/view/checkout/payment_method/before', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodBefore'],
             ['trigger' => 'catalog/view/checkout/shipping_method/before', 'actionName' => 'eventCatalogViewCheckoutShippingMethodBefore'],

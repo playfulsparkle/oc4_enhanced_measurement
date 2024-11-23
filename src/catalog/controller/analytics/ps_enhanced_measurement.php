@@ -77,9 +77,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+
         $ps_enhanced_measurement_script = 'extension/ps_enhanced_measurement/catalog/view/javascript/ps-enhanced-measurement.js';
 
         $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
+
 
         $args['ps_enhanced_measurement_status'] = $this->config->get('analytics_ps_enhanced_measurement_status');
         $args['ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
@@ -88,23 +90,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
 
 
-        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
-
-        $args['ps_user_id'] = null;
-
-        if ($this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_track_user_id') && $this->customer->isLogged()) {
             if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
                 $args['ps_user_id'] = "gtag('set', 'user_id', " . $this->customer->getId() . ");";
             } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
                 $args['ps_user_id'] = "dataLayer = window.dataLayer || [];" . PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ");";
+            } else {
+                $args['ps_user_id'] = null;
             }
+        } else {
+            $args['ps_user_id'] = null;
         }
-
-
-        unset($this->session->data['ps_sign_up_event']);
 
 
         if (isset($this->session->data['ps_login_event'])) {
@@ -112,14 +108,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
             ];
+
+            unset($this->session->data['ps_login_event']);
         } else {
             $ps_login = null;
         }
 
         $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
-        unset($this->session->data['ps_login_event']);
 
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
@@ -2229,6 +2228,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
+    /**
+     * Save newsletter state on index.php?route=account/newsletter.save
+     * we are going to be redirected to index.php?route=account/account
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     * @return void
+     */
     public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string &$output = null)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
@@ -2237,15 +2245,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response)) {
+        if (empty($json_response) || !isset($json_response['redirect'])) {
             return;
         }
 
-        if (
-            isset($json_response['redirect']) &&
-            isset($this->request->post['newsletter']) &&
-            $this->request->post['newsletter'] === '1'
-        ) {
+        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
     }
@@ -2258,17 +2262,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response)) {
+        if (empty($json_response) || !isset($json_response['redirect'])) {
             return;
         }
 
-        if (isset($json_response['redirect'])) {
-            $this->session->data['ps_generate_lead_contact_form_event'] = 1;
-        }
+        $this->session->data['ps_generate_lead_contact_form_event'] = 1;
     }
 
     public function eventCatalogViewInformationContactSuccessBefore(string &$route, array &$args, string &$template): void
     {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
         if (!isset($this->request->get['route'])) {
             return;
         }
@@ -2277,23 +2283,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
-            return;
-        }
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
             $ps_generate_lead_contact_form = [
                 'lead_source' => 'contact_form',
             ];
+
+            unset($this->session->data['ps_generate_lead_contact_form_event']);
         } else {
             $ps_generate_lead_contact_form = null;
         }
 
         $args['ps_generate_lead_contact_form'] = $ps_generate_lead_contact_form ? json_encode($ps_generate_lead_contact_form, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
-        unset($this->session->data['ps_generate_lead_contact_form_event']);
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewInformationContactSuccessBefore($args);
 
@@ -2308,11 +2312,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response)) {
+        if (empty($json_response) || !isset($json_response['redirect'])) {
             return;
         }
 
-        if (isset($json_response['redirect']) && $this->customer->isLogged()) {
+        if ($this->customer->isLogged()) {
             $this->session->data['ps_login_event'] = 1;
         }
     }
@@ -2323,21 +2327,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
 
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             $ps_generate_lead_newsletter = [
                 'lead_source' => 'newsletter',
             ];
-
-            unset($this->session->data['ps_generate_lead_newsletter_event']);
         } else {
             $ps_generate_lead_newsletter = null;
         }
 
         $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
+        unset($this->session->data['ps_generate_lead_newsletter_event']);
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAccountBefore($args);
 
@@ -3048,6 +3052,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountSuccessBefore(string &$route, array &$args, string &$template): void
     {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
         if (!isset($this->request->get['route'])) {
             return;
         }
@@ -3056,27 +3064,33 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
-            return;
-        }
 
-
-        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
-
-        if ($this->customer->isLogged()) {
+        if (isset($this->session->data['ps_sign_up_event'])) {
             $ps_sign_up = [
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
             ];
+
+            unset($this->session->data['ps_sign_up_event']);
         } else {
             $ps_sign_up = null;
         }
 
         $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
+
+        if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
+            $ps_generate_lead_newsletter = ['lead_source' => 'newsletter',];
+
+            unset($this->session->data['ps_generate_lead_newsletter_event']);
+        } else {
+            $ps_generate_lead_newsletter = null;
+        }
+
+        $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountSuccessBefore($args);
 
@@ -3104,29 +3118,49 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response)) {
+        if (empty($json_response) || !isset($json_response['success'])) {
             return;
         }
 
-        if (!isset($this->session->data['ps_sign_up_event']) && isset($json_response['success']) && $this->customer->isLogged()) {
-            $this->session->data['ps_sign_up_event'] = 1;
 
+        if ($this->customer->isLogged()) {
             $json_response['ps_sign_up'] = [
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
             ];
-
-            if (
-                isset($this->request->post['newsletter']) &&
-                $this->request->post['newsletter'] === '1'
-            ) {
-                $this->session->data['ps_generate_lead_newsletter_event'] = 1;
-
-                $json_response['ps_generate_lead_newsletter'] = [
-                    'lead_source' => 'newsletter',
-                ];
-            }
         }
+
+        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+            $json_response['ps_generate_lead_newsletter'] = [
+                'lead_source' => 'newsletter',
+            ];
+        }
+
+
+        $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+    }
+
+    public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (empty($json_response) || !isset($json_response['redirect'])) {
+            return;
+        }
+
+
+        if ($this->customer->isLogged()) {
+            $this->session->data['ps_sign_up_event'] = 1;
+        }
+
+        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+            $this->session->data['ps_generate_lead_newsletter_event'] = 1;
+        }
+
 
         $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
     }

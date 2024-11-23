@@ -307,6 +307,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             {{ text_message }}
             {% if ps_sign_up %}<script>ps_dataLayer.pushEventData('sign_up', {{ ps_sign_up }});</script>{% endif %}
+            {% if ps_generate_lead_newsletter %}<script>ps_dataLayer.pushEventData('generate_lead', {{ ps_generate_lead_newsletter }});</script>{% endif %}
             HTML
         ];
 
