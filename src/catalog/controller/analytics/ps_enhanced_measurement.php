@@ -92,7 +92,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $args['ps_user_id'] = null;
 
-        if ($this->config->get('analytics_ps_enhanced_track_user_id') && $this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
             if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
                 $args['ps_user_id'] = "gtag('set', 'user_id', " . $this->customer->getId() . ");";
             } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
@@ -101,19 +101,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if (isset($this->session->data['ps_login_event'])) {
-            $ps_login = [
-                'method' => 'Website',
-                'user_id' => $this->customer->getId(),
-            ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_login')) {
+            if (isset($this->session->data['ps_login_event'])) {
+                $ps_login = [
+                    'method' => 'Website',
+                    'user_id' => $this->customer->getId(),
+                ];
 
-            unset($this->session->data['ps_login_event']);
+                unset($this->session->data['ps_login_event']);
+            } else {
+                $ps_login = null;
+            }
+
+            $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
         } else {
-            $ps_login = null;
+            $args['ps_login'] = null;
         }
-
-        $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -2241,7 +2244,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
             return;
         }
 
@@ -2251,7 +2254,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
     }
@@ -2262,7 +2265,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
             return;
         }
 
@@ -2281,7 +2284,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
             return;
         }
 
@@ -2320,6 +2323,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_login')) {
+            return;
+        }
+
         $json_response = json_decode($this->response->getOutput(), true);
 
         if (empty($json_response) || !isset($json_response['redirect'])) {
@@ -2337,7 +2344,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
             return;
         }
 
@@ -3078,7 +3085,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->config->get('analytics_ps_enhanced_track_sign_up')) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_sign_up')) {
             if (isset($this->session->data['ps_sign_up_event'])) {
                 $ps_sign_up = [
                     'method' => 'Website',
@@ -3096,7 +3103,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
             if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
                 $ps_generate_lead_newsletter = ['lead_source' => 'newsletter',];
 
@@ -3144,14 +3151,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->config->get('analytics_ps_enhanced_track_sign_up') && $this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_sign_up') && $this->customer->isLogged()) {
             $json_response['ps_sign_up'] = [
                 'method' => 'Website',
                 'user_id' => $this->customer->getId(),
             ];
         }
 
-        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $json_response['ps_generate_lead_newsletter'] = [
                 'lead_source' => 'newsletter',
             ];
@@ -3174,11 +3181,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->config->get('analytics_ps_enhanced_track_sign_up') && $this->customer->isLogged()) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_sign_up') && $this->customer->isLogged()) {
             $this->session->data['ps_sign_up_event'] = 1;
         }
 
-        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
 
