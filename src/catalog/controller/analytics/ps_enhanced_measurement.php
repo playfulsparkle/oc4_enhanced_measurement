@@ -351,15 +351,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
 
-            $ps_view_item_list = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
-                ],
-            ];
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+                $ps_view_item_list = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => array_values($items),
+                    ],
+                ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            } else {
+                $args['ps_view_item_list'] = null;
+            }
 
 
             $ps_merge_items = [];
@@ -656,34 +660,42 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
 
-            $ps_view_item_list = [
-                'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
-                ],
-            ];
-
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-
-
-            if (isset($this->request->get['tag'])) {
-                $ps_search = [
-                    'search_term' => $this->request->get['tag'],
-                    'search_type' => 'site_search',
-                    'search_results' => count($items),
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+                $ps_view_item_list = [
+                    'ecommerce' => [
+                        'item_list_id' => $item_list_id,
+                        'item_list_name' => $item_list_name,
+                        'items' => array_values($items),
+                    ],
                 ];
-            } elseif (isset($this->request->get['search'])) {
-                $ps_search = [
-                    'search_term' => $this->request->get['search'],
-                    'search_type' => 'site_search',
-                    'search_results' => count($items),
-                ];
+
+                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
             } else {
-                $ps_search = null;
+                $args['ps_view_item_list'] = null;
             }
 
-            $args['ps_search'] = $ps_search ? json_encode($ps_search, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_search')) {
+                if (isset($this->request->get['tag'])) {
+                    $ps_search = [
+                        'search_term' => $this->request->get['tag'],
+                        'search_type' => 'site_search',
+                        'search_results' => count($items),
+                    ];
+                } elseif (isset($this->request->get['search'])) {
+                    $ps_search = [
+                        'search_term' => $this->request->get['search'],
+                        'search_type' => 'site_search',
+                        'search_results' => count($items),
+                    ];
+                } else {
+                    $ps_search = null;
+                }
+
+                $args['ps_search'] = $ps_search ? json_encode($ps_search, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            } else {
+                $args['ps_search'] = null;
+            }
 
 
             $ps_merge_items = [];
@@ -929,15 +941,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $ps_view_item_list = [
-            'ecommerce' => [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
-                'items' => array_values($items),
-            ],
-        ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+            $ps_view_item_list = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => array_values($items),
+                ],
+            ];
 
-        $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+        }
 
 
         $ps_merge_items = [];
@@ -1148,15 +1164,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $ps_view_item_list = [
-            'ecommerce' => [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
-                'items' => array_values($items),
-            ],
-        ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+            $ps_view_item_list = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => array_values($items),
+                ],
+            ];
 
-        $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+        }
 
 
         $ps_merge_items = [];
@@ -1418,15 +1438,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $ps_view_item_list = [
-            'ecommerce' => [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
-                'items' => array_values($items),
-            ],
-        ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+            $ps_view_item_list = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => array_values($items),
+                ],
+            ];
 
-        $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+        }
 
 
         $ps_merge_items = [];
@@ -1657,15 +1681,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $ps_view_item_list = [
-            'ecommerce' => [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
-                'items' => array_values($items),
-            ],
-        ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+            $ps_view_item_list = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => array_values($items),
+                ],
+            ];
 
-        $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+        }
 
 
         $ps_merge_items = [];
@@ -1871,15 +1899,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $ps_view_item_list = [
-            'ecommerce' => [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
-                'items' => array_values($items),
-            ],
-        ];
+        if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item_list')) {
+            $ps_view_item_list = [
+                'ecommerce' => [
+                    'item_list_id' => $item_list_id,
+                    'item_list_name' => $item_list_name,
+                    'items' => array_values($items),
+                ],
+            ];
 
-        $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_view_item_list'] = null;
+        }
 
 
         $ps_merge_items = [];
