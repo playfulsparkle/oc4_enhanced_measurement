@@ -2241,13 +2241,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+            return;
+        }
+
         $json_response = json_decode($this->response->getOutput(), true);
 
         if (empty($json_response) || !isset($json_response['redirect'])) {
             return;
         }
 
-        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
     }
@@ -2255,6 +2259,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string &$output = null)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
             return;
         }
 
@@ -2270,6 +2278,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogViewInformationContactSuccessBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
             return;
         }
 
@@ -2325,6 +2337,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+            return;
+        }
 
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             $ps_generate_lead_newsletter = [
@@ -3077,15 +3092,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
-        if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
-            $ps_generate_lead_newsletter = ['lead_source' => 'newsletter',];
+        if ($this->config->get('analytics_ps_enhanced_track_generate_lead')) {
+            if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
+                $ps_generate_lead_newsletter = ['lead_source' => 'newsletter',];
 
-            unset($this->session->data['ps_generate_lead_newsletter_event']);
+                unset($this->session->data['ps_generate_lead_newsletter_event']);
+            } else {
+                $ps_generate_lead_newsletter = null;
+            }
+
+            $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
         } else {
-            $ps_generate_lead_newsletter = null;
+            $args['ps_generate_lead_newsletter'] = null;
         }
-
-        $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -3128,7 +3147,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
         }
 
-        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $json_response['ps_generate_lead_newsletter'] = [
                 'lead_source' => 'newsletter',
             ];
@@ -3155,7 +3174,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->session->data['ps_sign_up_event'] = 1;
         }
 
-        if (isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($this->config->get('analytics_ps_enhanced_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
 
