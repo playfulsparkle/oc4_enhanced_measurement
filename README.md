@@ -1,16 +1,63 @@
 # Playful Sparkle - (GA4) Enhanced Measurement for OpenCart 4
 
-The **Playful Sparkle - (GA4) Enhanced Measurement** extension enhances your OpenCart 4.x store by simplifying filter management within categories. Upon saving product information, this extension automatically links associated product filters to the relevant categories, saving time and ensuring consistency across your filter setup.
+The **Playful Sparkle - (GA4) Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. Designed to support both experienced marketers and beginners, it provides valuable insights into eCommerce performance. Additionally, it supports Google Consent Mode (GCM) with predefined profiles, ensuring that your tracking setup complies with privacy regulations when Google Tag Manager is used for measurement implementation.
 
-A key feature of this extension is the ability to remove unused filters from categories. In each category's **Data > Filters** section, simply click the blue **Remove unused filters** button to clear out filters that are no longer relevant. This reduces frontend processing, as the system no longer needs to check product associations for filters that aren’t in use. The result is improved page load times, creating a more efficient and streamlined browsing experience for your customers.
+## Features and Benefits
 
-With the **Playful Sparkle - (GA4) Enhanced Measurement** extension, you’ll gain an effective way to enhance filter management and optimize your store’s performance, freeing you up to focus on business growth.
+### Why Use This Extension?
 
-## Benefits
+- **Advanced Tracking Capabilities:** Track user interactions such as product views, cart activities, and purchases in real-time.
+- **Flexible Measurement Implementations:** Supports both **Google Tag Manager (GTM)** and **Global Site Tag (gtag.js)**, giving you the freedom to choose your preferred implementation.
+- **Google Consent Mode (GCM)** provides support for Google Consent Mode through predefined GCM profiles. It enables the configuration of Ad Storage, Ad User Data, Ad Personalization, Analytics Storage, Functionality Storage, Personalization Storage, and Security Storage, as well as advanced settings including Wait for Update, Ads Data Redaction, and URL Passthrough. This functionality is available exclusively when Google Tag Manager is selected as the measurement implementation.
+- **Streamlined Setup:** No coding knowledge required. Just provide the necessary **Google tag ID**, **Measurement Protocol API secret**, or **Measurement ID**, depending on your selected implementation.
+- **Multi-Store Support:** Easily configure tracking for multiple stores under a single setup.
+- **Data-Driven Decisions:** Leverage the power of GA4 to optimize your marketing campaigns, product offerings, and overall user experience.
 
-- **Time-Saving**: No need to manually add filters to categories; the extension automates this process when saving products.
-- **Improved Efficiency**: Streamline your workflow by integrating filter management directly into product updates.
-- **Consistent Filtering**: Ensure that category filters reflect the products they contain without additional manual steps.
+### Supported Measurement Implementations
+
+1. **Google Tag Manager (GTM):**
+   - Ideal for users requiring advanced customization or managing multiple tags.
+   - Requires **Measurement ID**.
+
+2. **Global Site Tag (gtag.js):**
+   - Quick and straightforward for users looking to integrate Google Analytics without complexity.
+   - Requires **Google Tag ID** and **Measurement Protocol API Secret**.
+
+---
+
+## Tracking eCommerce Events
+
+This extension enables the tracking of key eCommerce events to provide a complete picture of user activity on your store.
+
+### Supported Events
+
+| **Event Name**             | **Description**                                                                                          |
+|----------------------------|----------------------------------------------------------------------------------------------------------|
+| `add_payment_info`         | Tracks when a user provides payment information during checkout.                                         |
+| `add_shipping_info`        | Tracks when a user selects or adds shipping details during checkout.                                     |
+| `add_to_cart`              | Tracks when a product is added to the shopping cart.                                                     |
+| `add_to_wishlist`          | Tracks when a product is added to a wishlist.                                                            |
+| `begin_checkout`           | Tracks when a user starts the checkout process.                                                          |
+| `generate_lead`            | Tracks lead generation activities.                                                                       |
+| `login`                    | Tracks user logins.                                                                                      |
+| `purchase`                 | Tracks completed purchases, including revenue and items purchased.                                       |
+| `refund`                   | Tracks refunds processed, either partial or full, for orders.                                            |
+| `remove_from_cart`         | Tracks when a product is removed from the shopping cart.                                                 |
+| `search`                   | Tracks user searches on your website.                                                                    |
+| `select_item`              | Tracks when a product with options is selected for viewing.                                              |
+| `select_promotion`         | Tracks when a promotional product with a subscription is selected for viewing.                           |
+| `sign_up`                  | Tracks user registrations.                                                                               |
+| `view_cart`                | Tracks when a user views their shopping cart.                                                            |
+| `view_item`                | Tracks when a user views a single product.                                                               |
+| `view_item_list`           | Tracks when a user views a list of products, such as search results or a category page.                  |
+| `view_promotion`           | Tracks when a user views promotional elements like banners or ads.                                       |
+
+### Event Details
+
+- **Add to Cart:** Fires only when a product is actually added to the cart. If the product has options or a subscription assigned to it, a `select_item` or `select_promotion` event is triggered respectively instead.
+- **Refund:** Captures refund events, with limitations on one submission per order (either partial or full).
+
+---
 
 ## Installation Instructions
 

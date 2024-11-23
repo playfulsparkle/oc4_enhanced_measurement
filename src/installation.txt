@@ -1,43 +1,87 @@
 Playful Sparkle - (GA4) Enhanced Measurement
 
-The Playful Sparkle - (GA4) Enhanced Measurement extension enhances your OpenCart 4.x store by simplifying filter management within categories. Upon saving product information, this extension automatically links associated product filters to the relevant categories, saving time and ensuring consistency across your filter setup.
+The Playful Sparkle - (GA4) Enhanced Measurement extension for OpenCart 4.x+
+seamlessly integrates and enhances Google Analytics GA4 tracking for your
+eCommerce store. This extension simplifies the implementation of
+Google Analytics by enabling detailed tracking of user behavior,
+cart activities, and purchase events. Designed to support both experienced
+marketers and beginners, it provides valuable insights into
+eCommerce performance. Additionally, it supports Google Consent Mode (GCM) with
+predefined profiles, ensuring that your tracking setup complies with privacy
+regulations when Google Tag Manager is used for measurement implementation.
 
-A key feature of this extension is the ability to remove unused filters from categories. In each category's Data > Filters section, simply click the blue Remove unused filters button to clear out filters that are no longer relevant. This reduces frontend processing, as the system no longer needs to check product associations for filters that aren’t in use. The result is improved page load times, creating a more efficient and streamlined browsing experience for your customers.
+Features
 
-With the Playful Sparkle - (GA4) Enhanced Measurement extension, you’ll gain an effective way to enhance filter management and optimize your store’s performance, freeing you up to focus on business growth.
+- Advanced Tracking Capabilities: Track user interactions such as product views,
+  cart activities, and purchases in real-time.
+- Flexible Measurement Implementations: Supports both Google Tag Manager (GTM)
+  and Global Site Tag (gtag.js), giving you the freedom to choose your
+  preferred implementation.
+- Google Consent Mode (GCM) provides support for Google Consent Mode through
+  predefined GCM profiles. It enables the configuration of Ad Storage,
+  Ad User Data, Ad Personalization, Analytics Storage, Functionality Storage,
+  Personalization Storage, and Security Storage, as well as advanced settings
+  including Wait for Update, Ads Data Redaction, and URL Passthrough.
+  This functionality is available exclusively when Google Tag Manager is
+  selected as the measurement implementation.
+- Streamlined Setup: No coding knowledge required. Just provide the necessary
+  Google tag ID, Measurement Protocol API secret, or Measurement ID, depending
+  on your selected implementation.
+- Multi-Store Support: Easily configure tracking for multiple stores under a
+  single setup.
+- Data-Driven Decisions: Leverage the power of GA4 to optimize your marketing
+  campaigns, product offerings, and overall user experience.
 
-Benefits
+Supported Events
 
-- Time-Saving: No need to manually add filters to categories; the extension automates this process when saving products.
-- Improved Efficiency: Streamline your workflow by integrating filter management directly into product updates.
-- Consistent Filtering: Ensure that category filters reflect the products they contain without additional manual steps.
+- add_payment_info: Tracks when a user provides payment information
+  during checkout.
+- add_shipping_info: Tracks when a user selects or adds shipping details
+  during checkout.
+- add_to_cart: Tracks when a product is added to the shopping cart. Fires only
+  when a product is actually added to the cart. If the product has options or a
+  subscription assigned to it, a select_item or select_promotion event is
+  triggered respectively instead.
+- add_to_wishlist: Tracks when a product is added to a wishlist.
+- begin_checkout: Tracks when a user starts the checkout process.
+- generate_lead: Tracks lead generation activities.
+- login: Tracks user logins.
+- purchase: Tracks completed purchases, including revenue and items purchased.
+- refund: Tracks refunds processed, either partial or full, for orders.
+  Captures refund events, with limitations on one submission per order
+  (either partial or full).
+- remove_from_cart: Tracks when a product is removed from the shopping cart.
+- search: Tracks user searches on your website.
+- select_item: Tracks when a product with options is selected for viewing.
+- select_promotion: Tracks when a promotional product with a subscription is
+  selected for viewing.
+- sign_up: Tracks user registrations.
+- view_cart: Tracks when a user views their shopping cart.
+- view_item: Tracks when a user views a single product.
+- view_item_list: Tracks when a user views a list of products, such as search
+  results or a category page.
+- view_promotion: Tracks when a user views promotional elements like
+  banners or ads.
 
-For more information, visit the extension GitHub page at https://github.com/playfulsparkle/oc4_ga4_enhanced_measurement.git.
+Demo frontend: https://opencart4.playfulsparkle.com/
+Demo backend: https://opencart4.playfulsparkle.com/admin/
 
-Demo frontend - https://opencart4.playfulsparkle.com/
-Demo backend - https://opencart4.playfulsparkle.com/admin/
+Installation Instructions
 
-Installation Guide
+1. Download the latest version from the OpenCart Marketplace.
+2. Log in to your OpenCart admin panel.
+3. Navigate to Extensions > Installer.
+4. Click the Upload button and upload the
+   ps_enhanced_measurement.ocmod.zip file.
+5. Locate the extension in the Installed Extensions list and click the
+   Install button.
+6. Navigate to Extensions > Extensions and select Analytics from the Choose the
+   extension type dropdown list.
+7. Locate the extension in the Analytics list and click the Install button.
+8. Click the Edit button, configure the extension parameters, and click the Save
+   button to save your settings.
 
-1. Download the Extension
-   - Download the latest Playful Sparkle - (GA4) Enhanced Measurement release from this repository.
+Support & Inquiries
 
-2. Upload the Extension Files
-   - Log in to your OpenCart admin panel.
-   - Go to Extensions > Installer.
-   - Click the Upload button and upload the ps_enhanced_measurement.ocmod.zip file.
-
-3. Install the Extension
-   - Once uploaded, find the Playful Sparkle - (GA4) Enhanced Measurement extension and click the Install button.
-   - Navigate to Extensions and select Analytics from the dropdown.
-   - Locate the Playful Sparkle - (GA4) Enhanced Measurement in the module list and click the green Install button.
-
-4. Configure the Extension
-   - After installation, go to the Extensions page, ensuring Analytics is selected.
-   - Click Edit next to the Playful Sparkle - (GA4) Enhanced Measurement extension.
-   - Install and enable the module by setting the status to Enabled.
-   - Save the configuration.
-
-Support & Feedback
-
-For support or any inquiries regarding the extension, feel free to open an issue on this repository or reach out via email at support@playfulsparkle.com.
+For assistance or inquiries related to this extension, please open an issue in
+the extension repository or contact us via email at support@playfulsparkle.com
