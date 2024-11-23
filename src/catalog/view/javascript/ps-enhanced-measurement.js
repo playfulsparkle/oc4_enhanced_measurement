@@ -1,5 +1,10 @@
 
 $(document).on('click', '[data-ps-track-event]', function (e) {
+  if (typeof ps_dataLayer === 'undefined') {
+    console.error('Playful Sparkle datalayer object not found!');
+    return;
+  }
+
   e.preventDefault();
 
   var self = $(this);
@@ -7,10 +12,10 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
   var eventName = self.data("ps-track-event");
 
   if (typeof trackId === 'undefined') {
-    console.error('No track ID found');
+    console.error('No track ID found!');
     return;
   } else if (typeof eventName === 'undefined') {
-    console.error('No event name found');
+    console.error('No event name found!');
     return;
   }
 
@@ -44,5 +49,5 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
     } else if (elementType === 'A') {
       location = self.attr("href");
     }
-  }, 800);
+  }, ps_dataLayer.tracking_delay);
 });

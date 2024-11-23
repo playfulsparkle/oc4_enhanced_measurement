@@ -18,6 +18,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
 
         if ($measurement_implementation === 'gtag') {
+            $gtag_config = [];
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_gtag_debug_mode')) {
+                $gtag_config['debug_mode'] = true;
+            }
+
+            if ($this->request->server['HTTPS']) {
+                $gtag_config['cookie_flags'] = 'SameSite=None;Secure';
+            } else {
+                $gtag_config['cookie_flags'] = 'SameSite=None';
+            }
+
+            $gtag_config = json_encode($gtag_config);
+
             return <<<HTML
             <!-- Google tag (gtag.js) -->
             <script async src="https://www.googletagmanager.com/gtag/js?id={$google_tag_id}"></script>
@@ -26,11 +40,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 function gtag() { dataLayer.push(arguments); }
 
                 gtag('js', new Date());
-                gtag('config', '{$google_tag_id}', { 'debug_mode': true }); // , {'cookie_flags': 'SameSite=None;Secure'}
+                gtag('config', '{$google_tag_id}', {$gtag_config});
             </script>
             HTML;
         } else if ($measurement_implementation === 'gtm') {
             return <<<HTML
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+            </script>
             <!-- Google Tag Manager -->
             <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -66,6 +84,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_enhanced_measurement_status'] = $this->config->get('analytics_ps_enhanced_measurement_status');
         $args['ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+        $args['ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
+        $args['ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
 
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');

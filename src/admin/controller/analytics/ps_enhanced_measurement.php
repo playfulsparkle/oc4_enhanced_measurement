@@ -55,13 +55,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $data['analytics_ps_enhanced_measurement_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
-        $data['analytics_ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
+        $data['analytics_ps_enhanced_measurement_gtag_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_gtag_debug_mode');
         $data['analytics_ps_enhanced_measurement_item_id'] = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $data['analytics_ps_enhanced_measurement_item_category_option'] = $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $data['analytics_ps_enhanced_measurement_item_price_tax'] = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $data['analytics_ps_enhanced_measurement_affiliation'] = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
         $data['analytics_ps_enhanced_measurement_location_id'] = $this->config->get('analytics_ps_enhanced_measurement_location_id');
         $data['analytics_ps_enhanced_measurement_currency'] = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $data['analytics_ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
+        $data['analytics_ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
 
         $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
 
@@ -101,7 +103,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         foreach ($currencies as $currency) {
             if ($currency['status']) {
-                $data['currencies'][$currency['code']] = sprintf('%s (%s)', $currency['title'], $currency['code']);
+                if ($this->config->get('config_currency') === $currency['code']) {
+                    $data['currencies'][$currency['code']] = sprintf('%s (%s) %s', $currency['title'], $currency['code'], $this->language->get('text_default'));
+                } else {
+                    $data['currencies'][$currency['code']] = sprintf('%s (%s)', $currency['title'], $currency['code']);
+                }
             }
         }
 
@@ -173,6 +179,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => 1,
+                'analytics_ps_enhanced_measurement_debug_mode' => 0,
+                'analytics_ps_enhanced_measurement_gtag_debug_mode' => 0,
+                'analytics_ps_enhanced_measurement_currency' => $this->language->get('text_default'),
+                'analytics_ps_enhanced_measurement_tracking_delay' => 800,
             ];
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
@@ -567,7 +577,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $json['event_data'] = [
                         'client_id' => $client_info['client_id'],
                         'user_id' => $client_info['user_id'],
-                        'non_personalized_ads' => false,
+                        'non_personalized_ads' => true,
                         'events' => [
                             [
                                 'name' => 'refund',

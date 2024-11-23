@@ -35,6 +35,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
                 {% if ps_enhanced_measurement_status %}<script>
                 var ps_dataLayer = {
+                    tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
                     data: {},
                     getData: function(eventName, productId) {
                         return this.data.hasOwnProperty(eventName + '_' + productId) ? this.data[eventName + '_' + productId] : null;
@@ -45,9 +46,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     push: function(eventName, productId) {
                         if (this.data.hasOwnProperty(eventName + '_' + productId)) {
                             this.pushData(eventName, this.data[eventName + '_' + productId]);
-                        } else {
-                            console.error('`' + eventName + '_' + productId + '` does not exists in dataset!');
-                        }
+                        }{% if ps_enhanced_measurement_debug_mode %} else {
+                            console.error('Enhanced Measurement (Error): `' + eventName + '_' + productId + '` dataset does not exists!');
+                        }{% endif %}
                     },
                     pushData: function(eventName, data) {
                         {% if ps_enhanced_measurement_implementation == 'gtag' %}
@@ -56,8 +57,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             dataLayer.push({ ecommerce: null });
                             dataLayer.push({ event: eventName, ...data });
                         {% endif %}
-
-                        console.log(JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));
+                        {% if ps_enhanced_measurement_debug_mode %}console.log('Enhanced Measurement (Info):\\r\\n' + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));{% endif %}
                     }
                 };
             </script>{% endif %}

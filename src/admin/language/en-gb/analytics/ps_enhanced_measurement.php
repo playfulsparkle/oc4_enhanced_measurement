@@ -20,6 +20,7 @@ $_['text_contact']                          = '<p>For further assistance, please
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Item Options';
+$_['text_store_options_group']              = 'Store Options';
 $_['text_product_id']                       = 'Product ID';
 $_['text_model']                            = 'Model';
 $_['text_sku']                              = 'SKU';
@@ -43,6 +44,8 @@ $_['column_refund_quantity']                = 'Refund quantity';
 // Tab
 $_['tab_general']                           = 'General';
 $_['tab_help_and_support']                  = 'Help &amp; Support';
+$_['tab_gtag']                              = 'Global Site Tag - gtag.js';
+$_['tab_gtm']                               = 'Google Tag Manager';
 
 // Entry
 $_['entry_status']                          = 'Status';
@@ -52,6 +55,7 @@ $_['entry_gtm_id']                          = 'Measurement ID';
 $_['entry_measurement_protocol_api_secret'] = 'Measurement Protocol API secret';
 $_['entry_item_id']                         = 'Item ID';
 $_['entry_item_category_option']            = 'Item Category';
+$_['entry_tracking_delay']                  = 'Tracking Delay';
 $_['entry_affiliation']                     = 'Affiliation';
 $_['entry_location_id']                     = 'Location ID';
 $_['entry_item_price_tax']                  = 'Show prices with tax';
@@ -69,6 +73,7 @@ $_['help_gtm_id_locate']                    = 'To find your Measurement ID to yo
 $_['help_mp_api_secret_locate']             = 'To find your Measurement Protocol API Secret, go to your <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">Google Analytics account</a>. Navigate to Admin in the left-hand menu, then under the Property Settings, select Data Streams. Choose your data stream, and scroll down to the Measurement Protocol API secrets section. Here, you can create a new API secret or find your existing ones. The API secret is a unique string e.g. XXXXXXX-XXXXXXX-XXXXXX used for authenticating server-side requests.';
 $_['help_affiliation']                      = 'Enter the store name or department for the <strong>affiliation</strong> part of ecommerce tracking. If you leave this blank, it will automatically use the default store name from the settings.';
 $_['help_location_id']                      = 'The physical location of the item, like the store where it’s sold. It’s best to use the <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> for that location, but you can also use a custom location ID.';
+$_['help_tracking_delay']                   = 'Specify the delay (in milliseconds) to wait before executing the default action (e.g., navigating to a link or submitting a form) after the GA4 event is sent. This ensures the event is tracked properly before the action completes. Leave empty to use the default value.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
