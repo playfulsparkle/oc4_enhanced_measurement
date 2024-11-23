@@ -2183,12 +2183,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
+            
             $args['ps_view_item'] = null;
             $args['ps_view_promotion'] = null;
 
-            if ((float) $product_info['special']) {
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_view_promotion') && (float) $product_info['special']) {
                 $args['ps_view_promotion'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
-            } else {
+            } else if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item')) {
                 $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
             }
 
