@@ -82,9 +82,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_track_add_payment_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info');
         $data['analytics_ps_enhanced_measurement_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info');
         $data['analytics_ps_enhanced_measurement_track_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
-
-        $data['gtm_id_required'] = $this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm';
-
         $data['analytics_ps_enhanced_measurement_gcm_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
         $data['analytics_ps_enhanced_measurement_ad_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
         $data['analytics_ps_enhanced_measurement_ad_user_data'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');

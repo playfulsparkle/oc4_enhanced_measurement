@@ -16,7 +16,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
-        $gcm_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
         $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
         $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
         $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
@@ -28,32 +27,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
         $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
 
-
-        if ($gcm_status) {
-            $default_consent = [
-                'ad_storage' => $ad_storage ? 'granted' : 'denied',
-                'ad_user_data' => $ad_user_data ? 'granted' : 'denied',
-                'ad_personalization' => $ad_personalization ? 'granted' : 'denied',
-                'analytics_storage' => $analytics_storage ? 'granted' : 'denied',
-                'functionality_storage' => $functionality_storage ? 'granted' : 'denied',
-                'personalization_storage' => $personalization_storage ? 'granted' : 'denied',
-                'security_storage' => $security_storage ? 'granted' : 'denied',
-            ];
-
-            if ($wait_for_update > 0) {
-                $default_consent['wait_for_update'] = $wait_for_update;
-            }
-
-            $default_consent_json = json_encode($default_consent);
-            $ads_data_redaction_str = $ads_data_redaction ? 'granted' : 'denied'; // Upgrade to consent mode v2
-            $url_passthrough_str = $url_passthrough ? 'granted' : 'denied'; // Upgrade to consent mode v2
-
-            $gcm_html = 'gtag("consent", "default", ' . $default_consent_json . ');' . PHP_EOL;
-            $gcm_html .= 'gtag("set", "ads_data_redaction", "' . $ads_data_redaction_str . '");' . PHP_EOL;
-            $gcm_html .= 'gtag("set", "url_passthrough", "' . $url_passthrough_str . '");' . PHP_EOL;
-        } else {
-            $gcm_html = '';
-        }
 
         if ($measurement_implementation === 'gtag') {
             $gtag_config = [];
@@ -70,20 +43,52 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $gtag_config = json_encode($gtag_config);
 
-            $html  = '<!-- Google tag (gtag.js) -->' . PHP_EOL;
+            $html = '<!-- Google tag (gtag.js) -->' . PHP_EOL;
             $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $google_tag_id . '"></script>' . PHP_EOL;
             $html .= "<script>" . PHP_EOL;
             $html .= "window.dataLayer = window.dataLayer || [];" . PHP_EOL;
             $html .= "function gtag() { dataLayer.push(arguments); }" . PHP_EOL . PHP_EOL;
             $html .= "gtag('js', new Date());" . PHP_EOL;
             $html .= "gtag('config', '" . $google_tag_id . "', " . $gtag_config . ");" . PHP_EOL;
-            $html .= $gcm_html;
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
+                $html .= "gtag('set', 'user_id', " . $this->customer->getId() . ");" . PHP_EOL;
+            }
+
             $html .= "</script>" . PHP_EOL;
         } else if ($measurement_implementation === 'gtm') {
             $html = "<script>" . PHP_EOL;
             $html .= "window.dataLayer = window.dataLayer || [];" . PHP_EOL;
-            $html .= "function gtag() { dataLayer.push(arguments); }" . PHP_EOL . PHP_EOL;
-            $html .= $gcm_html;
+            $html .= "function gtag() { dataLayer.push(arguments); }" . PHP_EOL;
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_gcm_status')) {
+                $default_consent = [
+                    'ad_storage' => $ad_storage ? 'granted' : 'denied',
+                    'ad_user_data' => $ad_user_data ? 'granted' : 'denied',
+                    'ad_personalization' => $ad_personalization ? 'granted' : 'denied',
+                    'analytics_storage' => $analytics_storage ? 'granted' : 'denied',
+                    'functionality_storage' => $functionality_storage ? 'granted' : 'denied',
+                    'personalization_storage' => $personalization_storage ? 'granted' : 'denied',
+                    'security_storage' => $security_storage ? 'granted' : 'denied',
+                ];
+
+                if ($wait_for_update > 0) {
+                    $default_consent['wait_for_update'] = $wait_for_update;
+                }
+
+                $default_consent_json = json_encode($default_consent);
+                $ads_data_redaction_str = $ads_data_redaction ? 'granted' : 'denied'; // Upgrade to consent mode v2
+                $url_passthrough_str = $url_passthrough ? 'granted' : 'denied'; // Upgrade to consent mode v2
+
+                $html .= PHP_EOL . "gtag('consent', 'default', " . $default_consent_json . ");" . PHP_EOL;
+                $html .= "gtag('set', 'ads_data_redaction', '" . $ads_data_redaction_str . "');" . PHP_EOL;
+                $html .= "gtag('set', 'url_passthrough', '" . $url_passthrough_str . "');" . PHP_EOL;
+            }
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
+                $html .= PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_NUMERIC_CHECK) . ");" . PHP_EOL;
+            }
+
             $html .= "</script>" . PHP_EOL;
             $html .= "<!-- Google Tag Manager -->" . PHP_EOL;
             $html .= "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" . PHP_EOL;
@@ -123,17 +128,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $args['ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
         $args['ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
-
-
-        $args['ps_user_id'] = null;
-
-        if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
-            if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtag') {
-                $args['ps_user_id'] = "gtag('set', 'user_id', " . $this->customer->getId() . ");";
-            } else if ($this->config->get('analytics_ps_enhanced_measurement_implementation') === 'gtm') {
-                $args['ps_user_id'] = "dataLayer = window.dataLayer || [];" . PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . ");";
-            }
-        }
 
 
         if ($this->config->get('analytics_ps_enhanced_measurement_track_login')) {
@@ -4344,7 +4338,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</>' . PHP_EOL . $output;
             }
         }
     }

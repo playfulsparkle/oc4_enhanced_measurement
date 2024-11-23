@@ -41,6 +41,7 @@ $_['text_group_ad_settings']                = 'Ad Settings';
 $_['text_group_analytics_settings']         = 'Analytics Settings';
 $_['text_group_security_settings']          = 'Security Settings';
 $_['text_group_advanced_settings']          = 'Advanced Settings';
+$_['text_gcm_warning']                      = 'Google Consent Mode (GCM) is supported only if you select Google Tag Manager in the Measurement Implementation dropdown. It is not available with Global Site Tag - gtag.js.';
 
 // Column
 $_['column_refund_quantity']                = 'Refund quantity';
@@ -51,7 +52,7 @@ $_['tab_gcm']                               = 'Google Conset Mode (GCM)';
 $_['tab_track_events']                      = 'Tracking events';
 $_['tab_help_and_support']                  = 'Help &amp; Support';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
-$_['tab_gtm']                               = 'Google Tag Manager';
+$_['tab_gtm']                               = 'Google Tag Manager (GTM)';
 
 // Entry
 $_['entry_status']                          = 'Status';

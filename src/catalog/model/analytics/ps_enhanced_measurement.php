@@ -33,7 +33,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '</head>',
             'replace' => <<<HTML
-                {% if ps_enhanced_measurement_status %}<script>
+            {% if ps_enhanced_measurement_status %}
+            <script>
                 var ps_dataLayer = {
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
                     data: {},
@@ -70,8 +71,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         {% if ps_enhanced_measurement_debug_mode %}console.log('Enhanced Measurement (Info):\\r\\n' + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));{% endif %}
                     }
                 };
-            </script>{% endif %}
-            {% if ps_user_id %}<script>{{ ps_user_id }}</script>{% endif %}
+            </script>
+            {% endif %}
             </head>
             HTML
         ];
