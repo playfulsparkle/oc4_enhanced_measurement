@@ -138,7 +138,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $args['ps_track_add_to_wishlist'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $args['has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($args['product_id']);
+        $args['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($args['product_id']);
 
         $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductThumbBefore($args);
 
@@ -1167,7 +1167,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         foreach ($args['products'] as $index => $product_info) {
             if (isset($args['products'][$index])) {
-                $args['products'][$index]['has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product_info['product_id']);
+                $args['products'][$index]['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product_info['product_id']);
             }
         }
 
@@ -1490,7 +1490,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($product_info) {
                 if (isset($args['products'][$index])) {
                     $args['products'][$index]['product_id'] = $product['product_id'];
-                    $args['products'][$index]['has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product['product_id']);
+                    $args['products'][$index]['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product['product_id']);
                 }
 
                 $item = [];
@@ -1585,7 +1585,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             } else {
                 if (isset($args['products'][$index])) {
                     $args['products'][$index]['product_id'] = null;
-                    $args['products'][$index]['has_options'] = null;
+                    $args['products'][$index]['ps_has_options'] = null;
                 }
             }
         }
@@ -1871,7 +1871,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         foreach ($args['products'] as $index => $product_info) {
             if (isset($args['products'][$index])) {
-                $args['products'][$index]['has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product_info['product_id']);
+                $args['products'][$index]['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product_info['product_id']);
             }
         }
 
