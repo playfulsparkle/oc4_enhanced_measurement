@@ -1,0 +1,166 @@
+<?php
+// Heading
+$_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
+$_['heading_fix']                           = 'Correzione dei bug comuni';
+$_['heading_getting_started']               = 'Iniziare';
+$_['heading_setup']                         = 'Configurazione di (GA4) Enhanced Measurement';
+$_['heading_troubleshoot']                  = 'Risoluzione dei problemi comuni';
+$_['heading_faq']                           = 'Domande frequenti';
+$_['heading_contact']                       = 'Contatta il supporto';
+
+// Text
+$_['text_extension']                        = 'Estensioni';
+$_['text_edit']                             = 'Modifica (GA4) Enhanced Measurement';
+$_['text_success']                          = 'Successo: Hai modificato con successo (GA4) Enhanced Measurement!';
+$_['text_getting_started']                  = '<p><strong>Panoramica:</strong> L\'estensione Playful Sparkle - GA4 Enhanced Measurement per OpenCart 4 offre funzionalità avanzate di tracciamento per il tuo negozio eCommerce. Supporta diverse opzioni di tracciamento degli eventi, incluse le interazioni degli utenti, le attività nel carrello e gli eventi di acquisto. Inoltre, consente l\'integrazione con Google Tag Manager o Global Site Tag, offrendo flessibilità nell\'implementazione delle soluzioni di misurazione.</p><p><strong>Requisiti:</strong> OpenCart 4.x, un account valido di Google Analytics GA4 e le credenziali appropriate in base all\'implementazione di misurazione selezionata: sono necessari Google Tag ID e Measurement Protocol API secret se si utilizza Global Site Tag (gtag.js), mentre è richiesto Measurement ID se si seleziona Google Tag Manager (GTM). Assicurati che nessuna altra estensione di analisi sia attiva per evitare conflitti nel codice.</p>';
+$_['text_setup']                            = '<ul><li>Seleziona la tua implementazione di misurazione preferita (Global Site Tag o Google Tag Manager).</li><li>Se utilizzi Global Site Tag, inserisci il tuo Google Tag ID e Measurement Protocol API secret. Per Google Tag Manager, inserisci il tuo Measurement ID.</li><li>Configura gli eventi di tracciamento che desideri abilitare, come il login, l\'acquisto o il tracciamento dell\'aggiunta al carrello.</li><li>Verifica che nessuna altra estensione che inietta i codici di tracciamento (ad esempio, Tag Manager o Global Site Tag) sia attiva per evitare conflitti.</li><li>Salva le impostazioni e testa l\'implementazione utilizzando gli strumenti di debug di Google Analytics.</li></ul>';
+$_['text_troubleshoot']                     = '<ul><li><strong>Problema:</strong> Gli eventi non sono visibili nel pannello di Google Analytics. <strong>Soluzione:</strong> Verifica che Measurement ID o Tag ID siano correttamente inseriti e corrispondano alla tua proprietà GA4. Se usi Global Site Tag (gtag.js), assicurati che Google Tag ID e Measurement Protocol API secret siano configurati correttamente.</li><li><strong>Problema:</strong> Gli eventi duplicati vengono tracciati. <strong>Soluzione:</strong> Verifica se altre estensioni di analisi stanno iniettando il codice di tracciamento e disattivale se necessario. Inoltre, verifica che lo stesso evento non venga tracciato tramite più implementazioni (ad esempio, sia GTM che gtag.js).</li><li><strong>Problema:</strong> Il tracciamento non funziona su più negozi. <strong>Soluzione:</strong> Assicurati che il corretto Tag ID o Measurement ID sia configurato per ogni negozio. Per GTM, verifica che ogni negozio abbia il contenitore appropriato configurato in Google Tag Manager.</li><li><strong>Problema:</strong> I dati di rimborso non sono visibili in Google Analytics. <strong>Soluzione:</strong> Attendi che i dati di rimborso appaiano in Google Analytics e assicurati che il rimborso sia correttamente configurato come parziale o totale, poiché solo una sola sottomissione per ordine è accettata.</li></ul>';
+$_['text_faq']                              = '<details><summary>Perché è visibile Google Consent Mode (GCM) quando seleziono Global Site Tag?</summary>Global Site Tag (gtag.js) non supporta né richiede GCM.</details><details><summary>Perché non c\'è l\'opzione di modalità debug per Google Tag Manager?</summary>Devi configurare la modalità debug direttamente in Google Tag Manager.</details><details><summary>Cosa succede se seleziono un ID articolo che non è disponibile?</summary>Verrà utilizzato il product_id al suo posto.</details><details><summary>Cosa succede se non compilo l\'Affiliazione?</summary>Verrà utilizzato il nome del negozio.</details><details><summary>Posso ritardare l\'invio degli eventi a Google Analytics?</summary>Sì, controlla la scheda Tracking Events e il campo Tracking Delay.</details><details><summary>Perché i dati di rimborso non appaiono in Google Analytics?</summary>I dati di rimborso potrebbero impiegare del tempo per apparire in Google Analytics.</details><details><summary>Perché non posso rimborsare più di una volta?</summary>Google Analytics accetta solo una sottomissione di rimborso per ordine. Puoi elaborare un rimborso parziale o totale.</details><details><summary>Quali eventi sono supportati?</summary>Gli eventi supportati sono: add_payment_info, add_shipping_info, add_to_cart, add_to_wishlist, begin_checkout, generate_lead, login, purchase, refund, remove_from_cart, search, select_item, select_promotion, sign_up, view_cart, view_item, view_item_list, view_promotion.</details><details><summary>Come funziona l\'evento di aggiunta al carrello?</summary>L\'evento di aggiunta al carrello viene attivato solo quando l\'utente aggiunge effettivamente un prodotto al carrello. In caso contrario, verrà attivato l\'evento select_item o select_promotion a seconda che si tratti di un prodotto speciale o meno.</details>';
+$_['text_contact']                          = '<p>Per ulteriore assistenza, contatta il nostro team di supporto:</p><ul><li><strong>Contatto:</strong> <a href="mailto:%s">%s</a></li><li><strong>Documentazione:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Documentazione Utente</a></li></ul>';
+$_['text_gtag']                             = 'Global Site Tag - gtag.js';
+$_['text_gtm']                              = 'Google Tag Manager';
+$_['text_item_options_group']               = 'Opzioni articolo';
+$_['text_store_options_group']              = 'Opzioni negozio';
+$_['text_product_id']                       = 'ID prodotto';
+$_['text_model']                            = 'Modello';
+$_['text_sku']                              = 'SKU';
+$_['text_upc']                              = 'UPC';
+$_['text_ean']                              = 'EAN';
+$_['text_jan']                              = 'JAN';
+$_['text_isbn']                             = 'ISBN';
+$_['text_mpn']                              = 'MPN';
+$_['text_default']                          = '(predefinito)';
+$_['text_category_option_type_1']           = 'L\'ultimo segmento di tutte le categorie associate al prodotto';
+$_['text_category_option_type_2']           = 'Tutte le categorie, i nomi delle categorie separati dal simbolo "&gt;" associate al prodotto';
+$_['text_category_option_type_3']           = 'Nomi delle categorie correnti associate al prodotto';
+$_['text_category_option_type_4']           = 'L\'ultimo segmento del nome della categoria corrente associata al prodotto';
+$_['text_multi_currency']                   = 'Multi-valuta';
+$_['text_refund_quantity']                  = 'Quantità';
+$_['text_refund_successfully_sent']         = 'Successo: I dati di rimborso sono stati inviati correttamente a Google Analytics.';
+$_['text_group_ad_settings']                = 'Impostazioni Annunci';
+$_['text_group_analytics_settings']         = 'Impostazioni Analytics';
+$_['text_group_security_settings']          = 'Impostazioni di Sicurezza';
+$_['text_group_advanced_settings']          = 'Impostazioni Avanzate';
+$_['text_product_already_refunded']         = 'Questo prodotto è già stato rimborsato. Non sono disponibili ulteriori azioni.';
+$_['text_gcm_info']                         = 'Google Consent Mode (GCM) funziona solo quando scegli Google Tag Manager nel menu a discesa Implementazione di misurazione. Non funziona con Global Site Tag (gtag.js). Per utilizzare questa funzione, assicurati di avere un banner dei cookie installato. Questa estensione imposta uno stato di consenso di base per impostazione predefinita, ma il banner dei cookie è responsabile per aggiornare il consenso per consentire la raccolta dei dati.';
+
+// Column
+$_['column_refund_quantity']                = 'Quantità di Rimborso';
+
+// Tab
+$_['tab_general']                           = 'Generale';
+$_['tab_gcm']                               = 'Modalità di Consenso Google (GCM)';
+$_['tab_track_events']                      = 'Tracciamento Eventi';
+$_['tab_help_and_support']                  = 'Aiuto & Supporto';
+$_['tab_gtag']                              = 'Global Site Tag - gtag.js';
+$_['tab_gtm']                               = 'Google Tag Manager (GTM)';
+
+// Entry
+$_['entry_status']                          = 'Stato';
+$_['entry_measurement_implementation']      = 'Implementazione della Misurazione';
+$_['entry_google_tag_id']                   = 'Google Tag ID';
+$_['entry_gtm_id']                          = 'Measurement ID';
+$_['entry_measurement_protocol_api_secret'] = 'Measurement Protocol API Secret';
+$_['entry_item_id']                         = 'ID Articolo';
+$_['entry_item_category_option']            = 'Categoria Articolo';
+$_['entry_tracking_delay']                  = 'Ritardo nel Tracciamento';
+$_['entry_affiliation']                     = 'Affiliazione';
+$_['entry_location_id']                     = 'ID Posizione';
+$_['entry_item_price_tax']                  = 'Mostra Prezzi con Tassa';
+$_['entry_currency']                        = 'Valuta';
+$_['entry_debug_mode']                      = 'Modalità Debug';
+$_['entry_gtag_debug_mode']                 = 'Debug Global Site Tag';
+$_['entry_generate_lead']                   = 'Traccia Evento Generazione Lead';
+$_['entry_sign_up']                         = 'Traccia Evento Iscrizione';
+$_['entry_login']                           = 'Traccia Evento Login';
+$_['entry_add_to_wishlist']                 = 'Traccia Evento Aggiungi ai Preferiti';
+$_['entry_add_to_cart']                     = 'Traccia Evento Aggiungi al Carrello';
+$_['entry_remove_from_cart']                = 'Traccia Evento Rimuovi dal Carrello';
+$_['entry_search']                          = 'Traccia Evento Ricerca';
+$_['entry_view_item_list']                  = 'Traccia Evento Visualizza Lista Articoli';
+$_['entry_select_item']                     = 'Traccia Evento Seleziona Articolo';
+$_['entry_view_item']                       = 'Traccia Evento Visualizza Articolo';
+$_['entry_select_promotion']                = 'Traccia Evento Seleziona Promozione';
+$_['entry_view_promotion']                  = 'Traccia Evento Visualizza Promozione';
+$_['entry_view_cart']                       = 'Traccia Evento Visualizza Carrello';
+$_['entry_begin_checkout']                  = 'Traccia Evento Inizia Checkout';
+$_['entry_add_payment_info']                = 'Traccia Evento Aggiungi Informazioni di Pagamento';
+$_['entry_add_shipping_info']               = 'Traccia Evento Aggiungi Informazioni di Spedizione';
+$_['entry_purchase']                        = 'Traccia Evento Acquisto';
+$_['entry_user_id']                         = 'Invia ID Utente';
+$_['entry_gcm_status']                      = 'Abilita GCM';
+$_['entry_ad_storage']                      = 'Archiviazione Annunci';
+$_['entry_ad_user_data']                    = 'Dati Utente Annunci';
+$_['entry_ad_personalization']              = 'Personalizzazione Annunci';
+$_['entry_analytics_storage']               = 'Archiviazione Analytics';
+$_['entry_functionality_storage']           = 'Archiviazione Funzionalità';
+$_['entry_personalization_storage']         = 'Archiviazione Personalizzazione';
+$_['entry_security_storage']                = 'Archiviazione Sicurezza';
+$_['entry_wait_for_update']                 = 'Attendi Aggiornamento';
+$_['entry_ads_data_redaction']              = 'Rimozione Dati Annunci';
+$_['entry_url_passthrough']                 = 'Passaggio URL';
+$_['entry_strict']                          = 'Stratto';
+$_['entry_balanced']                        = 'Bilanciato';
+$_['entry_custom']                          = 'Personalizzato';
+$_['entry_gcm_profiles']                    = 'Profili GCM';
+
+// Button
+$_['button_fix_event_handler']              = 'Correggi Gestore Eventi';
+$_['button_refund']                         = 'Rimborso';
+$_['button_refund_selected']                = 'Rimborso Selezionato';
+$_['button_refund_all']                     = 'Rimborso Tutti';
+
+// Help
+$_['help_google_tag_id_locate']             = 'Per trovare il tuo Google Tag ID, accedi al tuo <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">account Analytics</a>. Vai alla sezione Admin, seleziona la proprietà che desideri monitorare e trova il tuo Google Tag ID. Inizierà con "G-" seguito da una combinazione unica di lettere e numeri, come "G-XXXXXXXXXX". <a href="https://support.google.com/analytics/answer/9539598?hl=en" target="_blank" rel="external noopener noreferrer">Istruzioni dettagliate qui</a>.';
+$_['help_gtm_id_locate']                    = 'Per trovare il tuo Measurement ID per il tuo <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">account Google Tag Manager</a>, cerca l\'ID in cima alla dashboard del workspace: inizierà con "GTM-" seguito da una serie unica di lettere e numeri, come "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=en" target="_blank" rel="external noopener noreferrer">Istruzioni dettagliate qui</a>.';
+$_['help_mp_api_secret_locate']             = 'Per trovare il tuo Measurement Protocol API Secret, vai al tuo <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">account Google Analytics</a>. Naviga nella sezione Admin nel menu a sinistra, quindi sotto le Impostazioni della Proprietà, seleziona Flussi di Dati. Scegli il tuo flusso di dati e scorri fino alla sezione Measurement Protocol API secrets. Qui puoi creare un nuovo API secret o trovare quelli esistenti. L\'API secret è una stringa unica, ad esempio, XXXXXXX-XXXXXXX-XXXXXX, utilizzata per autenticare le richieste lato server.';
+$_['help_affiliation']                      = 'Inserisci il nome del negozio o del dipartimento per la parte di <strong>affiliazione</strong> nel tracciamento eCommerce. Se lasci questo campo vuoto, verrà utilizzato automaticamente il nome del negozio predefinito dalle impostazioni.';
+$_['help_location_id']                      = 'La posizione fisica dell\'oggetto, come il negozio dove viene venduto. È consigliato utilizzare l\'<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> per quella posizione, ma è anche possibile usare un ID posizione personalizzato.';
+$_['help_tracking_delay']                   = 'Specifica il ritardo (in millisecondi) da attendere prima di eseguire l\'azione predefinita (ad esempio, navigare su un link o inviare un modulo) dopo che l\'evento GA4 è stato inviato. Questo assicura che l\'evento venga tracciato correttamente prima che l\'azione venga completata. Lascia vuoto per usare il valore predefinito.';
+$_['help_generate_lead']                    = 'Questo evento misura quando un lead è stato generato, tracciando in particolare le iscrizioni alla newsletter e l\'invio dei moduli di contatto. Utilizzalo per capire l\'efficacia delle tue campagne di marketing e quante persone si ricollegano alla tua attività dopo il remarketing.';
+$_['help_sign_up']                          = 'Questo evento indica che un utente ha creato un account. Utilizzalo per capire i comportamenti differenti degli utenti connessi e non connessi.';
+$_['help_login']                            = 'Invia questo evento per segnalare che un utente ha effettuato il login nel tuo sito o app.';
+$_['help_add_to_wishlist']                  = 'Questo evento segnala che un elemento è stato aggiunto alla lista dei desideri. Usalo per identificare gli articoli più popolari per i regali nella tua app.';
+$_['help_add_to_cart']                      = 'Questo evento segnala che un elemento è stato aggiunto al carrello per l\'acquisto.';
+$_['help_remove_from_cart']                 = 'Questo evento segnala che un elemento è stato rimosso dal carrello.';
+$_['help_search']                           = 'Registra questo evento per indicare quando l\'utente ha effettuato una ricerca. Usalo per identificare cosa cercano gli utenti nel tuo sito o app. Ad esempio, invia questo evento quando un utente visualizza una pagina dei risultati di ricerca dopo aver effettuato una ricerca.';
+$_['help_view_item_list']                   = 'Registra questo evento quando l\'utente ha visualizzato un elenco di articoli da una determinata categoria.';
+$_['help_select_item']                      = 'Questo evento segnala che un articolo è stato selezionato da un elenco.';
+$_['help_view_item']                        = 'Questo evento segnala che un contenuto è stato mostrato all\'utente. Usalo per scoprire gli articoli più visualizzati.';
+$_['help_select_promotion']                 = 'Questo evento segnala che una promozione è stata selezionata da un elenco.';
+$_['help_view_promotion']                   = 'Questo evento segnala che una promozione è stata visualizzata da un elenco.';
+$_['help_view_cart']                        = 'Questo evento segnala che un utente ha visualizzato il proprio carrello.';
+$_['help_begin_checkout']                   = 'Questo evento segnala che un utente ha iniziato il processo di checkout.';
+$_['help_add_payment_info']                 = 'Questo evento segnala che un utente ha inviato le proprie informazioni di pagamento durante un processo di checkout eCommerce.';
+$_['help_add_shipping_info']                = 'Questo evento segnala che un utente ha inviato le proprie informazioni di spedizione durante un processo di checkout eCommerce.';
+$_['help_purchase']                         = 'Questo evento segnala quando uno o più articoli sono stati acquistati da un utente.';
+$_['help_user_id']                          = 'Questa opzione abilita il tracciamento degli ID utente connessi, permettendoti di comprendere meglio il comportamento degli utenti attraverso sessioni e dispositivi, fornendo analisi più accurate e dettagliate.';
+$_['help_ad_storage']                       = 'Controlla se è consentito l\'archiviazione dei dati per scopi pubblicitari, come il tracciamento dei clic sugli annunci o delle conversioni.';
+$_['help_ad_user_data']                     = 'Determina se i dati sugli utenti che interagiscono con gli annunci vengono archiviati, migliorando le capacità di targeting degli annunci.';
+$_['help_ad_personalization']               = 'Consente la personalizzazione degli annunci in base ai dati degli utenti, fornendo pubblicità più rilevanti per gli utenti.';
+$_['help_analytics_storage']                = 'Abilita l\'archiviazione dei dati utilizzati per scopi analitici, aiutando a monitorare le prestazioni del sito e il comportamento degli utenti.';
+$_['help_functionality_storage']            = 'Permette l\'archiviazione dei dati per supportare la funzionalità, come le preferenze utente o le funzionalità del sito che migliorano l\'esperienza dell\'utente.';
+$_['help_personalization_storage']          = 'Controlla l\'archiviazione dei dati per personalizzare l\'esperienza dell\'utente, come contenuti consigliati o impostazioni.';
+$_['help_security_storage']                 = 'Garantisce l\'archiviazione dei dati relativi alla sicurezza, come la prevenzione delle frodi e il controllo sicuro dell\'accesso.';
+$_['help_wait_for_update']                  = 'Imposta il tempo (in millisecondi) di ritardo prima di aggiornare lo stato del consenso, assicurando che tutte le impostazioni siano applicate.';
+$_['help_ads_data_redaction']               = 'Redige i dati degli utenti relativi agli annunci, garantendo la privacy nascondendo alcune informazioni identificabili.';
+$_['help_url_passthrough']                  = 'Permette che l\'URL superi i controlli di consenso, utile per tracciare percorsi specifici degli utenti senza memorizzare dati personali.';
+$_['help_gcm_status']                       = 'Abilita la modalità di consenso di Google, permettendo al tuo sito di adattare il comportamento dei tag Google in base alle impostazioni di consenso dell\'utente. Questa modalità offre un tracciamento rispettoso della privacy, consentendo agli strumenti di analisi e pubblicità di funzionare in conformità con le preferenze di consenso.';
+
+// Error
+$_['error_permission']                      = 'Attenzione: Non hai il permesso di modificare le impostazioni di Playful Sparkle - (GA4) Enhanced Measurement!';
+$_['error_refund_send']                     = 'Attenzione: Impossibile inviare i dati di rimborso a Google Analytics (GA4). Controlla le tue impostazioni e riprova.';
+$_['error_no_refundable_selected']          = 'Attenzione: Nessun prodotto è stato selezionato per il rimborso. Seleziona almeno un prodotto per elaborare il rimborso.';
+$_['error_google_tag_id']                   = 'Il campo Google Tag ID è obbligatorio. Inserisci il tuo Google Analytics ID.';
+$_['error_google_tag_id_invalid']           = 'Il formato del Google Tag ID è errato. Assicurati che segua il formato G-XXXXXXXXXX.';
+$_['error_gtm_id']                          = 'Il campo GTM ID è obbligatorio. Inserisci il tuo Measurement ID.';
+$_['error_gtm_id_invalid']                  = 'Il formato del GTM ID è errato. Assicurati che segua il formato GTM-XXXXXXXX.';
+$_['error_mp_api_secret']                   = 'Il campo Measurement Protocol API secret è obbligatorio. Inserisci il tuo Measurement Protocol API secret.';
+$_['error_mp_api_secret_invalid']           = 'Il formato del Measurement Protocol API secret è errato. Assicurati che segua il formato XXXXXXX-XXXXXXX-XXXXXX.';
+$_['error_measurement_implementation']      = 'L\'implementazione della misurazione non è configurata. Seleziona o Global Site Tag o Google Tag Manager.';
+$_['error_client_id']                       = 'Attenzione: L\'ID cliente non è stato salvato durante il checkout.';
+$_['error_order_product_id']                = 'Attenzione: L\'ID prodotto associato a questo ordine non è stato trovato.';
+$_['error_request_parameters']              = 'Attenzione: Mancano o sono incompleti i parametri richiesti nella richiesta.';
+$_['error_analytics_extension']             = 'Sembra che un altro strumento di analisi sia già attivo sul tuo sito. Avere più di uno strumento di questo tipo può creare problemi, come il tracciamento duplicato o mancante. Controlla le impostazioni del tuo sito.';
+$_['error_tracking_delay']                  = 'Il Tracking Delay deve essere almeno di 100 millisecondi per garantire il corretto tracciamento degli eventi.';
+$_['error_wait_for_update']                 = 'Il valore di Wait for Update deve essere un numero compreso tra 0 e 10000 millisecondi.';
