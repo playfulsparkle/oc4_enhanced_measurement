@@ -7,20 +7,6 @@ namespace Opencart\Admin\Model\Extension\PsEnhancedMeasurement\Analytics;
  */
 class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 {
-    public function replaceAdminViewSaleOrderInfoRefundedBefore(array $args): array
-    {
-        $views = [];
-
-        $views[] = [
-            'search' => '<div class="container-fluid">',
-            'replace' => '<div class="container-fluid">
-            <div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_text_product_already_refunded }}</div>',
-            'positions' => [2],
-        ];
-
-        return $views;
-    }
-
     /**
      * @param array $args
      *
@@ -29,6 +15,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
     public function replaceAdminViewSaleOrderInfoBefore(array $args): array
     {
         $views = [];
+
+        $views[] = [
+            'search' => '<div class="container-fluid">',
+            'replace' => '<div class="container-fluid">
+            {% if not ps_is_refundable %}<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_text_product_already_refunded }}</div>{% endif %}',
+            'positions' => [2],
+        ];
 
         $views[] = [
             'search' => '<div class="float-end">',
@@ -74,95 +67,97 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             $('#form-product-add').prepend('<div class=\"alert alert-success",
         ];
 
-        $views[] = [
-            'search' => '<script type="text/javascript"><!--',
-            'replace' => <<<HTML
-            <script type="text/javascript"><!--
-                var ps_refund_btns = $('button[id^="ps-refund-button"], #ps-refund-selected-button, #ps-refund-all-button');
+        if ($args['ps_is_refundable']) {
+            $views[] = [
+                'search' => '<script type="text/javascript"><!--',
+                'replace' => <<<HTML
+                <script type="text/javascript"><!--
+                    var ps_refund_btns = $('button[id^="ps-refund-button"], #ps-refund-selected-button, #ps-refund-all-button');
 
-                $('input[name^="refund"]').on('change', function() {
-                    $(this).next('button').prop('disabled', (parseInt($(this).val()) ?? 0) <= 0);
-                });
-
-                $('#ps-refund-all-button').on('click', function () {
-                    var formData = new FormData();
-
-                    formData.append('order_id', {{ order_id }});
-
-                    var refundInputs = $('input[name^="refund"]').each(function () {
-                        formData.append($(this).attr('name'), $(this).attr('max'));
+                    $('input[name^="refund"]').on('change', function() {
+                        $(this).next('button').prop('disabled', (parseInt($(this).val()) ?? 0) <= 0);
                     });
 
-                    sendRefundData(refundInputs, formData);
-                });
+                    $('#ps-refund-all-button').on('click', function () {
+                        var formData = new FormData();
 
-                $('#ps-refund-selected-button').on('click', function () {
-                    var formData = new FormData();
-                    var counter = 0;
+                        formData.append('order_id', {{ order_id }});
 
-                    var refundInputs = $('input[name^="refund"]').each(function () {
-                        if ($(this).val() > 0) {
-                            formData.append($(this).attr('name'), $(this).val());
-                            counter++;
+                        var refundInputs = $('input[name^="refund"]').each(function () {
+                            formData.append($(this).attr('name'), $(this).attr('max'));
+                        });
+
+                        sendRefundData(refundInputs, formData);
+                    });
+
+                    $('#ps-refund-selected-button').on('click', function () {
+                        var formData = new FormData();
+                        var counter = 0;
+
+                        var refundInputs = $('input[name^="refund"]').each(function () {
+                            if ($(this).val() > 0) {
+                                formData.append($(this).attr('name'), $(this).val());
+                                counter++;
+                            }
+                        });
+
+                        if (counter > 0) {
+                            formData.append('order_id', {{ order_id }});
+
+                            sendRefundData(refundInputs, formData);
+                        } else {
+                            $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_no_refundable_selected }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
                         }
                     });
 
-                    if (counter > 0) {
+                    $('button[id^="ps-refund-button"]').on('click', function () {
+                        var self = $(this);
+                        var refundInput = self.prev('input[name^="refund"]');
+
+                        var formData = new FormData();
+
+                        formData.append(refundInput.attr('name'), refundInput.val());
                         formData.append('order_id', {{ order_id }});
 
-                        sendRefundData(refundInputs, formData);
-                    } else {
-                        $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_no_refundable_selected }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                        sendRefundData(refundInput, formData);
+                    });
+
+                    function sendRefundData(refundInputs, formData) {
+                        ps_refund_btns.prop('disabled', true);
+
+                        fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => { return response.json(); })
+                            .then(data => {
+                                if (data.error) {
+                                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                                }
+
+                                if (data.event_data) {
+                                    return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
+                                }
+                            })
+                            .then(ga_response => { return ga_response; })
+                            .then(ga_response_data => {
+                                if (ga_response_data.status) {
+                                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_refund_successfully_sent }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                                } else {
+                                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_refund_send }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                                    console.error(ga_response_data.statusText);
+                                }
+
+                                refundInputs.each(function () {
+                                    $(this).val(0);
+                                });
+                            })
+                            .catch(error => { console.error(error); });
                     }
-                });
-
-                $('button[id^="ps-refund-button"]').on('click', function () {
-                    var self = $(this);
-                    var refundInput = self.prev('input[name^="refund"]');
-
-                    var formData = new FormData();
-
-                    formData.append(refundInput.attr('name'), refundInput.val());
-                    formData.append('order_id', {{ order_id }});
-
-                    sendRefundData(refundInput, formData);
-                });
-
-                function sendRefundData(refundInputs, formData) {
-                    ps_refund_btns.prop('disabled', true);
-
-                    fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => { return response.json(); })
-                        .then(data => {
-                            if (data.error) {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            }
-
-                            if (data.event_data) {
-                                return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
-                            }
-                        })
-                        .then(ga_response => { return ga_response; })
-                        .then(ga_response_data => {
-                            if (ga_response_data.status) {
-                                $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_refund_successfully_sent }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                            } else {
-                                $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_refund_send }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-
-                                console.error(ga_response_data.statusText);
-                            }
-
-                            refundInputs.each(function () {
-                                $(this).val(0);
-                            });
-                        })
-                        .catch(error => { console.error(error); });
-                }
-            HTML
-        ];
+                HTML
+            ];
+        }
 
         return $views;
     }

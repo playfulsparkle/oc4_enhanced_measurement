@@ -726,30 +726,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->request->get['order_id'])) {
             $order_id = (int) $this->request->get['order_id'];
 
-            if ($ps_is_refundable = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id)) {
-                $args['ps_text_refund_quantity'] = $this->language->get('ps_text_refund_quantity');
-                $args['ps_column_refund_quantity'] = $this->language->get('ps_column_refund_quantity');
-                $args['ps_button_refund'] = $this->language->get('ps_button_refund');
-                $args['ps_button_refund_all'] = $this->language->get('ps_button_refund_all');
-                $args['ps_button_refund_selected'] = $this->language->get('ps_button_refund_selected');
-                $args['ps_text_refund_successfully_sent'] = $this->language->get('ps_text_refund_successfully_sent');
-                $args['ps_error_refund_send'] = $this->language->get('ps_error_refund_send');
-                $args['ps_error_no_refundable_selected'] = $this->language->get('ps_error_no_refundable_selected');
+            $args['ps_text_refund_quantity'] = $this->language->get('ps_text_refund_quantity');
+            $args['ps_column_refund_quantity'] = $this->language->get('ps_column_refund_quantity');
+            $args['ps_button_refund'] = $this->language->get('ps_button_refund');
+            $args['ps_button_refund_all'] = $this->language->get('ps_button_refund_all');
+            $args['ps_button_refund_selected'] = $this->language->get('ps_button_refund_selected');
+            $args['ps_text_refund_successfully_sent'] = $this->language->get('ps_text_refund_successfully_sent');
+            $args['ps_error_refund_send'] = $this->language->get('ps_error_refund_send');
+            $args['ps_error_no_refundable_selected'] = $this->language->get('ps_error_no_refundable_selected');
+            $args['ps_text_product_already_refunded'] = $this->language->get('ps_text_product_already_refunded');
 
-                $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
-                $args['ps_google_tag_id'] = $ps_google_tag_id;
-                $args['ps_mp_api_secret'] = $ps_mp_api_secret;
-                $args['ps_is_refundable'] = $ps_is_refundable;
+            $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
+            $args['ps_google_tag_id'] = $ps_google_tag_id;
+            $args['ps_mp_api_secret'] = $ps_mp_api_secret;
+            $args['ps_is_refundable'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id);
 
-                // $args['ps_ga_server_url'] = 'https://www.google-analytics.com/debug/mp/collect';
-
-
-                $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);
-            } else {
-                $args['ps_text_product_already_refunded'] = $this->language->get('ps_text_product_already_refunded');
-
-                $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoRefundedBefore($args);
-            }
+            $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);
 
             $template = $this->replaceViews($route, $template, $views);
         }
