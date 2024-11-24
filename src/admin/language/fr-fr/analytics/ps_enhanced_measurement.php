@@ -2,9 +2,9 @@
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
 $_['heading_fix']                           = 'Corriger les erreurs courantes';
-$_['heading_getting_started']               = 'Commencer';
+$_['heading_getting_started']               = 'Démarrage';
 $_['heading_setup']                         = 'Configuration de (GA4) Enhanced Measurement';
-$_['heading_troubleshoot']                  = 'Dépannage courant';
+$_['heading_troubleshot']                   = 'Dépannage courant';
 $_['heading_faq']                           = 'FAQ';
 $_['heading_contact']                       = 'Contacter le support';
 

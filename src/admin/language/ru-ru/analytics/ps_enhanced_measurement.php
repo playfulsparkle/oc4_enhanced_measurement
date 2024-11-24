@@ -1,12 +1,12 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
-$_['heading_fix']                           = 'Исправление общих ошибок';
+$_['heading_fix']                           = 'Исправление распространенных ошибок';
 $_['heading_getting_started']               = 'Начало работы';
 $_['heading_setup']                         = 'Настройка (GA4) Enhanced Measurement';
-$_['heading_troubleshoot']                  = 'Типичные проблемы и их решения';
+$_['heading_troubleshot']                   = 'Типичные проблемы';
 $_['heading_faq']                           = 'Часто задаваемые вопросы';
-$_['heading_contact']                       = 'Связаться с поддержкой';
+$_['heading_contact']                       = 'Контакты службы поддержки';
 
 // Text
 $_['text_extension']                        = 'Расширения';

@@ -2,11 +2,11 @@
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
 $_['heading_fix']                           = 'Gyakori hibák javítása';
-$_['heading_getting_started']               = 'Első lépések';
+$_['heading_getting_started']               = 'Kezdő lépések';
 $_['heading_setup']                         = '(GA4) Enhanced Measurement beállítása';
-$_['heading_troubleshoot']                  = 'Gyakori hibaelhárítás';
+$_['heading_troubleshot']                   = 'Gyakori hibakeresési lépések';
 $_['heading_faq']                           = 'GYIK';
-$_['heading_contact']                       = 'Támogatás felkeresése';
+$_['heading_contact']                       = 'Terméktámogatás';
 
 // Text
 $_['text_extension']                        = 'Bővítmények';
@@ -16,7 +16,7 @@ $_['text_getting_started']                  = '<p><strong>Áttekintés:</strong>
 $_['text_setup']                            = '<ul><li>Válassza ki a kívánt mérési implementációt (Global Site Tag vagy Google Tag Manager).</li><li>Ha Global Site Tag-et használ, adja meg a Google Tag ID-t és a Measurement Protocol API Secret-et. Google Tag Manager esetén adja meg a Measurement ID-t.</li><li>Állítsa be a követni kívánt eseményeket, például bejelentkezés, vásárlás vagy kosárhoz adás követése.</li><li>Ellenőrizze, hogy más bővítmények, amelyek követési kódokat injektálnak (pl. Tag Manager vagy Global Site Tag), nincsenek-e aktív állapotban, hogy elkerülje az ütközéseket.</li><li>Mentse a beállításokat, és tesztelje az implementációt a Google Analytics hibakereső eszközök segítségével.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Probléma:</strong> Az események nem láthatók a Google Analytics irányítópultján. <strong>Megoldás:</strong> Ellenőrizze, hogy a Measurement ID vagy Tag ID helyesen van-e megadva, és egyezik-e a GA4 tulajdonával. Ha Global Site Tag-et (gtag.js) használ, győződjön meg arról, hogy a Google Tag ID és a Measurement Protocol API Secret megfelelően van konfigurálva.</li><li><strong>Probléma:</strong> Duplikált események kerülnek követésre. <strong>Megoldás:</strong> Ellenőrizze, hogy más analitikai bővítmények nem injektálnak-e követési kódokat, és tiltsa le őket, ha szükséges. Ellenőrizze továbbá, hogy ugyanaz az esemény nem kerül-e több implementáción keresztül követésre (pl. mind GTM, mind gtag.js).</li><li><strong>Probléma:</strong> A követés nem működik több áruházban. <strong>Megoldás:</strong> Győződjön meg arról, hogy a helyes Tag ID vagy Measurement ID minden áruházhoz be van állítva. GTM esetén győződjön meg arról, hogy minden áruháznál a megfelelő konténer be van állítva a Google Tag Managerben.</li><li><strong>Probléma:</strong> A visszatérítési adatok nem jelennek meg a Google Analytics-ben. <strong>Megoldás:</strong> Hagyjon időt arra, hogy a visszatérítési adatok megjelenjenek a Google Analytics-ben, és győződjön meg arról, hogy a visszatérítés helyesen van konfigurálva részleges vagy teljes visszatérítésként, mivel rendelésenként csak egy beküldés fogadható el.</li></ul>';
 $_['text_faq']                              = '<details><summary>Miért jelenik meg a Google Consent Mode (GCM), amikor Global Site Tag-et választok?</summary>A Global Site Tag (gtag.js) nem támogatja és nem igényli a GCM-et.</details><details><summary>Miért nincs hibakeresési mód opció a Google Tag Managerhez?</summary>A hibakeresési módot közvetlenül a Google Tag Managerben kell beállítani.</details><details><summary>Mi történik, ha olyan termékazonosítót választok, amely nem érhető el?</summary>A product_id lesz használva helyette.</details><details><summary>Mi történik, ha nem töltöm ki az Affiliation mezőt?</summary>A bolt neve lesz használva helyette.</details><details><summary>Késleltethetem az események küldését a Google Analytics-be?</summary>Igen, ellenőrizze a Követési események lapot és a Követési késleltetés mezőt.</details><details><summary>Miért nem jelennek meg a visszatérítési adatok a Google Analytics-ben?</summary>A visszatérítési adatok megjelenése időbe telhet a Google Analytics-ben.</details><details><summary>Miért nem lehet visszatérítést többször elküldeni?</summary>A Google Analytics csak egy visszatérítési beküldést fogad rendelésenként. Lehetőség van részleges vagy teljes visszatérítésre.</details><details><summary>Milyen eseményeket támogat a bővítmény?</summary>A támogatott események a következők: add_payment_info, add_shipping_info, add_to_cart, add_to_wishlist, begin_checkout, generate_lead, login, purchase, refund, remove_from_cart, search, select_item, select_promotion, sign_up, view_cart, view_item, view_item_list, view_promotion.</details><details><summary>Hogyan működik a kosárhoz adás esemény?</summary>A kosárhoz adás esemény csak akkor aktiválódik, ha a felhasználó ténylegesen hozzáad egy terméket a kosárhoz. Máskülönben a select_item vagy select_promotion esemény aktiválódik, attól függően, hogy speciális termékről van-e szó.</details>';
-$_['text_contact']                          = '<p>További segítségért kérjük, vegye fel a kapcsolatot támogatói csapatunkkal:</p><ul><li><strong>Kapcsolat:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentáció:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Felhasználói dokumentáció</a></li></ul>';
+$_['text_contact']                          = '<p>További segítségért kérjük, lépjen kapcsolatba támogatási csapatunkkal:</p><ul><li><strong>Kapcsolat:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentáció:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Felhasználói dokumentáció</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Termékopciók csoportja';
@@ -51,7 +51,7 @@ $_['column_refund_quantity']                = 'Visszatérített mennyiség';
 $_['tab_general']                           = 'Általános';
 $_['tab_gcm']                               = 'Google Consent Mode (GCM)';
 $_['tab_track_events']                      = 'Események követése';
-$_['tab_help_and_support']                  = 'Segítség és támogatás';
+$_['tab_help_and_support']                  = 'Segítség &amp; Támogatás';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
 

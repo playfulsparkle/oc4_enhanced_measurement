@@ -1,10 +1,10 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
-$_['heading_fix']                           = 'Opravenie bežných chýb';
-$_['heading_getting_started']               = 'Začiatky';
+$_['heading_fix']                           = 'Oprava bežných chýb';
+$_['heading_getting_started']               = 'Začíname';
 $_['heading_setup']                         = 'Nastavenie (GA4) Enhanced Measurement';
-$_['heading_troubleshoot']                  = 'Bežné problémy';
+$_['heading_troubleshot']                   = 'Bežné problémy';
 $_['heading_faq']                           = 'Často kladené otázky';
 $_['heading_contact']                       = 'Kontaktujte podporu';
 
@@ -16,7 +16,7 @@ $_['text_getting_started']                  = '<p><strong>Prehľad:</strong> Roz
 $_['text_setup']                            = '<ul><li>Vyberte preferované meracie riešenie (Global Site Tag alebo Google Tag Manager).</li><li>Ak používate Global Site Tag, zadajte svoje Google Tag ID a Measurement Protocol API tajný kľúč. Pre Google Tag Manager zadajte svoje Measurement ID.</li><li>Konfigurujte udalosti sledovania, ktoré chcete povoliť, ako prihlásenie, nákup alebo pridanie do košíka.</li><li>Overte, že žiadne iné rozšírenia nezadávajú sledovacie kódy (napr. Tag Manager alebo Global Site Tag), aby sa predišlo konfliktom.</li><li>Uložte nastavenia a otestujte implementáciu pomocou nástrojov na ladenie Google Analytics.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Problém:</strong> Udalosti nie sú viditeľné na paneli Google Analytics. <strong>Riešenie:</strong> Uistite sa, že Measurement ID alebo Tag ID je správne zadané a zodpovedá vášmu účtu GA4. Ak používate Global Site Tag (gtag.js), uistite sa, že Google Tag ID a Measurement Protocol API tajný kľúč sú správne nakonfigurované.</li><li><strong>Problém:</strong> Duplikované udalosti sú sledované. <strong>Riešenie:</strong> Skontrolujte, či iné analytické rozšírenia nezadávajú sledovací kód a deaktivujte ich, ak je to potrebné. Tiež overte, či nie je tá istá udalosť sledovaná prostredníctvom viacerých implementácií (napr. GTM a gtag.js).</li><li><strong>Problém:</strong> Sledovanie nefunguje naprieč viacerými obchodmi. <strong>Riešenie:</strong> Uistite sa, že správne Tag ID alebo Measurement ID je nakonfigurované pre každý obchod. Pre GTM sa uistite, že pre každý obchod je v Google Tag Manageri nastavený správny kontajner.</li><li><strong>Problém:</strong> Dáta o refundáciách nie sú viditeľné v Google Analytics. <strong>Riešenie:</strong> Nechajte nejaký čas na zobrazenie dát o refundáciách v Google Analytics a uistite sa, že refundácia je správne nakonfigurovaná ako čiastočná alebo plná, pretože je akceptované iba jedno podanie refundácie na objednávku.</li></ul>';
 $_['text_faq']                              = '<details><summary>Prečo je Google Consent Mode (GCM) viditeľný, keď vyberiem Global Site Tag?</summary>Global Site Tag (gtag.js) nepodporuje ani nevyžaduje GCM.</details><details><summary>Prečo nie je v Google Tag Manageri možnosť ladenia?</summary>Ladenie je potrebné nastaviť priamo v Google Tag Manageri.</details><details><summary>Čo sa stane, keď vyberiem iné ID položky, ktorá nie je k dispozícii?</summary>Produkt_id bude použitý namiesto toho.</details><details><summary>Čo sa stane, keď nevyplním Affiliation?</summary>Bude použitý názov obchodu.</details><details><summary>Môžu byť udalosti odosielané so oneskorením do Google Analytics?</summary>Ano, pozrite sa na kartu Sledovanie udalostí a pole Sledovanie oneskorenia.</details><details><summary>Prečo sa moje dáta o refundáciách nezobrazujú v Google Analytics?</summary>Dáta o refundáciách môžu v Google Analytics trvať dlhšie, než sa objavia.</details><details><summary>Prečo nemôžem refundovať viac ako raz?</summary>Google Analytics prijíma iba jedno podanie refundácie na objednávku. Môžete spracovať buď čiastočnú, alebo plnú refundáciu.</details><details><summary>Ako funguje udalosť pridania do košíka?</summary>Udalosť pridania do košíka je spustená iba vtedy, keď používateľ skutočne pridá produkt do košíka. Inak je spustená udalosť select_item alebo select_promotion na základe toho, či sa jedná o špeciálny produkt.</details>';
-$_['text_contact']                          = '<p>Pre ďalšiu pomoc kontaktujte náš tím podpory:</p><ul><li><strong>Kontakt:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentácia:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Užívateľská dokumentácia</a></li></ul>';
+$_['text_contact']                          = '<p>Pre ďalšiu pomoc sa, prosím, obráťte na náš tím podpory:</p><ul><li><strong>Kontakt:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentácia:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Dokumentácia pre používateľov</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Možnosti položiek';
@@ -51,7 +51,7 @@ $_['column_refund_quantity']                = 'Množstvo refundácie';
 $_['tab_general']                           = 'Všeobecné';
 $_['tab_gcm']                               = 'Google Consent Mode (GCM)';
 $_['tab_track_events']                      = 'Sledovanie udalostí';
-$_['tab_help_and_support']                  = 'Nápoveda a podpora';
+$_['tab_help_and_support']                  = 'Pomoc &amp; Podpora';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
 
