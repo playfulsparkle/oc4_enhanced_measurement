@@ -36,6 +36,10 @@ Features
 - Enhanced Insights for Better Decisions: Use Google Analytics GA4's robust
   features to optimize your store's performance, improve customer experience,
   and maximize your revenue.
+- Multilingual Support: Ready for international use with languages including
+  Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us),
+  Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it),
+  Русский (ru-ru), and Slovenčina (sk-sk).
 
 Supported Events
 

@@ -41,6 +41,7 @@ $_['text_group_ad_settings']                = 'Nastavenia reklám';
 $_['text_group_analytics_settings']         = 'Nastavenia analytiky';
 $_['text_group_security_settings']          = 'Nastavenia zabezpečenia';
 $_['text_group_advanced_settings']          = 'Pokročilé nastavenia';
+$_['text_product_already_refunded']         = 'Tento produkt už bol vrátený. Ďalšie akcie nie sú k dispozícii.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funguje iba pri výbere Google Tag Manager (GTM) alebo Global Site Tag (gtag.js). Ak používate iný merací nástroj, GCM nebude podporovaný.';
 
 // Column
@@ -105,8 +106,9 @@ $_['entry_gcm_profiles']                    = 'GCM Profily';
 
 // Button
 $_['button_fix_event_handler']              = 'Opraviť obslužnú rutinu udalostí';
-$_['button_refund']                         = 'Refundácia';
-$_['button_refund_all']                     = 'Refundovať všetko';
+$_['button_refund']                         = 'Vrátiť';
+$_['button_refund_selected']                = 'Vrátiť vybrané';
+$_['button_refund_all']                     = 'Vrátiť všetko';
 
 // Help
 $_['help_google_tag_id_locate']             = 'Ak chcete nájsť svoje Google Tag ID, prihláste sa do svojho <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">účtu Analytics</a>. Prejdite do sekcie Admin, vyberte vlastnosť, ktorú chcete sledovať, a nájdite svoje Google Tag ID. Začína písmenom "G-" nasledovaným jedinečnou kombináciou písmen a číslic, napr. "G-XXXXXXXXXX". <a href="https://support.google.com/analytics/answer/9539598?hl=sk" target="_blank" rel="external noopener noreferrer">Podrobnejší návod tu</a>.';
@@ -148,6 +150,7 @@ $_['help_gcm_status']                       = 'Povoľuje režim súhlasu Google,
 // Error
 $_['error_permission']                      = 'Upozornenie: Nemáte oprávnenie upravovať nastavenia (GA4) vylepšeného merania!';
 $_['error_refund_send']                     = 'Upozornenie: Nepodarilo sa odoslať údaje o vrátení peňazí do Google Analytics (GA4). Skontrolujte svoje nastavenia a skúste to znova.';
+$_['error_no_refundable_selected']          = 'Upozornenie: Neboli vybrané žiadne produkty na vrátenie. Vyberte aspoň jeden produkt na spracovanie vrátenia.';
 $_['error_google_tag_id']                   = 'Pole Google Tag ID je povinné. Zadajte svoje Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'Formát Google Tag ID je neplatný. Uistite sa, že nasleduje formát G-XXXXXXXXXX.';
 $_['error_gtm_id']                          = 'Pole GTM ID je povinné. Zadajte svoje meracie ID.';

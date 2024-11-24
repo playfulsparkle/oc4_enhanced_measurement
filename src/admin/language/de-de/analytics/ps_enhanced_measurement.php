@@ -41,6 +41,7 @@ $_['text_group_ad_settings']                = 'Anzeige-Einstellungen';
 $_['text_group_analytics_settings']         = 'Analytics-Einstellungen';
 $_['text_group_security_settings']          = 'Sicherheitseinstellungen';
 $_['text_group_advanced_settings']          = 'Erweiterte Einstellungen';
+$_['text_product_already_refunded']         = 'Dieses Produkt wurde bereits erstattet. Weitere Aktionen sind nicht verfügbar.';
 $_['text_gcm_info']                         = 'Der Google Consent Mode (GCM) funktioniert nur, wenn Sie den Google Tag Manager im Auswahlmenü für die Messimplementierung auswählen. Es funktioniert nicht mit dem Global Site Tag (gtag.js). Um diese Funktion zu nutzen, stellen Sie sicher, dass ein Cookie-Banner installiert ist. Diese Erweiterung setzt standardmäßig einen grundlegenden Zustimmungsstatus, aber das Cookie-Banner ist verantwortlich für die Aktualisierung der Zustimmung zur Datenerfassung.';
 
 // Column
@@ -106,6 +107,7 @@ $_['entry_gcm_profiles']                    = 'GCM-Profile';
 // Button
 $_['button_fix_event_handler']              = 'Ereignishandler beheben';
 $_['button_refund']                         = 'Rückerstattung';
+$_['button_refund_selected']                = 'Ausgewählte erstatten';
 $_['button_refund_all']                     = 'Alle rückerstatten';
 
 // Help
@@ -148,6 +150,7 @@ $_['help_gcm_status']                       = 'Aktiviert den Google Consent Mode
 // Error
 $_['error_permission']                      = 'Warnung: Sie haben keine Berechtigung, die Einstellungen für (GA4) Enhanced Measurement zu ändern!';
 $_['error_refund_send']                     = 'Warnung: Die Rückerstattungsdaten konnten nicht an Google Analytics (GA4) gesendet werden. Bitte überprüfen Sie Ihre Einstellungen und versuchen Sie es erneut.';
+$_['error_no_refundable_selected']          = 'Warnung: Es wurden keine Produkte für die Rückerstattung ausgewählt. Bitte wählen Sie mindestens ein Produkt aus, um die Rückerstattung zu bearbeiten.';
 $_['error_google_tag_id']                   = 'Das Feld Google Tag ID ist erforderlich. Bitte geben Sie Ihre Google Analytics ID ein.';
 $_['error_google_tag_id_invalid']           = 'Das Format der Google Tag ID ist ungültig. Stellen Sie sicher, dass es dem Format G-XXXXXXXXXX entspricht.';
 $_['error_gtm_id']                          = 'Das Feld GTM ID ist erforderlich. Bitte geben Sie Ihre Measurement ID ein.';

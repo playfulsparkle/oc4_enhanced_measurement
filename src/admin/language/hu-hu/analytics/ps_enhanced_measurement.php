@@ -41,6 +41,7 @@ $_['text_group_ad_settings']                = 'Hirdetés beállításai';
 $_['text_group_analytics_settings']         = 'Analitika beállításai';
 $_['text_group_security_settings']          = 'Biztonsági beállítások';
 $_['text_group_advanced_settings']          = 'Speciális beállítások';
+$_['text_product_already_refunded']         = 'Ez a termék már visszatérítésre került. További műveletek nem érhetők el.';
 $_['text_gcm_info']                         = 'A Google Consent Mode (GCM) csak akkor működik, ha a Mérési implementáció legördülő menüben a Google Tag Manager van kiválasztva. Nem működik a Global Site Tag - gtag.js használatakor. A funkció használatához szükséges egy süti-értesítési sáv telepítése. Ez a bővítmény alapértelmezés szerint egy alapvető hozzájárulási állapotot állít be, de a süti-értesítési sáv felelős a hozzájárulási állapot frissítéséért az adatok gyűjtésének engedélyezéséhez.';
 
 // Column
@@ -106,6 +107,7 @@ $_['entry_gcm_profiles']                    = 'GCM profilok';
 // Button
 $_['button_fix_event_handler']              = 'Eseménykezelő javítása';
 $_['button_refund']                         = 'Visszatérítés';
+$_['button_refund_selected']                = 'Kiválasztott visszatérítése';
 $_['button_refund_all']                     = 'Összes visszatérítése';
 
 // Help
@@ -148,6 +150,7 @@ $_['help_gcm_status']                       = 'Engedélyezi a Google Consent Mod
 // Error
 $_['error_permission']                      = 'Figyelem: Nincs jogosultsága a (GA4) Enhanced Measurement beállításainak módosításához!';
 $_['error_refund_send']                     = 'Figyelem: Nem sikerült elküldeni a visszatérítési adatokat a Google Analytics (GA4) számára. Kérjük, ellenőrizze a beállításokat, és próbálja újra.';
+$_['error_no_refundable_selected']          = 'Figyelem: Nem lett kiválasztva egyetlen visszatérítendő termék sem. Kérjük, válasszon legalább egy terméket a visszatérítés feldolgozásához.';
 $_['error_google_tag_id']                   = 'A Google Tag ID mező kitöltése kötelező. Kérjük, adja meg Google Analytics azonosítóját.';
 $_['error_google_tag_id_invalid']           = 'A Google Tag ID formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: G-XXXXXXXXXX.';
 $_['error_gtm_id']                          = 'A GTM ID mező kitöltése kötelező. Kérjük, adja meg Measurement ID-ját.';

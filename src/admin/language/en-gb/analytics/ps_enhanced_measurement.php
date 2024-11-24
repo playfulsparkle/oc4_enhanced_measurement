@@ -41,6 +41,7 @@ $_['text_group_ad_settings']                = 'Ad Settings';
 $_['text_group_analytics_settings']         = 'Analytics Settings';
 $_['text_group_security_settings']          = 'Security Settings';
 $_['text_group_advanced_settings']          = 'Advanced Settings';
+$_['text_product_already_refunded']         = 'This product has already been refunded. No further actions are available.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) works only when you choose Google Tag Manager in the Measurement Implementation dropdown. It doesn’t work with Global Site Tag (gtag.js). To use this feature, make sure you have a cookie banner installed. This extension sets a basic consent state by default, but the cookie banner is responsible for updating consent to allow data collection.';
 
 // Column
@@ -106,6 +107,7 @@ $_['entry_gcm_profiles']                    = 'GCM Profiles';
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
 $_['button_refund']                         = 'Refund';
+$_['button_refund_selected']                = 'Refund Selected';
 $_['button_refund_all']                     = 'Refund All';
 
 // Help
@@ -148,6 +150,7 @@ $_['help_gcm_status']                       = 'Enables Google Consent Mode, allo
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
 $_['error_refund_send']                     = 'Warning: Failed to send refund data to Google Analytics (GA4). Please check your settings and try again.';
+$_['error_no_refundable_selected']          = 'Warning: No products were selected for refund. Please select at least one product to process the refund.';
 $_['error_google_tag_id']                   = 'The Google Tag ID field is required. Please enter your Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'The Google Tag ID format is incorrect. Ensure it follows the format G-XXXXXXXXXX.';
 $_['error_gtm_id']                          = 'The GTM ID field is required. Please enter your Measurement ID.';
