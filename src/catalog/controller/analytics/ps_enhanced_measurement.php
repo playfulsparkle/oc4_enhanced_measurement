@@ -248,7 +248,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $page = 1;
         }
 
-        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+        if (isset($this->request->get['limit'])) {
             $limit = (int) $this->request->get['limit'];
         } else {
             $limit = $this->config->get('config_pagination');
@@ -515,7 +515,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->request->get['sub_category'])) {
-            $sub_category = $this->request->get['sub_category'];
+            $sub_category = (int) $this->request->get['sub_category'];
         } else {
             $sub_category = 0;
         }
@@ -538,7 +538,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $page = 1;
         }
 
-        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+        if (isset($this->request->get['limit'])) {
             $limit = (int) $this->request->get['limit'];
         } else {
             $limit = $this->config->get('config_pagination');
@@ -557,13 +557,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if (isset($this->request->get['search'])) {
                 $item_list_name = sprintf(
                     $this->language->get('text_x_search_products'),
-                    $this->request->get['search']
+                    html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8')
                 );
                 $item_list_id = $this->formatListId($item_list_name);
             } elseif (isset($this->request->get['tag'])) {
                 $item_list_name = sprintf(
                     $this->language->get('text_x_tag_products'),
-                    $this->request->get['tag']
+                    html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8')
                 );
                 $item_list_id = $this->formatListId($item_list_name);
             } else {
@@ -688,13 +688,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($this->config->get('analytics_ps_enhanced_measurement_track_search')) {
                 if (isset($this->request->get['tag'])) {
                     $ps_search = [
-                        'search_term' => $this->request->get['tag'],
+                        'search_term' => html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'),
                         'search_type' => 'site_search',
                         'search_results' => count($items),
                     ];
                 } elseif (isset($this->request->get['search'])) {
                     $ps_search = [
-                        'search_term' => $this->request->get['search'],
+                        'search_term' => html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'),
                         'search_type' => 'site_search',
                         'search_results' => count($items),
                     ];
@@ -826,7 +826,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $page = 1;
         }
 
-        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+        if (isset($this->request->get['limit'])) {
             $limit = (int) $this->request->get['limit'];
         } else {
             $limit = $this->config->get('config_pagination');
@@ -1298,10 +1298,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $page = 1;
         }
 
-        if (isset($this->request->get['limit']) && (int) $this->request->get['limit']) {
+        if (isset($this->request->get['limit'])) {
             $limit = (int) $this->request->get['limit'];
         } else {
-            $limit = (int) $this->config->get('config_pagination');
+            $limit = $this->config->get('config_pagination');
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -2467,7 +2467,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $quantity = (int) $this->request->post['quantity'];
 
-        if ($quantity <= 0) { // Do not send product data if quantity is zero, OpenCart what are you doing?
+        if ($quantity <= 0 || $quantity > PHP_INT_MAX) { // Do not send product data if quantity is zero, OpenCart what are you doing?
             return;
         }
 
@@ -2514,9 +2514,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
+        $product_info = $this->model_catalog_product->getProduct((int) $this->request->post['product_id']);
 
-        $options = isset($this->request->post['option']) ? array_filter($this->request->post['option']) : [];
+        $options = isset($this->request->post['option']) ? array_filter((array) $this->request->post['option']) : [];
 
         if ($product_info) {
             $item = [];
