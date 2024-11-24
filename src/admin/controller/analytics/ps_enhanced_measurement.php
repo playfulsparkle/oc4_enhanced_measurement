@@ -702,7 +702,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
     }
 
     public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void

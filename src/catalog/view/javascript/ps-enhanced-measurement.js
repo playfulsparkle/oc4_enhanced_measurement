@@ -1,42 +1,56 @@
+function handleUpdateCartEvent(trackId) {
+  var quantityObj = $('#product-quantity-' + trackId);
 
-$(document).on('click', '[data-ps-track-event]', function (e) {
-  if (typeof ps_dataLayer === 'undefined') {
-    console.error('Playful Sparkle datalayer object not found!');
-    return;
+  if (quantityObj.length === 0) {
+    return console.error('Cannot find product quantity input field for track ID:', trackId);
   }
 
+  var eventName;
+
+  var quantity = parseInt(quantityObj.val());
+
+  if (isNaN(quantity)) {
+    eventName = 'remove_from_cart';
+  } else {
+    eventName = (quantity > 0) ? 'add_to_cart' : 'remove_from_cart';
+  }
+
+  var trackData = ps_dataLayer.getData(eventName, trackId);
+
+  if (!trackData) {
+    return console.error('getData returned null for event:', eventName, 'and track ID:', trackId);
+  }
+
+  if (eventName === 'add_to_cart') {
+    var dataPrice = trackData.ecommerce.items[0].price;
+
+    trackData.ecommerce.value = dataPrice * quantity;
+    trackData.ecommerce.items[0].quantity = quantity;
+  }
+
+  ps_dataLayer.pushEventData(eventName, trackData);
+}
+
+$(document).on('click', '[data-ps-track-event]', function (e) {
   e.preventDefault();
 
   var self = $(this);
   var trackId = self.data("ps-track-id");
   var eventName = self.data("ps-track-event");
 
-  if (typeof trackId === 'undefined') {
-    console.error('No track ID found!');
-    return;
-  } else if (typeof eventName === 'undefined') {
-    console.error('No event name found!');
-    return;
+  if (!trackId) {
+    return console.error('No track ID found for the clicked element:', self);
+  }
+  if (!eventName) {
+    return console.error('No event name found for the clicked element:', self);
   }
 
-  self.removeAttr("data-ps-track-event").prop('disabled', true);
+  self
+    .removeAttr("data-ps-track-event")
+    .prop('disabled', true);
 
-  if (eventName === 'update_cart') { // Handle shopping cart events
-    var quantityObj = $('#product-quantity-' + trackId);
-    var newQuantity = parseInt(quantityObj.val()) ?? 0;
-
-    eventName = (newQuantity > 0) ? 'add_to_cart' : 'remove_from_cart';
-
-    var trackData = ps_dataLayer.getData(eventName, trackId);
-
-    if (eventName === 'add_to_cart') {
-      var dataPrice = trackData.ecommerce.items[0].price;
-
-      trackData.ecommerce.value = dataPrice * newQuantity;
-      trackData.ecommerce.items[0].quantity = newQuantity;
-    }
-
-    ps_dataLayer.pushEventData(eventName, trackData);
+  if (eventName === 'update_cart') {
+    handleUpdateCartEvent(trackId);
   } else {
     ps_dataLayer.onClick(eventName, trackId);
   }
@@ -45,8 +59,11 @@ $(document).on('click', '[data-ps-track-event]', function (e) {
 
   setTimeout(function () {
     if (elementType === 'BUTTON') {
-      self.prop('disabled', false).trigger("click").attr("data-ps-track-event", eventName);
-    } else if (elementType === 'A') {
+      self
+        .prop('disabled', false)
+        .trigger("click")
+        .attr("data-ps-track-event", eventName);
+    } else if (elementType === 'A' && self.attr("href")) {
       location = self.attr("href");
     }
   }, ps_dataLayer.tracking_delay);

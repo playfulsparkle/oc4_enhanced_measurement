@@ -123,7 +123,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_enhanced_measurement_script = 'extension/ps_enhanced_measurement/catalog/view/javascript/ps-enhanced-measurement.js';
 
-        $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
+        if (isset($args['scripts'])) {
+            $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
+        }
 
 
         $args['ps_enhanced_measurement_status'] = $this->config->get('analytics_ps_enhanced_measurement_status');
@@ -145,7 +147,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_login = null;
             }
 
-            $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_login'] = $ps_login ? json_encode($ps_login, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_login'] = null;
         }
@@ -266,7 +268,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -331,10 +333,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $categories = [];
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -348,19 +348,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -392,7 +382,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
             } else {
                 $args['ps_view_item_list'] = null;
             }
@@ -448,7 +438,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
             $args['ps_merge_items'] = null;
@@ -559,7 +549,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -640,10 +630,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -657,19 +645,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -701,7 +679,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
             } else {
                 $args['ps_view_item_list'] = null;
             }
@@ -724,7 +702,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_search = null;
                 }
 
-                $args['ps_search'] = $ps_search ? json_encode($ps_search, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_search'] = $ps_search ? json_encode($ps_search, JSON_NUMERIC_CHECK) : null;
             } else {
                 $args['ps_search'] = null;
             }
@@ -780,7 +758,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
             $args['ps_search'] = null;
@@ -859,7 +837,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -921,10 +899,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -938,19 +914,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            if ((float) $product_info['special']) {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['special'];
-                }
-            } else {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'];
-                }
-            }
+            $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+            $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -982,7 +948,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1038,7 +1004,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSpecialBefore($args);
@@ -1089,7 +1055,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -1144,10 +1110,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -1161,19 +1125,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            if ((float) $product_info['special']) {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['special'];
-                }
-            } else {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'];
-                }
-            }
+            $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+            $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -1205,7 +1159,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1261,7 +1215,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         foreach ($args['products'] as $index => $product_info) {
@@ -1355,7 +1309,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -1418,10 +1372,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -1435,19 +1387,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            if ((float) $product_info['special']) {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['special'];
-                }
-            } else {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'];
-                }
-            }
+            $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+            $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -1479,7 +1421,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1535,7 +1477,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductManufacturerInfoBefore($args);
@@ -1592,7 +1534,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -1655,10 +1597,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -1672,19 +1612,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -1722,7 +1652,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1768,7 +1698,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountOrderInfoBefore($args);
@@ -1820,7 +1750,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -1878,10 +1808,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -1895,19 +1823,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -1940,7 +1858,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1996,7 +1914,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistBefore($args);
@@ -2079,7 +1997,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -2167,10 +2085,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $categories = [];
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -2186,19 +2102,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            if ((float) $product_info['special']) {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['special'];
-                }
-            } else {
-                if ($item_price_tax) {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                } else {
-                    $price = $product_info['price'];
-                }
-            }
+            $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+            $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -2220,9 +2126,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_view_promotion'] = null;
 
             if ($this->config->get('analytics_ps_enhanced_measurement_track_view_promotion') && (float) $product_info['special']) {
-                $args['ps_view_promotion'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_promotion'] = $items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
             } else if ($this->config->get('analytics_ps_enhanced_measurement_track_view_item')) {
-                $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
             }
 
 
@@ -2303,10 +2209,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -2320,19 +2224,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -2403,7 +2297,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item'] = null;
             $args['ps_view_promotion'] = null;
@@ -2500,7 +2394,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_generate_lead_contact_form = null;
         }
 
-        $args['ps_generate_lead_contact_form'] = $ps_generate_lead_contact_form ? json_encode($ps_generate_lead_contact_form, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_generate_lead_contact_form'] = $ps_generate_lead_contact_form ? json_encode($ps_generate_lead_contact_form, JSON_NUMERIC_CHECK) : null;
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -2549,7 +2443,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_generate_lead_newsletter = null;
         }
 
-        $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_NUMERIC_CHECK) : null;
 
         unset($this->session->data['ps_generate_lead_newsletter_event']);
 
@@ -2564,6 +2458,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string &$output = null)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (!isset($this->request->post['product_id'], $this->request->post['quantity'])) {
+            return;
+        }
+
+        $quantity = (int) $this->request->post['quantity'];
+
+        if ($quantity <= 0) { // Do not send product data if quantity is zero, OpenCart what are you doing?
             return;
         }
 
@@ -2606,13 +2510,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
         $product_info = $this->model_catalog_product->getProduct($this->request->post['product_id']);
 
-        $quantity = isset($this->request->post['quantity']) ? (int) $this->request->post['quantity'] : 1;
         $options = isset($this->request->post['option']) ? array_filter($this->request->post['option']) : [];
 
         if ($product_info) {
@@ -2656,10 +2559,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $categories = [];
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -2741,7 +2642,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+            $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
         }
     }
 
@@ -2807,7 +2708,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -2851,10 +2752,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -2922,7 +2821,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
     public function eventCatalogViewCheckoutShippingMethodBefore(string &$route, array &$args, string &$template): void
@@ -2987,7 +2886,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -3031,10 +2930,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -3102,7 +2999,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
     public function eventCatalogViewCheckoutConfirmBefore(string &$route, array &$args, string &$template): void
@@ -3165,7 +3062,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -3210,10 +3107,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -3271,7 +3166,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);
@@ -3306,7 +3201,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_sign_up = null;
             }
 
-            $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_sign_up'] = $ps_sign_up ? json_encode($ps_sign_up, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_sign_up'] = null;
         }
@@ -3321,7 +3216,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_generate_lead_newsletter = null;
             }
 
-            $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+            $args['ps_generate_lead_newsletter'] = $ps_generate_lead_newsletter ? json_encode($ps_generate_lead_newsletter, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_generate_lead_newsletter'] = null;
         }
@@ -3374,7 +3269,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
     public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string &$output = null)
@@ -3399,7 +3294,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $this->response->setOutput(json_encode($json_response, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
     public function eventCatalogControllerCheckoutSuccessBefore(string &$route, array &$args): void
@@ -3445,7 +3340,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -3490,10 +3385,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -3581,7 +3474,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_NUMERIC_CHECK) : null;
 
 
         if (isset($this->request->cookie['_ga'])) {
@@ -3661,7 +3554,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -3705,10 +3598,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -3765,7 +3656,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ],
         ];
 
-        $args['ps_view_cart'] = $items ? json_encode($ps_view_cart, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_view_cart'] = $items ? json_encode($ps_view_cart, JSON_NUMERIC_CHECK) : null;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartBefore($args);
@@ -3817,7 +3708,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -3862,10 +3753,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -3956,7 +3845,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $args['ps_track_add_to_cart'] = $ps_track_add_to_cart;
@@ -4011,7 +3900,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -4054,10 +3943,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     break;
             }
 
-            $total_categories = count($categories);
-
             foreach ($categories as $category_index => $category_name) {
-                if ($total_categories === 0 || $category_index === 0) {
+                if ($category_index === 0) {
                     $item['item_category'] = $category_name;
                 } else {
                     $item['item_category' . ($category_index + 1)] = $category_name;
@@ -4123,7 +4010,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) : null;
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
 
 
         $args['ps_track_select_item'] = $ps_track_select_item;
@@ -4176,7 +4063,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -4236,10 +4123,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -4253,19 +4138,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4281,7 +4156,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $items[(int) $product_info['product_id']] = $item;
 
-                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -4341,7 +4216,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</>' . PHP_EOL . $output;
             }
         }
     }
@@ -4387,7 +4262,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -4455,10 +4330,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -4472,19 +4345,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4500,7 +4363,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $items[(int) $product_info['product_id']] = $item;
 
-                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -4560,7 +4423,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
@@ -4606,7 +4469,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -4666,10 +4529,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -4683,19 +4544,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4711,7 +4562,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $items[(int) $product_info['product_id']] = $item;
 
-                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -4771,7 +4622,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
@@ -4817,7 +4668,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else if (isset($this->session->data['voucher'])) {
             $product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = '';
+            $product_coupon = null;
         }
 
 
@@ -4884,10 +4735,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         break;
                 }
 
-                $total_categories = count($categories);
-
                 foreach ($categories as $category_index => $category_name) {
-                    if ($total_categories === 0 || $category_index === 0) {
+                    if ($category_index === 0) {
                         $item['item_category'] = $category_name;
                     } else {
                         $item['item_category' . ($category_index + 1)] = $category_name;
@@ -4901,19 +4750,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $item['location_id'] = $location_id;
                 }
 
-                if ((float) $product_info['special']) {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['special'];
-                    }
-                } else {
-                    if ($item_price_tax) {
-                        $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                    } else {
-                        $price = $product_info['price'];
-                    }
-                }
+                $price = (float) $product_info['special'] ? $product_info['special'] : $product_info['price'];
+
+                $price = $item_price_tax ? $this->tax->calculate($price, $product_info['tax_class_id'], $this->config->get('config_tax')) : $price;
 
                 $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4929,7 +4768,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $items[(int) $product_info['product_id']] = $item;
 
-                if (false === isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
+                if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
                         'item_list_id' => $item_list_id,
                         'item_list_name' => $item_list_name,
@@ -4989,7 +4828,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($items) {
-                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
+                $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
