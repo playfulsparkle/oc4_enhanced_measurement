@@ -170,7 +170,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
-		$this->load->model('setting/extension');
+        $this->load->model('setting/extension');
 
         $extensions = $this->model_setting_extension->getExtensionsByType('analytics');
 
@@ -206,7 +206,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (!$json) {
-            if (!isset($this->request->post['analytics_ps_enhanced_measurement_implementation'])) {
+            if (empty($this->request->post['analytics_ps_enhanced_measurement_implementation'])) {
                 $json['error']['input-measurement-implementation'] = $this->language->get('error_measurement_implementation');
             } else if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === '') {
                 $json['error']['input-measurement-implementation'] = $this->language->get('error_measurement_implementation');
@@ -216,22 +216,31 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (!$json) {
             if (empty($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
                 $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
-            } elseif (preg_match('/^G-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
+            } elseif (preg_match('/^G-[A-Z0-9]{10}$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
                 $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
-            }
-
-            if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtm') {
-                if (empty($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
-                    $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
-                } elseif (isset($this->request->post['analytics_ps_enhanced_measurement_gtm_id']) && preg_match('/^GTM-[A-Z0-9]+$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
-                    $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
-                }
             }
 
             if (empty($this->request->post['analytics_ps_enhanced_measurement_mp_api_secret'])) {
                 $json['error']['input-gtm-id'] = $this->language->get('error_mp_api_secret');
             } elseif (preg_match('/^[A-Za-z0-9]{7}-[A-Za-z0-9]{7}-[A-Za-z0-9]{6}$/', $this->request->post['analytics_ps_enhanced_measurement_mp_api_secret']) !== 1) {
                 $json['error']['input-gtm-id'] = $this->language->get('error_mp_api_secret_invalid');
+            }
+
+            if (empty($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
+            } elseif (preg_match('/^GTM-[A-Z0-9]{8}$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
+            }
+
+            if ($this->request->post['analytics_ps_enhanced_measurement_tracking_delay'] < 100) {
+                $json['error']['input-tracking-delay'] = $this->language->get('error_tracking_delay');
+            }
+
+            if (
+                $this->request->post['analytics_ps_enhanced_measurement_wait_for_update'] < 0 ||
+                $this->request->post['analytics_ps_enhanced_measurement_wait_for_update'] > 10000
+            ) {
+                $json['error']['input-wait-for-update'] = $this->language->get('error_wait_for_update');
             }
         }
 
