@@ -54,7 +54,7 @@ $_['text_group_ad_settings']                = 'Ad Settings';
 $_['text_group_analytics_settings']         = 'Analytics Settings';
 $_['text_group_security_settings']          = 'Security Settings';
 $_['text_group_advanced_settings']          = 'Advanced Settings';
-$_['text_gcm_warning']                      = 'Google Consent Mode (GCM) is supported only if you select Google Tag Manager in the Measurement Implementation dropdown. It is not available with Global Site Tag - gtag.js. Please ensure you have installed a cookie banner, as this extension only sets the default consent state. The consent must be updated by the cookie banner to enable data collection.';
+$_['text_gcm_info']                         = 'Google Consent Mode (GCM) works only when you choose Google Tag Manager in the Measurement Implementation dropdown. It doesn’t work with Global Site Tag (gtag.js). To use this feature, make sure you have a cookie banner installed. This extension sets a basic consent state by default, but the cookie banner is responsible for updating consent to allow data collection.';
 
 // Column
 $_['column_refund_quantity']                = 'Refund quantity';
@@ -171,4 +171,4 @@ $_['error_measurement_implementation']      = 'Measurement implementation is not
 $_['error_client_id']                       = 'Warning: Client ID was not saved during checkout. ';
 $_['error_order_product_id']                = 'Warning: The product ID associated with this order was not found.';
 $_['error_request_parameters']              = 'Warning: Required request parameters are missing or incomplete.';
-$_['error_analytics_extension']             = 'Another analytics extension is installed and enabled. This may interfere with the data collection process as multiple extensions can conflict in injecting tracking codes, causing duplicate or incomplete data, or overwriting settings. Please disable other analytics extensions to ensure proper functionality of this extension.';
+$_['error_analytics_extension']             = 'It looks like another analytics tool is already active on your site. Having more than one tool like this can create problems, such as duplicate or missing data, or incorrect settings. To avoid these issues and make sure this extension works properly, please turn off any other analytics tools you’ve installed.';

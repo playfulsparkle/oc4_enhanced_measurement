@@ -1,99 +1,94 @@
 # Playful Sparkle - (GA4) Enhanced Measurement for OpenCart 4
 
-The **Playful Sparkle - (GA4) Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. Designed to support both experienced marketers and beginners, it provides valuable insights into eCommerce performance. Additionally, it supports Google Consent Mode (GCM) with predefined profiles, ensuring that your tracking setup complies with privacy regulations when Google Tag Manager is used for measurement implementation.
+The **Playful Sparkle - (GA4) Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. It is designed to cater to both experienced marketers and beginners, providing valuable insights into your store's performance. Additionally, it supports **Google Consent Mode (GCM)** with predefined profiles, ensuring compliance with privacy regulations when Google Tag Manager is used.
 
-## Features and Benefits
+## Features
 
-### Why Use This Extension?
-
-- **Advanced Tracking Capabilities:** Track user interactions such as product views, cart activities, and purchases in real-time.
-- **Flexible Measurement Implementations:** Supports both **Google Tag Manager (GTM)** and **Global Site Tag (gtag.js)**, giving you the freedom to choose your preferred implementation.
-- **Google Consent Mode (GCM)** provides support for Google Consent Mode through predefined GCM profiles. It enables the configuration of Ad Storage, Ad User Data, Ad Personalization, Analytics Storage, Functionality Storage, Personalization Storage, and Security Storage, as well as advanced settings including Wait for Update, Ads Data Redaction, and URL Passthrough. This functionality is available exclusively when Google Tag Manager is selected as the measurement implementation.
-- **Streamlined Setup:** No coding knowledge required. Just provide the necessary **Google tag ID**, **Measurement Protocol API secret**, or **Measurement ID**, depending on your selected implementation.
-- **Multi-Store Support:** Easily configure tracking for multiple stores under a single setup.
-- **Data-Driven Decisions:** Leverage the power of GA4 to optimize your marketing campaigns, product offerings, and overall user experience.
-
-### Supported Measurement Implementations
-
-1. **Google Tag Manager (GTM):**
-   - Ideal for users requiring advanced customization or managing multiple tags.
-   - Requires **Measurement ID**.
-
-2. **Global Site Tag (gtag.js):**
-   - Quick and straightforward for users looking to integrate Google Analytics without complexity.
-   - Requires **Google Tag ID** and **Measurement Protocol API Secret**.
+- **Advanced Tracking Made Simple:** Automatically tracks important user interactions such as:
+  - Product views, category browsing, and search activity.
+  - Cart interactions like adding or removing items.
+  - Checkout steps and completed purchases.
+- **Two Setup Options to Suit Your Needs:**
+  - **Google Tag Manager (GTM):** Perfect for users who need advanced customization or manage multiple tags. Requires only the **Measurement ID**.
+  - **Global Site Tag (gtag.js):** A straightforward option for quick integration with Google Analytics. Requires **Google Tag ID** and **Measurement Protocol API Secret**.
+- **Google Consent Mode Integration:** Supports configuring user consent preferences for storage and ad data, with advanced options like **Ads Data Redaction** and **Wait for Update** to meet privacy requirements.
+- **Automatic Event Tracking:** Captures eCommerce-specific events such as page views, product impressions, add-to-cart actions, checkout progress, and purchase confirmations—no manual configuration required.
+- **Easy Setup and Management:** No technical skills needed. Simply input your required Google IDs and API secrets, and the extension handles the rest.
+- **Supports Multi-Store Environments:** Track and manage analytics for multiple stores from a single setup.
+- **Enhanced Insights for Better Decisions:** Use Google Analytics GA4's robust features to optimize your store's performance, improve customer experience, and maximize your revenue.
+- **Multilingual Support**: Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), and Slovenčina (sk-sk).
 
 ---
 
+This extension makes tracking your store’s performance easier than ever, ensuring you have all the tools needed to grow your business while staying compliant with privacy regulations. Whether you’re new to analytics or a seasoned marketer, this tool simplifies complex tracking tasks and helps you focus on what matters most—your customers.
+
+---
 ## Tracking eCommerce Events
 
-This extension enables the tracking of key eCommerce events to provide a complete picture of user activity on your store.
+This extension helps you understand how users interact with your online store by automatically tracking key actions (called "events"). These events provide insights into the customer journey, from browsing products to completing purchases, so you can make better decisions to improve your store's performance.
 
-### Supported Events
+### What Are Events?
 
-| **Event Name**             | **Description**                                                                                          |
-|----------------------------|----------------------------------------------------------------------------------------------------------|
-| `add_payment_info`         | Tracks when a user provides payment information during checkout.                                         |
-| `add_shipping_info`        | Tracks when a user selects or adds shipping details during checkout.                                     |
-| `add_to_cart`              | Tracks when a product is added to the shopping cart.                                                     |
-| `add_to_wishlist`          | Tracks when a product is added to a wishlist.                                                            |
-| `begin_checkout`           | Tracks when a user starts the checkout process.                                                          |
-| `generate_lead`            | Tracks lead generation activities.                                                                       |
-| `login`                    | Tracks user logins.                                                                                      |
-| `purchase`                 | Tracks completed purchases, including revenue and items purchased.                                       |
-| `refund`                   | Tracks refunds processed, either partial or full, for orders.                                            |
-| `remove_from_cart`         | Tracks when a product is removed from the shopping cart.                                                 |
-| `search`                   | Tracks user searches on your website.                                                                    |
-| `select_item`              | Tracks when a product with options is selected for viewing.                                              |
-| `select_promotion`         | Tracks when a promotional product with a subscription is selected for viewing.                           |
-| `sign_up`                  | Tracks user registrations.                                                                               |
-| `view_cart`                | Tracks when a user views their shopping cart.                                                            |
-| `view_item`                | Tracks when a user views a single product.                                                               |
-| `view_item_list`           | Tracks when a user views a list of products, such as search results or a category page.                  |
-| `view_promotion`           | Tracks when a user views promotional elements like banners or ads.                                       |
+Events are specific actions your customers take on your website. For example, adding a product to their cart, completing a purchase, or even searching for items. By tracking these actions, you can see what’s working well and what might need improvement.
 
-### Event Details
+### Events Tracked by This Extension
 
-- **Add to Cart:** Fires only when a product is actually added to the cart. If the product has options or a subscription assigned to it, a `select_item` or `select_promotion` event is triggered respectively instead.
-- **Refund:** Captures refund events, with limitations on one submission per order (either partial or full).
+| **Event**                  | **What It Tracks**                                                                                     |
+|----------------------------|--------------------------------------------------------------------------------------------------------|
+| `Add Payment Info`         | When a customer enters their payment details during checkout.                                          |
+| `Add Shipping Info`        | When a customer selects or provides shipping details during checkout.                                  |
+| `Add to Cart`              | When a product is added to the shopping cart.                                                          |
+| `Add to Wishlist`          | When a product is saved to a wishlist for later.                                                       |
+| `Begin Checkout`           | When a customer starts the checkout process.                                                           |
+| `Generate Lead`            | When a customer shows interest, such as by filling out a contact form.                                 |
+| `Login`                    | When a customer logs into their account.                                                               |
+| `Purchase`                 | When a customer completes an order, including the total spent and items purchased.                     |
+| `Refund`                   | When a refund is issued for an order.                                                                  |
+| `Remove from Cart`         | When a product is removed from the shopping cart.                                                      |
+| `Search`                   | When a customer searches for something on your website.                                                |
+| `Select Item`              | When a customer chooses a product to view, especially if it has options like sizes or colors.          |
+| `Select Promotion`         | When a customer interacts with a special promotion or offer.                                           |
+| `Sign Up`                  | When a customer creates an account or registers for something.                                         |
+| `View Cart`                | When a customer views the items in their shopping cart.                                                |
+| `View Item`                | When a customer views a single product page.                                                           |
+| `View Item List`           | When a customer views a list of products, like on a category or search results page.                   |
+| `View Promotion`           | When a customer sees promotional content, such as banners or ads.                                      |
+
+### Simplified Examples
+
+- **Add to Cart:** This event is triggered only when a product is successfully added to the cart. If the product has additional options (like size, color, or subscription plans), the system triggers a `select_item` or `select_promotion` event instead.
+- **Refund:** This tracks when you process a refund for an order. It can be partial (e.g., for one item) or full (for the entire order).
+- **Search:** When a customer uses the search bar on your website, this event records what they are looking for, helping you understand popular keywords.
+
+This feature allows you to get a full picture of how customers use your store, from their first visit to completing their purchase, making it easier to refine your offerings and improve their shopping experience.
 
 ---
 
 ## Installation Instructions
 
-### 1. Download the Extension
-Download the latest **Playful Sparkle - (GA4) Enhanced Measurement** release from this repository.
-
-### 2. Upload the Extension Files
-1. Log in to your OpenCart admin panel.
-2. Go to `Extensions > Installer`.
-3. Click the `Upload` button and upload the `ps_enhanced_measurement.ocmod.zip` file.
-
-### 3. Install the Extension
-4. Once uploaded, find the **Playful Sparkle - (GA4) Enhanced Measurement** extension and click the `Install` button.
-5. Navigate to `Extensions` and select `Analytics` from the dropdown.
-6. Locate the **Playful Sparkle - (GA4) Enhanced Measurement** in the module list and click the green `Install` button.
-
-### 4. Configure the Extension
-1. After installation, go to the `Extensions` page, ensuring `Analytics` is selected.
-2. Click `Edit` next to the **Playful Sparkle - (GA4) Enhanced Measurement** extension.
-4. Install and enable the module by setting the status to "Enabled."
-5. Save the configuration.
+1. Download the latest version from this repository.
+2. Log in to your OpenCart admin panel.
+3. Navigate to `Extensions > Installer`.
+4. Click the `Upload` button and upload the `ps_gtm.ocmod.zip` file.
+5. Locate the extension in the `Installed Extensions` list and click the `Install` button.
+6. Navigate to `Extensions > Extensions` and select `Analytics` from the `Choose the extension type` dropdown list.
+7. Locate the extension in the `Analytics` list and click the `Install` button.
+8. Click the `Edit` button, configure the extension parameters, and click the `Save` button to save your settings.
 
 ---
 
-## Support & Feedback
+## Support & Inquiries
 
-For support or any inquiries regarding the extension, feel free to open an issue on this repository or reach out via email at [support@playfulsparkle.com](mailto:support@playfulsparkle.com).
+For assistance or inquiries related to this extension, please open an issue on this repository or contact us via email at [support@playfulsparkle.com](mailto:support@playfulsparkle.com).
 
 ---
 
 ## License
 
-This project is licensed under the GPL-3.0 license. See the [LICENSE](./LICENSE) file for more information.
+This project is distributed under the GPL-3.0 license. Please refer to the [LICENSE](./LICENSE) file for further details.
 
 ---
 
 ## Contributing
 
-We welcome contributions! If you would like to contribute to this project, please fork the repository and submit a pull request with your changes.
+We encourage contributions from the community. To contribute, please fork the repository and submit a pull request with your proposed changes.

@@ -17,7 +17,7 @@
 	</div>
 	<div class="container-fluid">
 		{% if enabled_extensions %}
-		<div class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> {{ error_analytics_extension }}</div>
+		<div class="alert alert-warning"><i class="fa-solid fa-circle-exclamation"></i> {{ error_analytics_extension }}</div>
 		{% endif %}
 		<div class="card">
 			<div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
@@ -189,7 +189,7 @@
 						</div>
 						<div id="tab-gcm" class="tab-pane">
 
-							<div class="alert alert-warning"><i class="fa-solid fa-circle-exclamation"></i> {{ text_gcm_warning }}</div>
+							<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ text_gcm_info }}</div>
 
 							<div class="row mb-3">
 								<label for="input-gcm-status" class="col-sm-2 col-form-label">{{ entry_gcm_status }}</label>
