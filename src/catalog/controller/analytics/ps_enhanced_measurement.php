@@ -39,7 +39,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $gtag_config['cookie_flags'] = 'SameSite=None;Secure';
             }
 
-            $gtag_config = json_encode($gtag_config);
+            $gtag_config_json = $gtag_config ? json_encode($gtag_config) : null;
 
             $html = '<!-- Google tag (gtag.js) -->' . PHP_EOL;
             $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $google_tag_id . '"></script>' . PHP_EOL;
@@ -47,7 +47,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $html .= "window.dataLayer = window.dataLayer || [];" . PHP_EOL;
             $html .= "function gtag() { dataLayer.push(arguments); }" . PHP_EOL . PHP_EOL;
             $html .= "gtag('js', new Date());" . PHP_EOL;
-            $html .= "gtag('config', '" . $google_tag_id . "', " . $gtag_config . ");" . PHP_EOL;
+
+            if ($gtag_config_json) {
+                $html .= "gtag('config', '" . $google_tag_id . "', " . $gtag_config_json . ");" . PHP_EOL;
+            } else {
+                $html .= "gtag('config', '" . $google_tag_id . "');" . PHP_EOL;
+            }
 
             if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
                 $html .= "gtag('set', 'user_id', " . $this->customer->getId() . ");" . PHP_EOL;
