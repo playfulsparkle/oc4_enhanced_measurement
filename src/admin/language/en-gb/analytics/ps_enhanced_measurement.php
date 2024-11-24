@@ -123,40 +123,40 @@ $_['button_refund_all']                     = 'Refund All';
 
 // Help
 $_['help_google_tag_id_locate']             = 'To find your Google tag ID, log in to your <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">Analytics account</a>. Go to the Admin section, select the property you want to track, and find your Google tag ID. It will start with "G-" followed by a unique combination of letters and numbers, like "G-XXXXXXXXXX." <a href="https://support.google.com/analytics/answer/9539598?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';
-$_['help_gtm_id_locate']                    = 'To find your Measurement ID to your <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">Google Tag Manager account</a>. In the workspace, look for the ID at the top of the dashboard—it starts with "GTM-" followed by a unique series of letters and numbers, such as "GTM-XXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';
-$_['help_mp_api_secret_locate']             = 'To find your Measurement Protocol API Secret, go to your <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">Google Analytics account</a>. Navigate to Admin in the left-hand menu, then under the Property Settings, select Data Streams. Choose your data stream, and scroll down to the Measurement Protocol API secrets section. Here, you can create a new API secret or find your existing ones. The API secret is a unique string e.g. XXXXXXX-XXXXXXX-XXXXXX used for authenticating server-side requests.';
+$_['help_gtm_id_locate']                    = 'To find your Measurement ID for your <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">Google Tag Manager account</a>, look for the ID at the top of the workspace dashboard—it starts with "GTM-" followed by a unique series of letters and numbers, such as "GTM-XXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=en" target="_blank" rel="external noopener noreferrer">More detailed instructions here</a>.';
+$_['help_mp_api_secret_locate']             = 'To find your Measurement Protocol API Secret, go to your <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">Google Analytics account</a>. Navigate to Admin in the left-hand menu, then under the Property Settings, select Data Streams. Choose your data stream, and scroll down to the Measurement Protocol API secrets section. Here, you can create a new API secret or find your existing ones. The API secret is a unique string, e.g., XXXXXXX-XXXXXXX-XXXXXX, used for authenticating server-side requests.';
 $_['help_affiliation']                      = 'Enter the store name or department for the <strong>affiliation</strong> part of ecommerce tracking. If you leave this blank, it will automatically use the default store name from the settings.';
-$_['help_location_id']                      = 'The physical location of the item, like the store where it’s sold. It’s best to use the <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> for that location, but you can also use a custom location ID.';
+$_['help_location_id']                      = 'The physical location of the item, such as the store where it’s sold. It’s best to use the <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> for that location, but you can also use a custom location ID.';
 $_['help_tracking_delay']                   = 'Specify the delay (in milliseconds) to wait before executing the default action (e.g., navigating to a link or submitting a form) after the GA4 event is sent. This ensures the event is tracked properly before the action completes. Leave empty to use the default value.';
 $_['help_generate_lead']                    = 'This event measures when a lead has been generated, specifically tracking newsletter subscriptions and contact form submissions. Use this to understand the effectiveness of your marketing campaigns and how many customers re-engage with your business after remarketing.';
-$_['help_sign_up']                          = 'This event indicates that a user has signed up for an account. Use this to understand the different behaviors of logged-in and logged-out users.';
+$_['help_sign_up']                          = 'This event indicates that a user has signed up for an account. Use this to understand the different behaviours of logged-in and logged-out users.';
 $_['help_login']                            = 'Send this event to signify that a user has logged in to your website or app.';
 $_['help_add_to_wishlist']                  = 'This event signifies that an item was added to a wishlist. Use this to identify popular gift items in your app.';
 $_['help_add_to_cart']                      = 'This event signifies that an item was added to a cart for purchase.';
 $_['help_remove_from_cart']                 = 'This event signifies that an item was removed from a cart.';
 $_['help_search']                           = 'Log this event to indicate when the user has performed a search. Use this to identify what users are searching for on your website or app. For example, send this event when a user views a search results page after performing a search.';
-$_['help_view_item_list']                   = 'Log this event when the user has been presented with a list of items of a certain category.';
+$_['help_view_item_list']                   = 'Log this event when the user has been presented with a list of items from a certain category.';
 $_['help_select_item']                      = 'This event signifies an item was selected from a list.';
 $_['help_view_item']                        = 'This event signifies that some content was shown to the user. Use this to discover the most popular items viewed.';
 $_['help_select_promotion']                 = 'This event signifies a promotion was selected from a list.';
 $_['help_view_promotion']                   = 'This event signifies a promotion was viewed from a list.';
 $_['help_view_cart']                        = 'This event signifies that a user viewed their cart.';
-$_['help_begin_checkout']                   = 'This event signifies that a user has begun a checkout process.';
+$_['help_begin_checkout']                   = 'This event signifies that a user has begun the checkout process.';
 $_['help_add_payment_info']                 = 'This event signifies a user has submitted their payment information in an ecommerce checkout process.';
 $_['help_add_shipping_info']                = 'This event signifies a user has submitted their shipping information in an ecommerce checkout process.';
-$_['help_purchase']                         = 'This event signifies when one or more items is purchased by a user.';
-$_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behavior across sessions and devices, providing more accurate and detailed analytics.';
+$_['help_purchase']                         = 'This event signifies when one or more items are purchased by a user.';
+$_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behaviour across sessions and devices, providing more accurate and detailed analytics.';
 $_['help_ad_storage']                       = 'Controls whether data storage is allowed for ad-related purposes, such as tracking ad clicks or conversions.';
 $_['help_ad_user_data']                     = 'Determines if data about users interacting with ads is stored, enhancing ad targeting capabilities.';
-$_['help_ad_personalization']               = 'Allows ads to be personalized based on user data, providing more relevant advertisements to users.';
-$_['help_analytics_storage']                = 'Enables storage of data used for analytics purposes, helping to track site performance and user behavior.';
+$_['help_ad_personalization']               = 'Allows ads to be personalised based on user data, providing more relevant advertisements to users.';
+$_['help_analytics_storage']                = 'Enables storage of data used for analytics purposes, helping to track site performance and user behaviour.';
 $_['help_functionality_storage']            = 'Allows data storage to support functionality, like user preferences or site features that enhance user experience.';
-$_['help_personalization_storage']          = 'Controls storage of data for personalizing the user experience, such as recommended content or settings.';
+$_['help_personalization_storage']          = 'Controls storage of data for personalising the user experience, such as recommended content or settings.';
 $_['help_security_storage']                 = 'Ensures storage of security-related data, such as for fraud prevention and secure access control.';
 $_['help_wait_for_update']                  = 'Sets the time (in milliseconds) to delay before updating consent status, ensuring all settings are applied.';
 $_['help_ads_data_redaction']               = 'Redacts user data related to ads, ensuring privacy by hiding certain identifiable information.';
 $_['help_url_passthrough']                  = 'Allows the URL to pass through consent checks, useful for tracking specific user paths without storing personal data.';
-$_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behavior based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
+$_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behaviour based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
@@ -171,4 +171,4 @@ $_['error_measurement_implementation']      = 'Measurement implementation is not
 $_['error_client_id']                       = 'Warning: Client ID was not saved during checkout. ';
 $_['error_order_product_id']                = 'Warning: The product ID associated with this order was not found.';
 $_['error_request_parameters']              = 'Warning: Required request parameters are missing or incomplete.';
-$_['error_analytics_extension']             = 'It looks like another analytics tool is already active on your site. Having more than one tool like this can create problems, such as duplicate or missing data, or incorrect settings. To avoid these issues and make sure this extension works properly, please turn off any other analytics tools you’ve installed.';
+$_['error_analytics_extension']             = 'It looks like another analytics tool is already active on your site. Having more than one tool like this can create problems, such as duplicate or missing tracking. Please check your site’s settings.';
