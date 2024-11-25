@@ -125,7 +125,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     function sendRefundData(refundInputs, formData) {
                         ps_refund_btns.prop('disabled', true);
 
-                        fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.sendRefund&user_token={{ user_token }}', {
+                        fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.send_refund&user_token={{ user_token }}', {
                                 method: 'POST',
                                 body: formData
                             })
@@ -168,14 +168,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             KEY `order_id` (`order_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
         ");
-
-        $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` ADD `ps_disqualified_lead` TINYINT NOT NULL DEFAULT '0' AFTER `price`");
     }
 
     public function uninstall()
     {
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ps_refund_order`");
-        $this->db->query("TABLE `" . DB_PREFIX . "cart` DROP `ps_disqualified_lead`");
     }
 
     public function getClientIdByOrderId($orderId)

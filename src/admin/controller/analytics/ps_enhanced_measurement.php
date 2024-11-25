@@ -299,10 +299,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
             $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->install();
-
-            $this->load->model('setting/cron');
-
-            $this->model_setting_cron->addCron('ps_enhanced_measurement', '', 'day', 'extension/ps_enhanced_measurement/cron/ps_enhanced_measurement', true);
         }
     }
 
@@ -316,10 +312,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
             $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->uninstall();
-
-            $this->load->model('setting/cron');
-
-            $this->model_setting_cron->deleteCronByCode('ps_enhanced_measurement');
         }
     }
 
@@ -431,7 +423,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         return $result > 0;
     }
 
-    public function sendRefund(): void
+    public function send_refund(): void
     {
         if (
             !$this->config->get('analytics_ps_enhanced_measurement_status') ||
