@@ -262,7 +262,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('setting/setting');
 
             $data = [
-                'analytics_ps_enhanced_measurement_implementation' => 'gtm',
+                'analytics_ps_enhanced_measurement_implementation' => 'gtag',
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => 1,
