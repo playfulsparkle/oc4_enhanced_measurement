@@ -2545,7 +2545,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
             unset($this->session->data['ps_generate_lead_contact_form_event']);
 
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
             $ps_generate_lead_contact_form = [
+                'currency' => $currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'lead_source' => 'contact_form',
             ];
 
@@ -2600,7 +2608,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             unset($this->session->data['ps_generate_lead_newsletter_event']);
 
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
             $ps_generate_lead_newsletter = [
+                'currency' => $currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'lead_source' => 'newsletter',
             ];
 
@@ -3501,7 +3517,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if ($config_track_generate_lead && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
             $json_response['ps_generate_lead_newsletter'] = [
+                'currency' => $currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'lead_source' => 'newsletter',
             ];
         }
