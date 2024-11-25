@@ -36,20 +36,20 @@ $_['text_category_option_type_3']           = 'Los nombres de categoría actuale
 $_['text_category_option_type_4']           = 'El último segmento del nombre de la categoría actual asociada al producto';
 $_['text_multi_currency']                   = 'Multi-moneda';
 $_['text_refund_quantity']                  = 'Cantidad';
-$_['text_refund_successfully_sent']         = 'Éxito: Los datos de reembolso se han enviado exitosamente a Google Analytics.';
+$_['text_refund_success']                   = 'Éxito: Los datos de reembolso se han enviado correctamente a Google Analytics.';
 $_['text_group_ad_settings']                = 'Configuración de anuncios';
 $_['text_group_analytics_settings']         = 'Configuración de análisis';
 $_['text_group_security_settings']          = 'Configuración de seguridad';
 $_['text_group_advanced_settings']          = 'Configuración avanzada';
 $_['text_product_already_refunded']         = 'Este producto ya ha sido reembolsado. No se pueden realizar más acciones.';
-$_['text_gcm_info']                         = 'El Modo de Consentimiento de Google (GCM) solo funciona cuando eliges Google Tag Manager en el menú desplegable de Implementación de Medición. No funciona con Global Site Tag (gtag.js). Para usar esta función, asegúrate de tener un banner de cookies instalado. Esta extensión establece un estado básico de consentimiento por defecto, pero el banner de cookies es responsable de actualizar el consentimiento para permitir la recolección de datos.';
+$_['text_gcm_info']                         = 'El Modo de Consentimiento de Google (GCM) solo funciona cuando seleccionas Google Tag Manager en el menú desplegable de Implementación de Medición. No es compatible con Global Site Tag (gtag.js). Para usar esta función, asegúrate de tener instalado un banner de cookies. Esta extensión establece un estado básico de consentimiento por defecto, pero el banner de cookies es responsable de actualizar el consentimiento para permitir la recolección de datos.';
 $_['text_close_convert_lead']               = 'Cerrar cliente potencial como convertido (por ejemplo, Pedido completado con éxito)';
 $_['text_close_unconvert_lead']             = 'Cerrar cliente potencial como no convertido (por ejemplo, Pedido cancelado)';
 $_['text_disqualify_lead']                  = 'Descalificación del cliente potencial (por ejemplo, Carrito abandonado)';
-$_['text_working_lead_success']             = 'El evento « Cliente potencial en proceso » se ha enviado con éxito.';
-$_['text_close_convert_lead_success']       = 'El evento « Cliente potencial convertido cerrado » se ha enviado con éxito.';
-$_['text_close_unconvert_lead_success']     = 'El evento « Cliente potencial no convertido cerrado » se ha enviado con éxito.';
-$_['text_disqualify_lead_success']          = 'El evento « Cliente potencial descalificado » se ha enviado con éxito.';
+$_['text_working_lead_success']             = 'El evento « Cliente potencial en proceso » se ha enviado correctamente.';
+$_['text_close_convert_lead_success']       = 'El evento « Cliente potencial convertido cerrado » se ha enviado correctamente.';
+$_['text_close_unconvert_lead_success']     = 'El evento « Cliente potencial no convertido cerrado » se ha enviado correctamente.';
+$_['text_disqualify_lead_success']          = 'El evento « Cliente potencial descalificado » se ha enviado correctamente.';
 
 // Column
 $_['column_refund_quantity']                = 'Cantidad de Reembolso';
@@ -114,7 +114,7 @@ $_['entry_gcm_profiles']                    = 'Perfiles de GCM';
 $_['entry_lead_associations']               = 'Asociaciones de clientes potenciales';
 $_['entry_lead_type']                       = 'Tipo de cliente potencial';
 $_['entry_order_status']                    = 'Estado del pedido';
-$_['entry_working_lead']                    = '(GA4) Enviar evento de "Working Lead"';
+$_['entry_working_lead']                    = 'Enviar evento "Working Lead" (GA4)';
 
 // Button
 $_['button_fix_event_handler']              = 'Corregir Controlador de Eventos';
@@ -123,16 +123,16 @@ $_['button_refund_selected']                = 'Reembolsar Seleccionado';
 $_['button_refund_all']                     = 'Reembolsar Todo';
 
 // Help
-$_['help_google_tag_id_locate']             = 'Para encontrar tu Google Tag ID, inicia sesión en tu <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">cuenta de Analytics</a>. Ve a la sección de Administración, selecciona la propiedad que deseas rastrear y localiza tu Google Tag ID. Comenzará con "G-" seguido de una combinación única de letras y números, como "G-XXXXXXXXXX". <a href="https://support.google.com/analytics/answer/9539598?hl=es" target="_blank" rel="external noopener noreferrer">Instrucciones más detalladas aquí</a>.';
+$_['help_google_tag_id_locate']             = 'Para encontrar tu Google Tag ID, inicia sesión en tu <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">cuenta de Analytics</a>. Ve a la sección de Administración, selecciona la propiedad que deseas rastrear y localiza tu Google Tag ID. Este comenzará con "G-" seguido de una combinación única de letras y números, como "G-XXXXXXXXXX". <a href="https://support.google.com/analytics/answer/9539598?hl=es" target="_blank" rel="external noopener noreferrer">Instrucciones más detalladas aquí</a>.';
 $_['help_gtm_id_locate']                    = 'Para encontrar tu Measurement ID para tu <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">cuenta de Google Tag Manager</a>, busca el ID en la parte superior del panel de trabajo, comenzando con "GTM-" seguido de una serie única de letras y números, como "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=es" target="_blank" rel="external noopener noreferrer">Instrucciones más detalladas aquí</a>.';
-$_['help_mp_api_secret_locate']             = 'Para encontrar tu Measurement Protocol API Secret, ve a tu <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">cuenta de Google Analytics</a>. Navega a Administración en el menú de la izquierda, luego bajo la Configuración de la Propiedad, selecciona Flujos de Datos. Elige tu flujo de datos y desplázate hacia abajo hasta la sección de secretos de Measurement Protocol API. Aquí podrás crear un nuevo secreto de API o encontrar los existentes. El secreto de API es una cadena única, por ejemplo, XXXXXXX-XXXXXXX-XXXXXX, utilizada para autenticar las solicitudes del lado del servidor.';
+$_['help_mp_api_secret_locate']             = 'Para encontrar tu Measurement Protocol API Secret, ve a tu <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">cuenta de Google Analytics</a>. Navega a Administración en el menú de la izquierda, luego, bajo la Configuración de la Propiedad, selecciona Flujos de Datos. Elige tu flujo de datos y desplázate hacia abajo hasta la sección de secretos de Measurement Protocol API. Aquí podrás crear un nuevo secreto de API o encontrar los existentes. El secreto de API es una cadena única, por ejemplo, XXXXXXX-XXXXXXX-XXXXXX, utilizada para autenticar las solicitudes del lado del servidor.';
 $_['help_affiliation']                      = 'Ingresa el nombre de la tienda o departamento para la parte de <strong>afiliación</strong> del seguimiento de comercio electrónico. Si dejas este campo vacío, se utilizará automáticamente el nombre de la tienda predeterminado de la configuración.';
 $_['help_location_id']                      = 'La ubicación física del artículo, como la tienda donde se vende. Lo ideal es usar el <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> para esa ubicación, pero también puedes usar un ID de ubicación personalizado.';
 $_['help_tracking_delay']                   = 'Especifica el retraso (en milisegundos) antes de ejecutar la acción predeterminada (por ejemplo, navegar a un enlace o enviar un formulario) después de que se envíe el evento de GA4. Esto asegura que el evento se rastree correctamente antes de que se complete la acción. Déjalo vacío para usar el valor predeterminado.';
-$_['help_generate_lead']                    = 'Este evento mide cuando se ha generado un lead, específicamente rastreando suscripciones a boletines y envíos de formularios de contacto. Úsalo para entender la efectividad de tus campañas de marketing y cuántos clientes vuelven a interactuar con tu negocio después de una reorientación.';
-$_['help_qualify_lead']                     = 'Este evento mide cuándo un lead se califica, como después de una interacción significativa con el cliente o una acción de alto valor, como el inicio del proceso de pago. Utilícelo para evaluar la calidad de sus leads y rastrear el progreso de los clientes potenciales a través de su embudo de ventas.';
-$_['help_sign_up']                          = 'Este evento indica que un usuario se ha registrado en una cuenta. Úsalo para comprender los diferentes comportamientos de los usuarios que han iniciado sesión y los que no han iniciado sesión.';
-$_['help_login']                            = 'Envía este evento para señalar que un usuario ha iniciado sesión en tu sitio web o aplicación.';
+$_['help_generate_lead']                    = 'Este evento mide cuando se ha generado un lead, específicamente rastreando suscripciones a boletines y envíos de formularios de contacto. Úsalo para evaluar la efectividad de tus campañas de marketing y cuántos clientes vuelven a interactuar con tu negocio después de una reorientación.';
+$_['help_qualify_lead']                     = 'Este evento mide cuándo un lead se califica, como después de una interacción significativa con el cliente o una acción de alto valor, como el inicio del proceso de pago. Utilízalo para evaluar la calidad de tus leads y rastrear el progreso de los clientes potenciales a través de su embudo de ventas.';
+$_['help_sign_up']                          = 'Este evento indica que un usuario se ha registrado en una cuenta. Úsalo para entender los diferentes comportamientos de los usuarios que han iniciado sesión y los que no han iniciado sesión.';
+$_['help_login']                            = 'Envía este evento para indicar que un usuario ha iniciado sesión en tu sitio web o aplicación.';
 $_['help_add_to_wishlist']                  = 'Este evento indica que un artículo se ha añadido a una lista de deseos. Úsalo para identificar los artículos populares para regalos en tu aplicación.';
 $_['help_add_to_cart']                      = 'Este evento indica que un artículo se ha añadido a un carrito para su compra.';
 $_['help_remove_from_cart']                 = 'Este evento indica que un artículo se ha eliminado de un carrito.';
@@ -163,7 +163,7 @@ $_['help_working_lead']                     = 'Activa esta opción para enviar e
 
 // Error
 $_['error_permission']                      = 'Advertencia: No tiene permiso para modificar la configuración de (GA4) Enhanced Measurement.';
-$_['error_refund_send']                     = 'Advertencia: No se pudo enviar los datos de reembolso a Google Analytics (GA4). Verifique su configuración e inténtelo nuevamente.';
+$_['error_refund_send']                     = 'Advertencia: No se pudieron enviar los datos de reembolso a Google Analytics (GA4). Verifique su configuración e inténtelo nuevamente.';
 $_['error_no_refundable_selected']          = 'Advertencia: No se seleccionaron productos para el reembolso. Por favor, seleccione al menos un producto para procesar el reembolso.';
 $_['error_google_tag_id']                   = 'El campo Google Tag ID es obligatorio. Por favor, ingrese su ID de Google Analytics.';
 $_['error_google_tag_id_invalid']           = 'El formato de Google Tag ID es incorrecto. Asegúrese de que siga el formato G-XXXXXXXXXX.';
@@ -176,7 +176,7 @@ $_['error_refund_no_items']                 = 'Advertencia: No se encontró el I
 $_['error_refund_no_order_id']              = 'Advertencia: Faltan o son incompletos los parámetros requeridos en la solicitud.';
 $_['error_analytics_extension']             = 'Parece que otra herramienta de análisis ya está activa en su sitio. Tener más de una herramienta de este tipo puede generar problemas, como seguimiento duplicado o faltante. Verifique la configuración de su sitio.';
 $_['error_tracking_delay']                  = 'El retraso de seguimiento debe ser al menos de 100 milisegundos para asegurar un seguimiento adecuado de los eventos.';
-$_['error_wait_for_update']                 = 'El valor de Esperar para actualización debe ser un número entre 0 y 10000 milisegundos.';
+$_['error_wait_for_update']                 = 'El valor de « Esperar para actualización » debe ser un número entre 0 y 10000 milisegundos.';
 $_['error_working_lead']                    = 'Se produjo un error al enviar el evento « Cliente potencial en proceso ».';
 $_['error_close_convert_lead']              = 'Se produjo un error al enviar el evento « Cliente potencial convertido cerrado ».';
 $_['error_close_unconvert_lead']            = 'Se produjo un error al enviar el evento « Cliente potencial no convertido cerrado ».';

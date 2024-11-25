@@ -735,7 +735,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($this->sendGAAnalyticsData($event_data)) {
             $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
 
-            $json['success'] = $this->language->get('text_refund_successfully_sent');
+            $json['success'] = $this->language->get('text_refund_success');
         } else {
             $json['error'] = $this->language->get('error_refund_send');
         }
