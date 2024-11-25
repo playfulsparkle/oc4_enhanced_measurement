@@ -171,7 +171,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             `user_id` int(11) NOT NULL,
             `client_id` varchar(50) NOT NULL,
             `refunded` tinyint(1) NOT NULL DEFAULT 0,
-            `date_added` datetime NOT NULL DEFAULT
+            `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`refund_id`),
             KEY `order_id` (`order_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;

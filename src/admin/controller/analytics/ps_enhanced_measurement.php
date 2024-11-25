@@ -262,13 +262,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('setting/setting');
 
             $data = [
-                'analytics_ps_enhanced_measurement_implementation' => 'gtag',
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => 1,
                 'analytics_ps_enhanced_measurement_debug_mode' => 0,
                 'analytics_ps_enhanced_measurement_gtag_debug_mode' => 0,
-                'analytics_ps_enhanced_measurement_currency' => $this->language->get('text_default'),
+                'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
                 'analytics_ps_enhanced_measurement_track_user_id' => 1,
                 'analytics_ps_enhanced_measurement_track_generate_lead' => 1,
