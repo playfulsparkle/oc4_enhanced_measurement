@@ -440,9 +440,36 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!isset($this->request->post['order_id'])) {
+            $json = [];
+
+            $json['error'] = $this->language->get('error_refund_no_order_id');
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
+
+            return;
+        }
+
+        $order_id = (int) $this->request->post['order_id'];
+
         $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
+        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
+
+        if (!$client_info) {
+            $json = [];
+
+            $json['error'] = $this->language->get('error_client_id');
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
+
+            return;
+        }
+
         $this->load->model('sale/order');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
@@ -466,54 +493,40 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $affiliation = $this->config->get('config_name');
         }
 
+        $refund = isset($this->request->post['refund']) ? (array) $this->request->post['refund'] : [];
 
-        if (isset($this->request->post['order_id'])) {
-            $order_id = (int) $this->request->post['order_id'];
-        } else {
-            $order_id = 0;
+
+        $order_total_data['total_coupon'] = null;
+        $order_total_data['total_voucher'] = null;
+
+        $order_totals = $this->model_sale_order->getTotals($order_id);
+
+        foreach ($order_totals as $order_total) {
+            $start = strpos($order_total['title'], '(') + 1;
+            $end = strrpos($order_total['title'], ')');
+
+            if ($start && $end) {
+                $order_total_data['total_' . $order_total['code']] = substr($order_total['title'], $start, $end - $start);
+            }
         }
 
-        if (isset($this->request->post['refund'])) {
-            $refund = (array) $this->request->post['refund'];
+        if ($order_total_data['total_coupon']) {
+            $product_coupon = $order_total_data['total_coupon'];
+        } else if (isset($this->session->order_total_data['voucher'])) {
+            $product_coupon = $order_total_data['total_voucher'];
         } else {
-            $refund = [];
+            $product_coupon = '';
         }
 
 
-        $json = [];
+        $items = [];
+        $index = 0;
+        $total = 0;
+        $sub_total = 0;
 
+        $products = $this->model_sale_order->getProducts($order_id);
 
-        if ($order_id) {
-            $order_total_data['total_coupon'] = null;
-            $order_total_data['total_voucher'] = null;
-
-            $order_totals = $this->model_sale_order->getTotals($order_id);
-
-            foreach ($order_totals as $order_total) {
-                $start = strpos($order_total['title'], '(') + 1;
-                $end = strrpos($order_total['title'], ')');
-
-                if ($start && $end) {
-                    $order_total_data['total_' . $order_total['code']] = substr($order_total['title'], $start, $end - $start);
-                }
-            }
-
-            if ($order_total_data['total_coupon']) {
-                $product_coupon = $order_total_data['total_coupon'];
-            } else if (isset($this->session->order_total_data['voucher'])) {
-                $product_coupon = $order_total_data['total_voucher'];
-            } else {
-                $product_coupon = '';
-            }
-
-
-            $products = $this->model_sale_order->getProducts($order_id);
-
-            $items = [];
-            $index = 0;
-            $total = 0;
-            $sub_total = 0;
-
+        if ($products) {
             if ($refund) {
                 foreach ($products as $product) {
                     if (isset($refund[(int) $product['order_product_id']])) {
@@ -653,73 +666,74 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $index++;
                 } // end foreach
             }
-
-
-            if ($items) {
-                $total_fees = 0;
-                $shipping = 0;
-
-                foreach ($order_totals as $order_total) {
-                    if (in_array($order_total['code'], ['sub_total', 'tax', 'total'])) {
-                        continue;
-                    }
-
-                    if ($order_total['code'] === 'shipping') {
-                        $shipping = $order_total['value'];
-                        continue;
-                    }
-
-                    $total_fees += $order_total['value'];
-                }
-
-
-                $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
-
-                if ($client_info) {
-                    $params = [
-                        'currency' => $currency,
-                        'transaction_id' => $order_id,
-                        'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
-                        'coupon' => $product_coupon ? $product_coupon : '',
-                        'shipping' => $this->currency->format($shipping, $currency, 0, false),
-                        'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
-                        'items' => array_values($items),
-                    ];
-
-                    if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
-                        $params['engagement_time_msec'] = 1200;
-                        $params['debug_mode'] = true;
-                    }
-
-                    $event_data = [
-                        'client_id' => $client_info['client_id'],
-                        'user_id' => $client_info['user_id'],
-                        'non_personalized_ads' => true,
-                        'events' => [
-                            [
-                                'name' => 'refund',
-                                'params' => $params,
-                            ],
-                        ],
-                    ];
-
-                    if ($this->sendGAAnalyticsData($event_data)) {
-                        $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
-
-                        $json['success'] = $this->language->get('text_refund_successfully_sent');
-                    } else {
-                        $json['error'] = $this->language->get('error_refund_send');
-                    }
-                } else {
-                    $json['error'] = $this->language->get('error_client_id');
-                }
-            } else {
-                $json['error'] = $this->language->get('error_order_product_id');
-            }
-        } else {
-            $json['error'] = $this->language->get('error_request_parameters');
         }
 
+        if (!$items) {
+            $json = [];
+
+            $json['error'] = $this->language->get('error_refund_no_items');
+
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
+
+            return;
+        }
+
+
+        $total_fees = 0;
+        $shipping = 0;
+
+        foreach ($order_totals as $order_total) {
+            if (in_array($order_total['code'], ['sub_total', 'tax', 'total'])) {
+                continue;
+            }
+
+            if ($order_total['code'] === 'shipping') {
+                $shipping = $order_total['value'];
+                continue;
+            }
+
+            $total_fees += $order_total['value'];
+        }
+
+
+        $params = [
+            'currency' => $currency,
+            'transaction_id' => $order_id,
+            'value' => $this->currency->format($sub_total + $total_fees, $currency, 0, false),
+            'coupon' => $product_coupon ? $product_coupon : '',
+            'shipping' => $this->currency->format($shipping, $currency, 0, false),
+            'tax' => $this->currency->format($total - $sub_total, $currency, 0, false),
+            'items' => array_values($items),
+        ];
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+            $params['engagement_time_msec'] = 1200;
+            $params['debug_mode'] = true;
+        }
+
+        $event_data = [
+            'client_id' => $client_info['client_id'],
+            'user_id' => $client_info['user_id'],
+            'non_personalized_ads' => true,
+            'events' => [
+                [
+                    'name' => 'refund',
+                    'params' => $params,
+                ],
+            ],
+        ];
+
+
+        $json = [];
+
+        if ($this->sendGAAnalyticsData($event_data)) {
+            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
+
+            $json['success'] = $this->language->get('text_refund_successfully_sent');
+        } else {
+            $json['error'] = $this->language->get('error_refund_send');
+        }
 
         $this->response->addHeader('Content-Type: application/json');
         $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
@@ -736,7 +750,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ch = curl_init($url);
 
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36');
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
