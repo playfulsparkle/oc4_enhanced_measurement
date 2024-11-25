@@ -2698,8 +2698,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['coupon'] = $product_coupon;
             }
 
-            // $item['discount'] = 0;
-
             $item['index'] = 0;
 
             $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
@@ -2823,6 +2821,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         ) {
             return;
         }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info')) {
+            return;
+        }
+
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
