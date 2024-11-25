@@ -3519,6 +3519,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+
+        if (
+            !$config_track_sign_up &&
+            !$config_track_generate_lead
+        ) {
+            return;
+        }
+
         $json_response = json_decode($this->response->getOutput(), true);
 
         if (!$json_response || !isset($json_response['redirect'])) {
@@ -3526,11 +3536,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_track_sign_up') && $this->customer->isLogged()) {
+        if ($config_track_sign_up && $this->customer->isLogged()) {
             $this->session->data['ps_sign_up_event'] = 1;
         }
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
+        if ($config_track_generate_lead && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
             $this->session->data['ps_generate_lead_newsletter_event'] = 1;
         }
 
@@ -3734,21 +3744,30 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
     {
+        if (
+            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
+            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
+        ) {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_purchase')) {
+            return;
+        }
+
         if (!isset($this->request->get['route'])) {
             return;
-        }
-
-        if ($this->request->get['route'] !== 'checkout/success') {
+        } else if ($this->request->get['route'] !== 'checkout/success') {
             return;
         }
-
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
 
         $args['ps_purchase'] = isset($this->session->data['ps_purchase']) ? $this->session->data['ps_purchase'] : null;
 
         unset($this->session->data['ps_purchase']);
+
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
 
