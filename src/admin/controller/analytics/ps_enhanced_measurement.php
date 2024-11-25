@@ -93,7 +93,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_wait_for_update'] = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
         $data['analytics_ps_enhanced_measurement_ads_data_redaction'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
         $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
-        $data['analytics_ps_enhanced_measurement_refund_status'] = (int) $this->config->get('analytics_ps_enhanced_measurement_refund_status');
 
         if ($this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status')) {
             $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
@@ -456,6 +455,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
         if (!isset($this->request->post['order_id'])) {
             $json = [];
 
@@ -468,8 +469,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $order_id = (int) $this->request->post['order_id'];
-
-        $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('sale/order');
@@ -732,10 +731,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json = [];
 
         if ($this->sendGAAnalyticsData($event_data)) {
-            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState(
-                $order_id,
-                $this->config->get('analytics_ps_enhanced_measurement_refund_status')
-            );
+            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
 
             $json['success'] = $this->language->get('text_refund_successfully_sent');
         } else {

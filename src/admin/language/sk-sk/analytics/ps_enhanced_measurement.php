@@ -109,7 +109,6 @@ $_['entry_gcm_profiles']                    = 'GCM Profily';
 $_['entry_lead_associations']               = 'Asociácie potenciálnych zákazníkov';
 $_['entry_lead_type']                       = 'Typ potenciálneho zákazníka';
 $_['entry_order_status']                    = 'Stav objednávky';
-$_['entry_refund_status']                   = 'Stav vrátenej objednávky';
 $_['entry_working_lead']                    = '(GA4) Odoslať udalosť „Working Lead“';
 
 // Button

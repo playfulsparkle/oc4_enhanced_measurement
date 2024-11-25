@@ -110,7 +110,6 @@ $_['entry_gcm_profiles']                    = 'Profils GCM';
 $_['entry_lead_associations']               = 'Associations de prospects';
 $_['entry_lead_type']                       = 'Type de prospect';
 $_['entry_order_status']                    = 'Statut de la commande';
-$_['entry_refund_status']                   = 'Statut des commandes remboursées';
 $_['entry_working_lead']                    = '(GA4) Envoyer l’événement « Working Lead »';
 
 // Button

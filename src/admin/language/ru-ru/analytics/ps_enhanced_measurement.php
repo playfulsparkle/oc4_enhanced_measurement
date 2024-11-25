@@ -109,7 +109,6 @@ $_['entry_gcm_profiles']                    = 'Профили GCM';
 $_['entry_lead_associations']               = 'Ассоциации лидов';
 $_['entry_lead_type']                       = 'Тип лида';
 $_['entry_order_status']                    = 'Статус заказа';
-$_['entry_refund_status']                   = 'Статус возвращенного заказа';
 $_['entry_working_lead']                    = '(GA4) Отправить событие «Working Lead»';
 
 // Button

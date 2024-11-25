@@ -109,7 +109,7 @@ $_['entry_gcm_profiles']                    = 'GCM profilok';
 $_['entry_lead_associations']               = 'Potenciális vásárlók társításai';
 $_['entry_lead_type']                       = 'Potenciális vásárló típusa';
 $_['entry_order_status']                    = 'Megrendelés állapota';
-$_['entry_refund_status']                   = 'Visszatérített megrendelés állapota';
+$_['']                   = 'Visszatérített megrendelés állapota';
 $_['entry_working_lead']                    = '(GA4) „Working Lead” esemény küldése';
 
 // Button

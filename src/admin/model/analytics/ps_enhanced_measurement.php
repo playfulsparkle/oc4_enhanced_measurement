@@ -148,29 +148,32 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     function sendRefundData(refundInputs, formData) {
                         ps_refund_btns.prop('disabled', true);
 
-                        fetch('index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.send_refund&user_token={{ user_token }}', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => { return response.json(); })
-                            .then(data => {
-                                if (data.error) {
-                                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                        $.ajax({
+                            url: 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.send_refund&user_token={{ user_token }}',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function(data) {
+                                if (data['error']) {
+                                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data['error'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
 
-                                    console.error(ga_response_data.statusText);
+                                    console.error(data.error);
                                 }
 
-                                if (data.success) {
-                                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + data.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-
-                                    $('#history').load('index.php?route=sale/order.history&user_token={{ user_token }}&order_id=' + $('#input-order-id').val());
+                                if (data['success']) {
+                                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + data['success'] + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
                                 }
 
                                 refundInputs.each(function () {
                                     $(this).val(0);
                                 });
-                            })
-                            .catch(error => { console.error(error); });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(error);
+                            }
+                        });
+
                     }
                 HTML
             ];
@@ -218,15 +221,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $query->num_rows > 0;
     }
 
-    public function saveRefundedState($order_id, $order_status_id = null): void
+    public function saveRefundedState($order_id): void
     {
         $this->db->query("UPDATE `" . DB_PREFIX . "ps_refund_order` SET `refunded` = '1' WHERE `order_id` = '" . (int) $order_id . "'");
-
-        if ($order_status_id) {
-            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `order_status_id` = '" . (int) $order_status_id . "' WHERE `order_id` = '" . (int) $order_id . "'");
-
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_history` SET `order_id` = '" . (int) $order_id . "', `order_status_id` = '" . (int) $order_status_id . "', `notify` = '0', `comment` = '', `date_added` = NOW()");
-        }
     }
 
     public function getCategories(int $product_id): array
