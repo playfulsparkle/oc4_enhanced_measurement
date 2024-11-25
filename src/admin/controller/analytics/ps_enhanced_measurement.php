@@ -93,6 +93,31 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_wait_for_update'] = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
         $data['analytics_ps_enhanced_measurement_ads_data_redaction'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
         $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
+        $data['analytics_ps_enhanced_measurement_refund_status'] = (int) $this->config->get('analytics_ps_enhanced_measurement_refund_status');
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status')) {
+            $data['analytics_ps_enhanced_measurement_qualify_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status');
+        } else {
+            $data['analytics_ps_enhanced_measurement_qualify_lead_status'] = [];
+        }
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status')) {
+            $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
+        } else {
+            $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = [];
+        }
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_close_unconvert_lead_status')) {
+            $data['analytics_ps_enhanced_measurement_close_unconvert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_unconvert_lead_status');
+        } else {
+            $data['analytics_ps_enhanced_measurement_close_unconvert_lead_status'] = [];
+        }
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_disqualify_lead_status')) {
+            $data['analytics_ps_enhanced_measurement_disqualify_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_disqualify_lead_status');
+        } else {
+            $data['analytics_ps_enhanced_measurement_disqualify_lead_status'] = [];
+        }
 
         $data['analytics_ps_enhanced_measurement_gcm_profiles'] = 0;
 
@@ -121,6 +146,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
+
+        $this->load->model('localisation/order_status');
+
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
         $data['measurement_implementations'] = [
             '' => $this->language->get('text_none'),
@@ -352,6 +381,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $events = [
             ['trigger' => 'admin/view/sale/order_info/before', 'actionName' => 'eventAdminViewSaleOrderInfoBefore'],
+            ['trigger' => 'admin/controller/sale/order.call/after', 'actionName' => 'eventAdminControllerSaleOrderAddHistoryAfter'],
 
             ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
 
@@ -708,7 +738,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json = [];
 
         if ($this->sendGAAnalyticsData($event_data)) {
-            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
+            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState(
+                $order_id,
+                $this->config->get('analytics_ps_enhanced_measurement_refund_status')
+            );
 
             $json['success'] = $this->language->get('text_refund_successfully_sent');
         } else {
@@ -744,6 +777,141 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         return $response === false ? false : true;
     }
 
+    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string &$output = null)
+    {
+        if (!isset($this->request->get['action'])) {
+            return;
+        }
+
+        if ($this->request->get['action'] !== 'sale/order.addHistory') {
+            return;
+        }
+
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
+            return;
+        }
+
+        if (isset($this->request->post['order_id'])) {
+            $order_id = (int) $this->request->post['order_id'];
+        } else {
+            $order_id = 0;
+        }
+
+        if ($order_id <= 0) {
+            return;
+        }
+
+        if (isset($this->request->post['order_status_id'])) {
+            $order_status_id = (int) $this->request->post['order_status_id'];
+        } else {
+            $order_status_id = 0;
+        }
+
+        if (isset($this->request->post['working_lead'])) {
+            $working_lead = (int) $this->request->post['working_lead'];
+        } else {
+            $working_lead = 0;
+        }
+
+
+        $this->load->model('sale/order');
+        $this->load->model('localisation/order_status');
+
+        $order_info = $this->model_sale_order->getOrder($order_id);
+
+        if ($working_lead === 1) {
+            $event_data = [
+                'events' => [
+                    [
+                        'name' => 'working_lead',
+                        'params' => [
+                            'currency' => $order_info['currency_code'],
+                            'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                            'lead_status' => 'conversation',
+                        ],
+                    ],
+                ],
+            ];
+
+            $this->sendGAAnalyticsData($event_data);
+        } else {
+            $config_qualify_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status');
+            $config_close_convert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
+            $config_close_unconvert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_unconvert_lead_status');
+            $config_disqualify_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_disqualify_lead_status');
+
+            $order_statuses = $this->model_localisation_order_status->getOrderStatuses();
+
+            $order_status_text = '';
+
+            foreach ($order_statuses as $order_status) {
+                if ((int) $order_status['order_status_id'] === $order_status_id) {
+                    $order_status_text = $order_status['name'];
+                }
+            }
+
+            if ($config_qualify_lead_status && in_array($order_status_id, $config_qualify_lead_status)) {
+                $event_data = [
+                    'events' => [
+                        [
+                            'name' => 'qualify_lead',
+                            'params' => [
+                                'currency' => $order_info['currency_code'],
+                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                            ],
+                        ],
+                    ],
+                ];
+
+                $this->sendGAAnalyticsData($event_data);
+            } else if ($config_close_convert_lead_status && in_array($order_status_id, $config_close_convert_lead_status)) {
+                $event_data = [
+                    'events' => [
+                        [
+                            'name' => 'close_convert_lead',
+                            'params' => [
+                                'currency' => $order_info['currency_code'],
+                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                            ],
+                        ],
+                    ],
+                ];
+
+                $this->sendGAAnalyticsData($event_data);
+            } else if ($config_close_unconvert_lead_status && in_array($order_status_id, $config_close_unconvert_lead_status)) {
+                $event_data = [
+                    'events' => [
+                        [
+                            'name' => 'close_unconvert_lead',
+                            'params' => [
+                                'currency' => $order_info['currency_code'],
+                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                                'unconvert_lead_reason' => $order_status_text,
+                            ],
+                        ],
+                    ],
+                ];
+
+                $this->sendGAAnalyticsData($event_data);
+            } else if ($config_disqualify_lead_status && in_array($order_status_id, $config_disqualify_lead_status)) {
+                $event_data = [
+                    'events' => [
+                        [
+                            'name' => 'disqualify_lead',
+                            'params' => [
+                                'currency' => $order_info['currency_code'],
+                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                                'disqualified_lead_reason' => $order_status_text,
+                            ],
+                        ],
+                    ],
+                ];
+
+                $this->sendGAAnalyticsData($event_data);
+            }
+        }
+    }
+
     public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
@@ -770,6 +938,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_button_refund_selected'] = $this->language->get('ps_button_refund_selected');
             $args['ps_error_no_refundable_selected'] = $this->language->get('ps_error_no_refundable_selected');
             $args['ps_text_product_already_refunded'] = $this->language->get('ps_text_product_already_refunded');
+            $args['ps_entry_working_lead'] = $this->language->get('ps_entry_working_lead');
+            $args['ps_help_working_lead'] = $this->language->get('ps_help_working_lead');
 
             $args['ps_is_refundable'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id);
 

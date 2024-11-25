@@ -67,6 +67,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             $('#form-product-add').prepend('<div class=\"alert alert-success",
         ];
 
+        $views[] = [
+            'search' => "$('#input-history').val('');",
+            'replace' => "$('#input-history').val('');
+            $('#input-working-lead').prop('checked', false);",
+        ];
+
+        $views[] = [
+            'search' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>',
+            'replace' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="input-working-lead" class="col-sm-2 col-form-label">{{ ps_entry_working_lead }}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-switch form-switch-lg">
+                      <input type="hidden" name="working_lead" value="0"/>
+                      <input type="checkbox" name="working_lead" value="1" id="input-working-lead" class="form-check-input"/>
+                    </div>
+                    <div class="form-text">{{ ps_help_working_lead }}'
+        ];
+
+
         if ($args['ps_is_refundable']) {
             $views[] = [
                 'search' => '<script type="text/javascript"><!--',
@@ -139,6 +162,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                                 if (data.success) {
                                     $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + data.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+
+                                    $('#history').load('index.php?route=sale/order.history&user_token={{ user_token }}&order_id=' + $('#input-order-id').val());
                                 }
 
                                 refundInputs.each(function () {
@@ -175,9 +200,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ps_refund_order`");
     }
 
-    public function getClientIdByOrderId($orderId)
+    public function getClientIdByOrderId($order_id)
     {
-        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "' AND `client_id` != ''");
+        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != ''");
 
         if ($query->num_rows) {
             return $query->row;
@@ -186,16 +211,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return null;
     }
 
-    public function isRefundableByOrderId($orderId)
+    public function isRefundableByOrderId($order_id)
     {
-        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $orderId . "' AND `client_id` != '' AND `refunded` != '1'");
+        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != '' AND `refunded` != '1'");
 
         return $query->num_rows > 0;
     }
 
-    public function saveRefundedState($orderId): void
+    public function saveRefundedState($order_id, $order_status_id = null): void
     {
-        $this->db->query("UPDATE `" . DB_PREFIX . "ps_refund_order` SET `refunded` = '1' WHERE `order_id` = '" . (int) $orderId . "'");
+        $this->db->query("UPDATE `" . DB_PREFIX . "ps_refund_order` SET `refunded` = '1' WHERE `order_id` = '" . (int) $order_id . "'");
+
+        if ($order_status_id) {
+            $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `order_status_id` = '" . (int) $order_status_id . "' WHERE `order_id` = '" . (int) $order_id . "'");
+
+            $this->db->query("INSERT INTO `" . DB_PREFIX . "order_history` SET `order_id` = '" . (int) $order_id . "', `order_status_id` = '" . (int) $order_status_id . "', `notify` = '0', `comment` = '', `date_added` = NOW()");
+        }
     }
 
     public function getCategories(int $product_id): array

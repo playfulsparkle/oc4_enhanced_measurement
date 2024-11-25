@@ -43,6 +43,10 @@ $_['text_group_security_settings']          = 'Security Settings';
 $_['text_group_advanced_settings']          = 'Advanced Settings';
 $_['text_product_already_refunded']         = 'This product has already been refunded. No further actions are available.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) works only when you choose Google Tag Manager in the Measurement Implementation dropdown. It doesn’t work with Global Site Tag (gtag.js). To use this feature, make sure you have a cookie banner installed. This extension sets a basic consent state by default, but the cookie banner is responsible for updating consent to allow data collection.';
+$_['text_qualify_lead']                     = 'Qualify Lead (e.g., Processing Order)';
+$_['text_close_convert_lead']               = 'Close Lead as Converted (e.g., Order Successfully Completed)';
+$_['text_close_unconvert_lead']             = 'Close Lead as Unconverted (e.g., Order Canceled)';
+$_['text_disqualify_lead']                  = 'Disqualify Lead (e.g., Abandoned Cart)';
 
 // Column
 $_['column_refund_quantity']                = 'Refund Quantity';
@@ -103,6 +107,11 @@ $_['entry_strict']                          = 'Strict';
 $_['entry_balanced']                        = 'Balanced';
 $_['entry_custom']                          = 'Custom';
 $_['entry_gcm_profiles']                    = 'GCM Profiles';
+$_['entry_lead_associations']               = 'Lead Associations';
+$_['entry_lead_type']                       = 'Lead type';
+$_['entry_order_status']                    = 'Order Status';
+$_['entry_refund_status']                   = 'Refunded Order Status';
+$_['entry_working_lead']                    = '(GA4) Send Working Lead Event';
 
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
@@ -146,6 +155,7 @@ $_['help_wait_for_update']                  = 'Sets the time (in milliseconds) t
 $_['help_ads_data_redaction']               = 'Redacts user data related to ads, ensuring privacy by hiding certain identifiable information.';
 $_['help_url_passthrough']                  = 'Allows the URL to pass through consent checks, useful for tracking specific user paths without storing personal data.';
 $_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behavior based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
+$_['help_working_lead']                     = 'Toggle to send the "Working Lead" event to Google Analytics when you contact the customer.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';

@@ -43,6 +43,10 @@ $_['text_group_security_settings']          = 'Impostazioni di Sicurezza';
 $_['text_group_advanced_settings']          = 'Impostazioni Avanzate';
 $_['text_product_already_refunded']         = 'Questo prodotto è già stato rimborsato. Non sono disponibili ulteriori azioni.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funziona solo quando scegli Google Tag Manager nel menu a discesa Implementazione di misurazione. Non funziona con Global Site Tag (gtag.js). Per utilizzare questa funzione, assicurati di avere un banner dei cookie installato. Questa estensione imposta uno stato di consenso di base per impostazione predefinita, ma il banner dei cookie è responsabile per aggiornare il consenso per consentire la raccolta dei dati.';
+$_['text_qualify_lead']                     = 'Qualifica il lead (es., Elaborazione ordine)';
+$_['text_close_convert_lead']               = 'Chiudi il lead come convertito (es., Ordine completato con successo)';
+$_['text_close_unconvert_lead']             = 'Chiudi il lead come non convertito (es., Ordine annullato)';
+$_['text_disqualify_lead']                  = 'Squalifica il lead (es., Carrello abbandonato)';
 
 // Column
 $_['column_refund_quantity']                = 'Quantità di Rimborso';
@@ -103,6 +107,11 @@ $_['entry_strict']                          = 'Stratto';
 $_['entry_balanced']                        = 'Bilanciato';
 $_['entry_custom']                          = 'Personalizzato';
 $_['entry_gcm_profiles']                    = 'Profili GCM';
+$_['entry_lead_associations']               = 'Associazioni di lead';
+$_['entry_lead_type']                       = 'Tipo di lead';
+$_['entry_order_status']                    = 'Stato dell\'ordine';
+$_['entry_refund_status']                   = 'Stato degli ordini rimborsati';
+$_['entry_working_lead']                    = '(GA4) Invia evento "Lead in lavorazione"';
 
 // Button
 $_['button_fix_event_handler']              = 'Correggi Gestore Eventi';
@@ -146,6 +155,7 @@ $_['help_wait_for_update']                  = 'Imposta il tempo (in millisecondi
 $_['help_ads_data_redaction']               = 'Redige i dati degli utenti relativi agli annunci, garantendo la privacy nascondendo alcune informazioni identificabili.';
 $_['help_url_passthrough']                  = 'Permette che l\'URL superi i controlli di consenso, utile per tracciare percorsi specifici degli utenti senza memorizzare dati personali.';
 $_['help_gcm_status']                       = 'Abilita la modalità di consenso di Google, permettendo al tuo sito di adattare il comportamento dei tag Google in base alle impostazioni di consenso dell\'utente. Questa modalità offre un tracciamento rispettoso della privacy, consentendo agli strumenti di analisi e pubblicità di funzionare in conformità con le preferenze di consenso.';
+$_['help_working_lead']                     = 'Attiva per inviare l\'evento "Lead in lavorazione" a Google Analytics quando contatti il cliente.';
 
 // Error
 $_['error_permission']                      = 'Attenzione: Non hai il permesso di modificare le impostazioni di Playful Sparkle - (GA4) Enhanced Measurement!';

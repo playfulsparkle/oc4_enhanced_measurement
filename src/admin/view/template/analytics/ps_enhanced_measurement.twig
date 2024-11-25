@@ -375,6 +375,86 @@
 								</div>
 							</div>
 
+							<div class="row mb-3 required">
+								<label class="col-sm-2 col-form-label">{{ entry_lead_associations }}</label>
+								<div class="col-sm-10">
+
+									<div class="table-responsive">
+										<table id="contact-point-table" class="table table-bordered">
+											<thead>
+												<tr>
+													<td class="text-start">{{ entry_lead_type }}</td>
+													<td class="text-start">{{ entry_order_status }}</td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>{{ text_qualify_lead }}</td>
+													<td style="width: 55%;">
+														<div class="well well-sm" style="height: 150px; overflow: auto;">
+															{% for order_status in order_statuses %}
+															<div class="checkbox">
+																<label>
+																	<input type="checkbox" name="analytics_ps_enhanced_measurement_qualify_lead_status[]" value="{{ order_status.order_status_id }}"{% if order_status.order_status_id in analytics_ps_enhanced_measurement_qualify_lead_status %} checked{% endif %}>
+																	{{ order_status.name }}
+																</label>
+															</div>
+															{% endfor %}
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>{{ text_close_convert_lead }}</td>
+													<td>
+														<div class="well well-sm" style="height: 150px; overflow: auto;">
+															{% for order_status in order_statuses %}
+															<div class="checkbox">
+																<label>
+																	<input type="checkbox" name="analytics_ps_enhanced_measurement_close_convert_lead_status[]" value="{{ order_status.order_status_id }}"{% if order_status.order_status_id in analytics_ps_enhanced_measurement_close_convert_lead_status %} checked{% endif %}>
+																	{{ order_status.name }}
+																</label>
+															</div>
+															{% endfor %}
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>{{ text_close_unconvert_lead }}</td>
+													<td>
+														<div class="well well-sm" style="height: 150px; overflow: auto;">
+															{% for order_status in order_statuses %}
+															<div class="checkbox">
+																<label>
+																	<input type="checkbox" name="analytics_ps_enhanced_measurement_close_unconvert_lead_status[]" value="{{ order_status.order_status_id }}"{% if order_status.order_status_id in analytics_ps_enhanced_measurement_close_unconvert_lead_status %} checked{% endif %}>
+																	{{ order_status.name }}
+																</label>
+															</div>
+															{% endfor %}
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>{{ text_disqualify_lead }}</td>
+													<td>
+														<div class="well well-sm" style="height: 150px; overflow: auto;">
+															{% for order_status in order_statuses %}
+															<div class="checkbox">
+																<label>
+																	<input type="checkbox" name="analytics_ps_enhanced_measurement_disqualify_lead_status[]" value="{{ order_status.order_status_id }}"{% if order_status.order_status_id in analytics_ps_enhanced_measurement_disqualify_lead_status %} checked{% endif %}>
+																	{{ order_status.name }}
+																</label>
+															</div>
+															{% endfor %}
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+							</div>
+
 							<div class="row mb-3">
 								<label for="input-sign-up" class="col-sm-2 col-form-label">{{ entry_sign_up }}</label>
 								<div class="col-sm-10">
@@ -548,6 +628,18 @@
 										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_purchase" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_purchase %} checked{% endif %} id="input-purchase" />
 									</div>
 									<div class="form-text">{{ help_purchase }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3 required">
+								<label for="input-refund-status" class="col-sm-2 col-form-label">{{ entry_refund_status }}</label>
+								<div class="col-sm-10">
+									<select name="analytics_ps_enhanced_measurement_refund_status" id="input-refund-status" class="form-select">
+										<option value="">{{ text_select }}</option>
+										{% for order_status in order_statuses %}
+										<option value="{{ order_status.order_status_id }}" {% if order_status.order_status_id==analytics_ps_enhanced_measurement_refund_status %} selected{% endif %}>{{ order_status.name }}</option>
+										{% endfor %}
+									</select>
 								</div>
 							</div>
 

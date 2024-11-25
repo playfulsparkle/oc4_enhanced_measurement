@@ -43,6 +43,10 @@ $_['text_group_security_settings']          = 'Nastavenia zabezpečenia';
 $_['text_group_advanced_settings']          = 'Pokročilé nastavenia';
 $_['text_product_already_refunded']         = 'Tento produkt už bol vrátený. Ďalšie akcie nie sú k dispozícii.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funguje iba pri výbere Google Tag Manager (GTM) alebo Global Site Tag (gtag.js). Ak používate iný merací nástroj, GCM nebude podporovaný.';
+$_['text_qualify_lead']                     = 'Kvalifikácia potenciálneho zákazníka (napr. Spracovanie objednávky)';
+$_['text_close_convert_lead']               = 'Uzavretie potenciálneho zákazníka ako konvertovaného (napr. Objednávka úspešne dokončená)';
+$_['text_close_unconvert_lead']             = 'Uzavretie potenciálneho zákazníka ako nekonvertovaného (napr. Objednávka zrušená)';
+$_['text_disqualify_lead']                  = 'Diskvalifikácia potenciálneho zákazníka (napr. Opuštený košík)';
 
 // Column
 $_['column_refund_quantity']                = 'Množstvo refundácie';
@@ -103,6 +107,11 @@ $_['entry_strict']                          = 'Prísny';
 $_['entry_balanced']                        = 'Vyvážený';
 $_['entry_custom']                          = 'Vlastný';
 $_['entry_gcm_profiles']                    = 'GCM Profily';
+$_['entry_lead_associations']               = 'Asociácie potenciálnych zákazníkov';
+$_['entry_lead_type']                       = 'Typ potenciálneho zákazníka';
+$_['entry_order_status']                    = 'Stav objednávky';
+$_['entry_refund_status']                   = 'Stav vrátenej objednávky';
+$_['entry_working_lead']                    = '(GA4) Odoslať udalosť „Pracovná kvalifikácia“';
 
 // Button
 $_['button_fix_event_handler']              = 'Opraviť obslužnú rutinu udalostí';
@@ -146,6 +155,7 @@ $_['help_wait_for_update']                  = 'Nastavuje čas (v milisekundách)
 $_['help_ads_data_redaction']               = 'Rediguje užívateľské dáta súvisiace s reklamami, čím zaisťuje ochranu súkromia skrytím niektorých identifikovateľných informácií.';
 $_['help_url_passthrough']                  = 'Umožňuje, aby URL prešla kontrolami súhlasu, čo je užitočné na sledovanie konkrétnych užívateľských ciest bez ukládania osobných údajov.';
 $_['help_gcm_status']                       = 'Povoľuje režim súhlasu Google, čo umožňuje vašej stránke prispôsobiť správanie Google značiek na základe nastavení súhlasu používateľa. Tento režim poskytuje sledovanie šetrné k súkromiu, čo umožňuje, aby analytika a reklamy fungovali v súlade so súhlasnými preferenciami.';
+$_['help_working_lead']                     = 'Zapnúť odoslanie udalosti „Pracovná kvalifikácia“ do Google Analytics pri kontaktovaní zákazníka.';
 
 // Error
 $_['error_permission']                      = 'Upozornenie: Nemáte oprávnenie upravovať nastavenia (GA4) vylepšeného merania!';
