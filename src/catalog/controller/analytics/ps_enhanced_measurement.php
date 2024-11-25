@@ -4812,7 +4812,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
 
-        $this->load->model('extension/opencart/module/latest');
+        if (version_compare(VERSION, '4.0.2.3', '>=')) {
+            $this->load->model('extension/opencart/module/latest');
+        } else {
+            $this->load->model('catalog/product');
+        }
+
         $this->load->model('catalog/manufacturer');
 
         $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
@@ -4844,7 +4849,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
-        $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
+        if (version_compare(VERSION, '4.0.2.3', '>=')) {
+            $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
+        } else {
+            $products = $this->model_catalog_product->getLatest($setting['limit']);
+        }
 
         if ($products) {
             $item_list_name = sprintf(
