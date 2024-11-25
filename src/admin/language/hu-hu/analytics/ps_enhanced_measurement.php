@@ -158,7 +158,6 @@ $_['error_gtm_id_invalid']                  = 'A GTM ID formátuma helytelen. Gy
 $_['error_mp_api_secret']                   = 'A Measurement Protocol API secret mező kitöltése kötelező. Kérjük, adja meg Measurement Protocol API titkát.';
 $_['error_mp_api_secret_invalid']           = 'A Measurement Protocol API secret formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: XXXXXXX-XXXXXXX-XXXXXX.';
 $_['error_measurement_implementation']      = 'A mérési implementáció nincs beállítva. Kérjük, válasszon a Global Site Tag vagy a Google Tag Manager közül.';
-$_['error_client_id']                       = 'Figyelem: A vásárlás során a Client ID nem került mentésre.';
 $_['error_refund_no_items']                 = 'Figyelem: A megrendeléshez tartozó termékazonosító nem található.';
 $_['error_refund_no_order_id']              = 'Figyelem: Hiányoznak vagy hiányosak a szükséges kérési paraméterek.';
 $_['error_analytics_extension']             = 'Úgy tűnik, egy másik analitikai eszköz már aktív az oldalán. Több ilyen eszköz használata problémákat okozhat, például duplikált vagy hiányzó nyomkövetést. Kérjük, ellenőrizze webhelye beállításait.';

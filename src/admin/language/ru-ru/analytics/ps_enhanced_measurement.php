@@ -158,7 +158,6 @@ $_['error_gtm_id_invalid']                  = 'Неверный формат GTM
 $_['error_mp_api_secret']                   = 'Поле Measurement Protocol API secret обязательно для заполнения. Пожалуйста, введите ваш Measurement Protocol API secret.';
 $_['error_mp_api_secret_invalid']           = 'Неверный формат Measurement Protocol API secret. Убедитесь, что он соответствует формату XXXXXXX-XXXXXXX-XXXXXX.';
 $_['error_measurement_implementation']      = 'Реализация измерений не настроена. Пожалуйста, выберите либо Global Site Tag, либо Google Tag Manager.';
-$_['error_client_id']                       = 'Предупреждение: Client ID не был сохранен во время оформления заказа.';
 $_['error_refund_no_items']                 = 'Предупреждение: Не найден идентификатор продукта, связанный с этим заказом.';
 $_['error_refund_no_order_id']              = 'Предупреждение: Требуемые параметры запроса отсутствуют или неполные.';
 $_['error_analytics_extension']             = 'Похоже, что другой инструмент аналитики уже активен на вашем сайте. Наличие нескольких таких инструментов может вызвать проблемы, такие как дублирование или отсутствие отслеживания. Пожалуйста, проверьте настройки вашего сайта.';

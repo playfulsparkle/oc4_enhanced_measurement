@@ -158,7 +158,6 @@ $_['error_gtm_id_invalid']                  = 'Formát GTM ID je neplatný. Uist
 $_['error_mp_api_secret']                   = 'Pole tajného kľúča API Measurement Protocol je povinné. Zadajte svoj tajný kľúč API Measurement Protocol.';
 $_['error_mp_api_secret_invalid']           = 'Formát tajného kľúča API Measurement Protocol je neplatný. Uistite sa, že nasleduje formát XXXXXXX-XXXXXXX-XXXXXX.';
 $_['error_measurement_implementation']      = 'Implementácia merania nie je nakonfigurovaná. Vyberte buď Global Site Tag alebo Google Tag Manager.';
-$_['error_client_id']                       = 'Upozornenie: ID klienta nebolo uložené počas pokladne.';
 $_['error_refund_no_items']                 = 'Upozornenie: Produktové ID spojené s touto objednávkou nebolo nájdené.';
 $_['error_refund_no_order_id']              = 'Upozornenie: Chýbajú alebo sú neúplné požadované parametre žiadosti.';
 $_['error_analytics_extension']             = 'Zdá sa, že na vašom webe je už aktívny iný analytický nástroj. Používanie viacerých nástrojov tohto typu môže spôsobiť problémy, ako sú duplicitné alebo chýbajúce sledovania. Skontrolujte nastavenia svojho webu.';

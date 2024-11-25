@@ -448,20 +448,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-
-        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
-
-        if (!$client_info) {
-            $json = [];
-
-            $json['error'] = $this->language->get('error_client_id');
-
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
-
-            return;
-        }
-
         $this->load->model('sale/order');
         $this->load->model('catalog/category');
         $this->load->model('catalog/manufacturer');
@@ -688,6 +674,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $total_fees += $order_total['value'];
         }
 
+
+        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
         $params = [
             'currency' => $currency,

@@ -158,7 +158,6 @@ $_['error_gtm_id_invalid']                  = 'Le format du GTM ID est incorrect
 $_['error_mp_api_secret']                   = 'Le champ Measurement Protocol API secret est requis. Veuillez entrer votre secret Measurement Protocol API.';
 $_['error_mp_api_secret_invalid']           = 'Le format du Measurement Protocol API secret est incorrect. Assurez-vous qu\'il suit le format XXXXXXX-XXXXXXX-XXXXXX.';
 $_['error_measurement_implementation']      = 'L\'implémentation de la mesure n\'est pas configurée. Veuillez sélectionner soit Global Site Tag, soit Google Tag Manager.';
-$_['error_client_id']                       = 'Avertissement : L\'ID client n\'a pas été sauvegardé lors du processus de commande.';
 $_['error_refund_no_items']                 = 'Avertissement : L\'ID produit associé à cette commande n\'a pas été trouvé.';
 $_['error_refund_no_order_id']              = 'Avertissement : Des paramètres de requête requis sont manquants ou incomplets.';
 $_['error_analytics_extension']             = 'Il semble qu\'un autre outil d\'analyse soit déjà actif sur votre site. Avoir plus d\'un tel outil peut entraîner des problèmes, tels que le suivi en double ou manquant. Veuillez vérifier les paramètres de votre site.';
