@@ -2337,7 +2337,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['redirect'])) {
+        if (!$json_response || !isset($json_response['redirect'])) {
             return;
         }
 
@@ -2358,7 +2358,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['redirect'])) {
+        if (!$json_response || !isset($json_response['redirect'])) {
             return;
         }
 
@@ -2416,7 +2416,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['redirect'])) {
+        if (!$json_response || !isset($json_response['redirect'])) {
             return;
         }
 
@@ -2461,64 +2461,70 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart')) {
+            return;
+        }
+
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (!$json_response || !isset($json_response['success'])) {
+            return;
+        }
+
         if (!isset($this->request->post['product_id'], $this->request->post['quantity'])) {
             return;
         }
 
         $quantity = (int) $this->request->post['quantity'];
 
-        if ($quantity <= 0 || $quantity > PHP_INT_MAX) { // Do not send product data if quantity is zero, OpenCart what are you doing?
-            return;
-        }
-
-        $json_response = json_decode($this->response->getOutput(), true);
-
-        if (empty($json_response) || !isset($json_response['success'])) {
+        if ($quantity <= 0 || $quantity > PHP_INT_MAX) {
             return;
         }
 
 
-        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
-        $this->load->language('checkout/cart');
-
-        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
-        $this->load->model('catalog/category');
-        $this->load->model('catalog/manufacturer');
         $this->load->model('catalog/product');
-
-
-        $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
-        $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
-        $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
-        $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
-
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
-
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
-        }
-
-        $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
-
-        if (empty($affiliation)) {
-            $affiliation = $this->config->get('config_name');
-        }
-
-
-        if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
-        } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
-        } else {
-            $product_coupon = null;
-        }
-
 
         $product_info = $this->model_catalog_product->getProduct((int) $this->request->post['product_id']);
 
-        $options = isset($this->request->post['option']) ? array_filter((array) $this->request->post['option']) : [];
-
         if ($product_info) {
+            $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+            $this->load->language('checkout/cart');
+
+            $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+            $this->load->model('catalog/category');
+            $this->load->model('catalog/manufacturer');
+
+
+            $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+            $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+            $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+            $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+
+            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+            if (empty($currency)) {
+                $currency = $this->session->data['currency'];
+            }
+
+            $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+
+            if (empty($affiliation)) {
+                $affiliation = $this->config->get('config_name');
+            }
+
+
+            $options = isset($this->request->post['option']) ? array_filter((array) $this->request->post['option']) : [];
+
+
+            if (isset($this->session->data['coupon'])) {
+                $product_coupon = $this->session->data['coupon'];
+            } else if (isset($this->session->data['voucher'])) {
+                $product_coupon = $this->session->data['voucher'];
+            } else {
+                $product_coupon = null;
+            }
+
+
             $item = [];
 
             $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
@@ -2671,7 +2677,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['success'])) {
+        if (!$json_response || !isset($json_response['success'])) {
             return;
         }
 
@@ -2849,7 +2855,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['success'])) {
+        if (!$json_response || !isset($json_response['success'])) {
             return;
         }
 
@@ -3250,7 +3256,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['success'])) {
+        if (!$json_response || !isset($json_response['success'])) {
             return;
         }
 
@@ -3280,7 +3286,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response = json_decode($this->response->getOutput(), true);
 
-        if (empty($json_response) || !isset($json_response['redirect'])) {
+        if (!$json_response || !isset($json_response['redirect'])) {
             return;
         }
 
