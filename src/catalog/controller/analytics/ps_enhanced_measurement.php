@@ -3011,6 +3011,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info')) {
+            return;
+        }
+
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutShippingMethodBefore($args);
@@ -3195,6 +3200,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_track_select_item')) {
+            return;
+        }
+
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
 
@@ -3375,9 +3385,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if (!isset($this->request->get['route'])) {
             return;
-        }
-
-        if ($this->request->get['route'] !== 'account/success') {
+        } else if ($this->request->get['route'] !== 'account/success') {
             return;
         }
 
