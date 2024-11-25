@@ -741,7 +741,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
+        $this->response->setOutput(json_encode($json));
     }
 
     protected function sendGAAnalyticsData(array $data): bool
@@ -749,8 +749,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $ps_mp_api_secret = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
 
-        $json_payload = json_encode($data, JSON_NUMERIC_CHECK);
+        $json_payload = json_encode($data);
 
+        // $url = 'https://www.google-analytics.com/debug/mp/collect?measurement_id=' . $ps_google_tag_id . '&api_secret=' . $ps_mp_api_secret;
         $url = 'https://www.google-analytics.com/mp/collect?measurement_id=' . $ps_google_tag_id . '&api_secret=' . $ps_mp_api_secret;
 
         $ch = curl_init($url);
@@ -766,7 +767,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         curl_close($ch);
 
-        return $response === false ? false : true;
+        return (bool) $response;
     }
 
     public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string &$output = null)
@@ -806,10 +807,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('sale/order');
         $this->load->model('localisation/order_status');
 
         $order_info = $this->model_sale_order->getOrder($order_id);
+
+        $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
 
         if ($working_lead === 1) {
             $params = [
@@ -819,6 +823,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ];
 
             $event_data = [
+                'client_id' => $client_info['client_id'],
+                'user_id' => $client_info['user_id'],
                 'events' => [
                     [
                         'name' => 'working_lead',
@@ -855,6 +861,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ];
 
                 $event_data = [
+                    'client_id' => $client_info['client_id'],
+                    'user_id' => $client_info['user_id'],
                     'events' => [
                         [
                             'name' => 'close_convert_lead',
@@ -877,6 +885,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ];
 
                 $event_data = [
+                    'client_id' => $client_info['client_id'],
+                    'user_id' => $client_info['user_id'],
                     'events' => [
                         [
                             'name' => 'close_unconvert_lead',
@@ -899,6 +909,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ];
 
                 $event_data = [
+                    'client_id' => $client_info['client_id'],
+                    'user_id' => $client_info['user_id'],
                     'events' => [
                         [
                             'name' => 'disqualify_lead',
