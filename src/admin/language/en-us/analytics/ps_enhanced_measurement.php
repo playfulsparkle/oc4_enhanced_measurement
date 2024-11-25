@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Currency';
 $_['entry_debug_mode']                      = 'Debug Mode';
 $_['entry_gtag_debug_mode']                 = 'Debug Global Site Tag';
 $_['entry_generate_lead']                   = 'Track Generate Lead Event';
+$_['entry_qualify_lead']                    = 'Track Qualify Lead Event';
 $_['entry_sign_up']                         = 'Track Sign Up Event';
 $_['entry_login']                           = 'Track Login Event';
 $_['entry_add_to_wishlist']                 = 'Track Add to Wishlist Event';
@@ -126,6 +127,7 @@ $_['help_affiliation']                      = 'Enter the store name or departmen
 $_['help_location_id']                      = 'The physical location of the item, such as the store where it’s sold. It’s best to use the <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> for that location, but you can also use a custom location ID.';
 $_['help_tracking_delay']                   = 'Specify the delay (in milliseconds) to wait before executing the default action (e.g., navigating to a link or submitting a form) after the GA4 event is sent. This ensures the event is tracked properly before the action completes. Leave empty to use the default value.';
 $_['help_generate_lead']                    = 'This event measures when a lead has been generated, specifically tracking newsletter subscriptions and contact form submissions. Use this to understand the effectiveness of your marketing campaigns and how many customers re-engage with your business after remarketing.';
+$_['help_qualify_lead']                     = 'This event measures when a lead is qualified, such as after a meaningful customer interaction or a high-value action like the beginning of the checkout process. Use this to assess the quality of your leads and track the progression of potential customers through your sales funnel.';
 $_['help_sign_up']                          = 'This event indicates that a user has signed up for an account. Use this to understand the different behaviors of logged-in and logged-out users.';
 $_['help_login']                            = 'Send this event to signify that a user has logged in to your website or app.';
 $_['help_add_to_wishlist']                  = 'This event signifies that an item was added to a wishlist. Use this to identify popular gift items in your app.';

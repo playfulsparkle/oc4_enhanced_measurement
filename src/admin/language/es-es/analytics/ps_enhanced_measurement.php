@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Moneda';
 $_['entry_debug_mode']                      = 'Modo de Depuración';
 $_['entry_gtag_debug_mode']                 = 'Depuración de la Etiqueta Global del Sitio';
 $_['entry_generate_lead']                   = 'Rastrear Evento de Generación de Prospecto';
+$_['entry_qualify_lead']                    = 'Rastrear evento de Calificar Lead';
 $_['entry_sign_up']                         = 'Rastrear Evento de Registro';
 $_['entry_login']                           = 'Rastrear Evento de Inicio de Sesión';
 $_['entry_add_to_wishlist']                 = 'Rastrear Evento de Agregar a la Lista de Deseos';
@@ -126,6 +127,7 @@ $_['help_affiliation']                      = 'Ingresa el nombre de la tienda o 
 $_['help_location_id']                      = 'La ubicación física del artículo, como la tienda donde se vende. Lo ideal es usar el <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> para esa ubicación, pero también puedes usar un ID de ubicación personalizado.';
 $_['help_tracking_delay']                   = 'Especifica el retraso (en milisegundos) antes de ejecutar la acción predeterminada (por ejemplo, navegar a un enlace o enviar un formulario) después de que se envíe el evento de GA4. Esto asegura que el evento se rastree correctamente antes de que se complete la acción. Déjalo vacío para usar el valor predeterminado.';
 $_['help_generate_lead']                    = 'Este evento mide cuando se ha generado un lead, específicamente rastreando suscripciones a boletines y envíos de formularios de contacto. Úsalo para entender la efectividad de tus campañas de marketing y cuántos clientes vuelven a interactuar con tu negocio después de una reorientación.';
+$_['help_qualify_lead']                     = 'Este evento mide cuándo un lead se califica, como después de una interacción significativa con el cliente o una acción de alto valor, como el inicio del proceso de pago. Utilícelo para evaluar la calidad de sus leads y rastrear el progreso de los clientes potenciales a través de su embudo de ventas.';
 $_['help_sign_up']                          = 'Este evento indica que un usuario se ha registrado en una cuenta. Úsalo para comprender los diferentes comportamientos de los usuarios que han iniciado sesión y los que no han iniciado sesión.';
 $_['help_login']                            = 'Envía este evento para señalar que un usuario ha iniciado sesión en tu sitio web o aplicación.';
 $_['help_add_to_wishlist']                  = 'Este evento indica que un artículo se ha añadido a una lista de deseos. Úsalo para identificar los artículos populares para regalos en tu aplicación.';

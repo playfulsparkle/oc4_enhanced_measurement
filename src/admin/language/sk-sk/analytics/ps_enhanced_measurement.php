@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Mena';
 $_['entry_debug_mode']                      = 'Režim ladenia';
 $_['entry_gtag_debug_mode']                 = 'Ladenie Global Site Tag';
 $_['entry_generate_lead']                   = 'Sledovať udalosť Generovanie leadu';
+$_['entry_qualify_lead']                    = 'Sledovať udalosť „Kvalifikovaný lead“';
 $_['entry_sign_up']                         = 'Sledovať udalosť Registrácia';
 $_['entry_login']                           = 'Sledovať udalosť Prihlásenie';
 $_['entry_add_to_wishlist']                 = 'Sledovať udalosť Pridanie do zoznamu prianí';
@@ -125,6 +126,7 @@ $_['help_affiliation']                      = 'Zadajte názov obchodu alebo odde
 $_['help_location_id']                      = 'Fyzická lokalita položky, napríklad obchod, kde je predávaná. Najlepšie je použiť <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> pre túto lokalitu, ale môžete použiť aj vlastné ID miesta.';
 $_['help_tracking_delay']                   = 'Zadajte oneskorenie (v milisekundách), ktoré má byť vyčkávané pred vykonaním predvolenej akcie (napr. prechod na odkaz alebo odoslanie formulára) po odoslaní udalosti GA4. Tým sa zabezpečí správne sledovanie udalosti pred dokončením akcie. Nechajte prázdne pre použitie predvolenej hodnoty.';
 $_['help_generate_lead']                    = 'Táto udalosť meria, kedy bol vytvorený lead, konkrétne sleduje prihlásenie na odber newsletteru a odoslanie kontaktného formulára. Použite ju na pochopenie účinnosti vašich marketingových kampaní a ako sa mnoho zákazníkov opäť zapája s vašou firmou po remarketingu.';
+$_['help_qualify_lead']                     = 'Táto udalosť meria, kedy je lead kvalifikovaný, napríklad po významnej interakcii so zákazníkom alebo akcii s vysokou hodnotou, ako je začiatok procesu platby. Použite túto udalosť na posúdenie kvality vašich leadov a sledovanie postupu potenciálnych zákazníkov vo vašom predajnom lieviku.';
 $_['help_sign_up']                          = 'Táto udalosť označuje, že používateľ sa zaregistroval pre účet. Použite ju na pochopenie rôznych správaní prihlásených a neprihlásených používateľov.';
 $_['help_login']                            = 'Odošlite túto udalosť na označenie, že používateľ sa prihlásil na vaše webové stránky alebo aplikáciu.';
 $_['help_add_to_wishlist']                  = 'Táto udalosť označuje, že položka bola pridaná do zoznamu prianí. Použite ju na identifikáciu populárnych darčekových predmetov vo vašej aplikácii.';

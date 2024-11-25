@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Valuta';
 $_['entry_debug_mode']                      = 'Modalità Debug';
 $_['entry_gtag_debug_mode']                 = 'Debug Global Site Tag';
 $_['entry_generate_lead']                   = 'Traccia Evento Generazione Lead';
+$_['entry_qualify_lead']                    = 'Traccia evento Qualify Lead';
 $_['entry_sign_up']                         = 'Traccia Evento Iscrizione';
 $_['entry_login']                           = 'Traccia Evento Login';
 $_['entry_add_to_wishlist']                 = 'Traccia Evento Aggiungi ai Preferiti';
@@ -126,6 +127,7 @@ $_['help_affiliation']                      = 'Inserisci il nome del negozio o d
 $_['help_location_id']                      = 'La posizione fisica dell\'oggetto, come il negozio dove viene venduto. È consigliato utilizzare l\'<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> per quella posizione, ma è anche possibile usare un ID posizione personalizzato.';
 $_['help_tracking_delay']                   = 'Specifica il ritardo (in millisecondi) da attendere prima di eseguire l\'azione predefinita (ad esempio, navigare su un link o inviare un modulo) dopo che l\'evento GA4 è stato inviato. Questo assicura che l\'evento venga tracciato correttamente prima che l\'azione venga completata. Lascia vuoto per usare il valore predefinito.';
 $_['help_generate_lead']                    = 'Questo evento misura quando un lead è stato generato, tracciando in particolare le iscrizioni alla newsletter e l\'invio dei moduli di contatto. Utilizzalo per capire l\'efficacia delle tue campagne di marketing e quante persone si ricollegano alla tua attività dopo il remarketing.';
+$_['help_qualify_lead']                     = 'Questo evento misura quando un lead viene qualificato, ad esempio dopo un’interazione significativa con il cliente o un’azione di alto valore come l’inizio del processo di checkout. Usalo per valutare la qualità dei tuoi lead e monitorare l’avanzamento dei potenziali clienti nel tuo funnel di vendita.';
 $_['help_sign_up']                          = 'Questo evento indica che un utente ha creato un account. Utilizzalo per capire i comportamenti differenti degli utenti connessi e non connessi.';
 $_['help_login']                            = 'Invia questo evento per segnalare che un utente ha effettuato il login nel tuo sito o app.';
 $_['help_add_to_wishlist']                  = 'Questo evento segnala che un elemento è stato aggiunto alla lista dei desideri. Usalo per identificare gli articoli più popolari per i regali nella tua app.';

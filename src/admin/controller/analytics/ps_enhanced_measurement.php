@@ -66,6 +66,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
         $data['analytics_ps_enhanced_measurement_track_user_id'] = $this->config->get('analytics_ps_enhanced_measurement_track_user_id');
         $data['analytics_ps_enhanced_measurement_track_generate_lead'] = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $data['analytics_ps_enhanced_measurement_track_qualify_lead'] = $this->config->get('analytics_ps_enhanced_measurement_track_qualify_lead');
         $data['analytics_ps_enhanced_measurement_track_sign_up'] = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
         $data['analytics_ps_enhanced_measurement_track_login'] = $this->config->get('analytics_ps_enhanced_measurement_track_login');
         $data['analytics_ps_enhanced_measurement_track_add_to_wishlist'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
@@ -293,6 +294,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
                 'analytics_ps_enhanced_measurement_track_user_id' => 1,
                 'analytics_ps_enhanced_measurement_track_generate_lead' => 1,
+                'analytics_ps_enhanced_measurement_track_qualify_lead' => 1,
                 'analytics_ps_enhanced_measurement_track_sign_up' => 1,
                 'analytics_ps_enhanced_measurement_track_login' => 1,
                 'analytics_ps_enhanced_measurement_track_add_to_wishlist' => 1,
@@ -810,18 +812,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         if ($working_lead === 1) {
+            $params = [
+                'currency' => $order_info['currency_code'],
+                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                'lead_status' => 'conversation',
+            ];
+
             $event_data = [
                 'events' => [
                     [
                         'name' => 'working_lead',
-                        'params' => [
-                            'currency' => $order_info['currency_code'],
-                            'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
-                            'lead_status' => 'conversation',
-                        ],
+                        'params' => $params,
                     ],
                 ],
             ];
+
+            if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                $params['engagement_time_msec'] = 1200;
+                $params['debug_mode'] = true;
+            }
 
             $this->sendGAAnalyticsData($event_data);
         } else {
@@ -840,47 +849,68 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($config_close_convert_lead_status && in_array($order_status_id, $config_close_convert_lead_status)) {
+                $params = [
+                    'currency' => $order_info['currency_code'],
+                    'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                ];
+
                 $event_data = [
                     'events' => [
                         [
                             'name' => 'close_convert_lead',
-                            'params' => [
-                                'currency' => $order_info['currency_code'],
-                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
-                            ],
+                            'params' => $params,
                         ],
                     ],
                 ];
 
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                    $params['engagement_time_msec'] = 1200;
+                    $params['debug_mode'] = true;
+                }
+
                 $this->sendGAAnalyticsData($event_data);
             } else if ($config_close_unconvert_lead_status && in_array($order_status_id, $config_close_unconvert_lead_status)) {
+                $params = [
+                    'currency' => $order_info['currency_code'],
+                    'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                    'unconvert_lead_reason' => $order_status_text,
+                ];
+
                 $event_data = [
                     'events' => [
                         [
                             'name' => 'close_unconvert_lead',
-                            'params' => [
-                                'currency' => $order_info['currency_code'],
-                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
-                                'unconvert_lead_reason' => $order_status_text,
-                            ],
+                            'params' => $params,
                         ],
                     ],
                 ];
 
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                    $params['engagement_time_msec'] = 1200;
+                    $params['debug_mode'] = true;
+                }
+
                 $this->sendGAAnalyticsData($event_data);
             } else if ($config_disqualify_lead_status && in_array($order_status_id, $config_disqualify_lead_status)) {
+                $params = [
+                    'currency' => $order_info['currency_code'],
+                    'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
+                    'disqualified_lead_reason' => $order_status_text,
+                ];
+
                 $event_data = [
                     'events' => [
                         [
                             'name' => 'disqualify_lead',
-                            'params' => [
-                                'currency' => $order_info['currency_code'],
-                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
-                                'disqualified_lead_reason' => $order_status_text,
-                            ],
+                            'params' => $params,
                         ],
                     ],
                 ];
+
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                    $params['engagement_time_msec'] = 1200;
+                    $params['debug_mode'] = true;
+                }
 
                 $this->sendGAAnalyticsData($event_data);
             }

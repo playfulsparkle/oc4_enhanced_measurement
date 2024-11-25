@@ -3241,7 +3241,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout')) {
+
+        $config_track_begin_checkout = $this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout');
+        $config_track_qualify_lead = $this->config->get('analytics_ps_enhanced_measurement_track_qualify_lead');
+
+        if (
+            !$config_track_begin_checkout &&
+            !$config_track_qualify_lead
+        ) {
             return;
         }
 
@@ -3373,24 +3380,33 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $total_price = $this->getCartTotalPrice($item_price_tax);
 
-        $ps_begin_checkout = [
-            'ecommerce' => [
+
+        if ($config_track_begin_checkout) {
+            $ps_begin_checkout = [
+                'ecommerce' => [
+                    'currency' => $currency,
+                    'value' => $this->currency->format($total_price, $currency, 0, false),
+                    'coupon' => $product_coupon ? $product_coupon : '',
+                    'items' => array_values($items),
+                ],
+            ];
+
+            $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_begin_checkout'] = null;
+        }
+
+
+        if ($config_track_qualify_lead) {
+            $ps_qualify_lead = [
                 'currency' => $currency,
                 'value' => $this->currency->format($total_price, $currency, 0, false),
-                'coupon' => $product_coupon ? $product_coupon : '',
-                'items' => array_values($items),
-            ],
-        ];
+            ];
 
-        $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
-
-
-        $ps_qualify_lead = [
-            'currency' => $currency,
-            'value' => $this->currency->format($total_price, $currency, 0, false),
-        ];
-
-        $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
+            $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_qualify_lead'] = null;
+        }
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);

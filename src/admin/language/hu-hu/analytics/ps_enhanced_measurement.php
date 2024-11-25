@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Pénznem';
 $_['entry_debug_mode']                      = 'Hibakeresési mód';
 $_['entry_gtag_debug_mode']                 = 'Global Site Tag hibakeresése';
 $_['entry_generate_lead']                   = '„Lead generálás” esemény követése';
+$_['entry_qualify_lead']                    = 'Kvalifikált lead esemény követése';
 $_['entry_sign_up']                         = '„Regisztráció” esemény követése';
 $_['entry_login']                           = '„Bejelentkezés” esemény követése';
 $_['entry_add_to_wishlist']                 = '„Kívánságlistához adás” esemény követése';
@@ -126,6 +127,7 @@ $_['help_affiliation']                      = 'Adja meg az üzlet vagy részleg 
 $_['help_location_id']                      = 'A termék fizikai helye, például az üzlet, ahol értékesítik. Javasolt a <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> használata, de egyéni helyazonosítót is megadhat.';
 $_['help_tracking_delay']                   = 'Adja meg a késleltetés időtartamát (ezredmásodpercben) a GA4 esemény elküldése előtt végrehajtott alapértelmezett művelet (pl. linkre navigálás vagy űrlap beküldése) előtt. Ez biztosítja, hogy az esemény megfelelően legyen rögzítve, mielőtt a művelet befejeződik. Ha üresen hagyja, az alapértelmezett érték kerül alkalmazásra.';
 $_['help_generate_lead']                    = 'Ez az esemény azt méri, amikor egy lead létrejött, például hírlevél-feliratkozás vagy kapcsolati űrlap beküldése során. Használja ezt az eseményt, hogy megértse a marketingkampányok hatékonyságát és azt, hány ügyfél tér vissza az üzletéhez remarketing után.';
+$_['help_qualify_lead']                     = 'Ez az esemény méri, hogy mikor válik egy lead kvalifikálttá, például egy jelentős ügyfélinterakció vagy egy értékes művelet, mint például a fizetési folyamat megkezdése után. Használja ezt a leadek minőségének értékelésére és a potenciális ügyfelek értékesítési tölcséren belüli előrehaladásának nyomon követésére.';
 $_['help_sign_up']                          = 'Ez az esemény azt jelzi, hogy egy felhasználó regisztrált egy fiókot. Használja ezt az eseményt a bejelentkezett és kijelentkezett felhasználók különböző viselkedésének megértésére.';
 $_['help_login']                            = 'Ezt az eseményt küldje el, hogy jelezze, amikor egy felhasználó bejelentkezett a webhelyére vagy alkalmazásába.';
 $_['help_add_to_wishlist']                  = 'Ez az esemény azt jelzi, hogy egy tételt hozzáadtak a kívánságlistához. Használja ezt, hogy azonosítsa a népszerű ajándéktételeket az alkalmazásában.';

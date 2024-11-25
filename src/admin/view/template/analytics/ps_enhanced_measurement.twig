@@ -441,6 +441,17 @@
 							</div>
 
 							<div class="row mb-3">
+								<label for="input-qualify-lead" class="col-sm-2 col-form-label">{{ entry_qualify_lead }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_qualify_lead %} checked{% endif %} id="input-qualify-lead" />
+									</div>
+									<div class="form-text">{{ help_qualify_lead }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
 								<label for="input-sign-up" class="col-sm-2 col-form-label">{{ entry_sign_up }}</label>
 								<div class="col-sm-10">
 									<div class="form-check form-switch form-switch-lg">

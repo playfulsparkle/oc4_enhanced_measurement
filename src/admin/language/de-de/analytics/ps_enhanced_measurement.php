@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Währung';
 $_['entry_debug_mode']                      = 'Debugging aktivieren';
 $_['entry_gtag_debug_mode']                 = 'Debuggen für Global Site Tag';
 $_['entry_generate_lead']                   = 'Verfolge Generierung von Leads';
+$_['entry_qualify_lead']                    = 'Qualify Lead-Ereignis verfolgen';
 $_['entry_sign_up']                         = 'Verfolge Registrierungsevent';
 $_['entry_login']                           = 'Verfolge Login-Ereignis';
 $_['entry_add_to_wishlist']                 = 'Verfolge Hinzufügen zur Wunschliste';
@@ -125,6 +126,7 @@ $_['help_affiliation']                      = 'Geben Sie den Namen des Geschäft
 $_['help_location_id']                      = 'Der physische Standort des Artikels, z. B. das Geschäft, in dem er verkauft wird. Es ist am besten, die <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place-ID</a> für diesen Standort zu verwenden, aber Sie können auch eine benutzerdefinierte Standort-ID verwenden.';
 $_['help_tracking_delay']                   = 'Geben Sie die Verzögerung (in Millisekunden) an, die gewartet werden soll, bevor die Standardaktion ausgeführt wird (z. B. das Navigieren zu einem Link oder das Absenden eines Formulars), nachdem das GA4-Ereignis gesendet wurde. Dadurch wird sichergestellt, dass das Ereignis ordnungsgemäß erfasst wird, bevor die Aktion abgeschlossen ist. Lassen Sie es leer, um den Standardwert zu verwenden.';
 $_['help_generate_lead']                    = 'Dieses Ereignis misst, wann ein Lead generiert wurde, insbesondere das Verfolgen von Newsletter-Abonnements und Formularübermittlungen. Verwenden Sie dies, um die Effektivität Ihrer Marketingkampagnen zu verstehen und wie viele Kunden nach Remarketing erneut mit Ihrem Unternehmen interagieren.';
+$_['help_qualify_lead']                     = 'Dieses Ereignis misst, wann ein Lead qualifiziert wird, beispielsweise nach einer bedeutenden Kundeninteraktion oder einer wertvollen Aktion wie dem Beginn des Checkout-Prozesses. Verwenden Sie dies, um die Qualität Ihrer Leads zu bewerten und den Fortschritt potenzieller Kunden in Ihrem Verkaufstrichter zu verfolgen.';
 $_['help_sign_up']                          = 'Dieses Ereignis zeigt an, dass sich ein Benutzer für ein Konto angemeldet hat. Verwenden Sie dies, um das Verhalten von angemeldeten und nicht angemeldeten Benutzern zu verstehen.';
 $_['help_login']                            = 'Senden Sie dieses Ereignis, um anzuzeigen, dass sich ein Benutzer auf Ihrer Website oder in Ihrer App angemeldet hat.';
 $_['help_add_to_wishlist']                  = 'Dieses Ereignis zeigt an, dass ein Artikel zu einer Wunschliste hinzugefügt wurde. Verwenden Sie dies, um beliebte Geschenkartikel in Ihrer App zu identifizieren.';

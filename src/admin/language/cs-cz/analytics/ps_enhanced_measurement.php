@@ -74,6 +74,7 @@ $_['entry_currency']                        = 'Měna';
 $_['entry_debug_mode']                      = 'Režim ladění';
 $_['entry_gtag_debug_mode']                 = 'Ladění Global Site Tag';
 $_['entry_generate_lead']                   = 'Sledovat událost Generování leadu';
+$_['entry_qualify_lead']                    = 'Sledovat událost „Kvalifikovaný lead“';
 $_['entry_sign_up']                         = 'Sledovat událost Registrace';
 $_['entry_login']                           = 'Sledovat událost Přihlášení';
 $_['entry_add_to_wishlist']                 = 'Sledovat událost Přidání do seznamu přání';
@@ -125,6 +126,7 @@ $_['help_affiliation']                      = 'Zadejte název obchodu nebo oddě
 $_['help_location_id']                      = 'Fyzická lokalita položky, například obchod, kde je prodávána. Nejlepší je použít <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> pro tuto lokalitu, ale můžete použít i vlastní ID místa.';
 $_['help_tracking_delay']                   = 'Zadejte zpoždění (v milisekundách), které má být vyčkáváno před provedením výchozí akce (např. přechod na odkaz nebo odeslání formuláře) po odeslání události GA4. Tím se zajistí správné sledování události před dokončením akce. Nechte prázdné pro použití výchozí hodnoty.';
 $_['help_generate_lead']                    = 'Tato událost měří, kdy byl vytvořen lead, konkrétně sleduje přihlášení k odběru newsletteru a odeslání kontaktního formuláře. Použijte ji k pochopení účinnosti vašich marketingových kampaní a jak mnoho zákazníků se opět zapojuje s vaší firmou po remarketingu.';
+$_['help_qualify_lead']                     = 'Tato událost měří, kdy je lead kvalifikován, například po smysluplné interakci se zákazníkem nebo akci s vysokou hodnotou, jako je zahájení procesu platby. Použijte tuto událost k posouzení kvality vašich leadů a ke sledování postupu potenciálních zákazníků ve vašem prodejním trychtýři.';
 $_['help_sign_up']                          = 'Tato událost označuje, že uživatel se zaregistroval pro účet. Použijte ji k pochopení různých chování přihlášených a neprihlášených uživatelů.';
 $_['help_login']                            = 'Odeslat tuto událost k označení, že uživatel se přihlásil na vaše webové stránky nebo aplikaci.';
 $_['help_add_to_wishlist']                  = 'Tato událost označuje, že položka byla přidána do seznamu přání. Použijte ji k identifikaci populárních dárkových předmětů ve vaší aplikaci.';

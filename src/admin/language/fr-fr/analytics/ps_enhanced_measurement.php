@@ -75,6 +75,7 @@ $_['entry_currency']                        = 'Devise';
 $_['entry_debug_mode']                      = 'Mode débogage';
 $_['entry_gtag_debug_mode']                 = 'Déboguer Global Site Tag';
 $_['entry_generate_lead']                   = 'Suivre l\'événement Générer un prospect';
+$_['entry_qualify_lead']                    = 'Suivre l’événement « Qualify Lead »';
 $_['entry_sign_up']                         = 'Suivre l\'événement Inscription';
 $_['entry_login']                           = 'Suivre l\'événement Connexion';
 $_['entry_add_to_wishlist']                 = 'Suivre l\'événement Ajouter au panier';
@@ -126,6 +127,7 @@ $_['help_affiliation']                      = 'Entrez le nom du magasin ou du d�
 $_['help_location_id']                      = 'L\'emplacement physique de l\'article, comme le magasin où il est vendu. Il est préférable d\'utiliser l\'<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">identifiant Google Place</a> pour cet emplacement, mais vous pouvez également utiliser un identifiant de lieu personnalisé.';
 $_['help_tracking_delay']                   = 'Spécifiez le délai (en millisecondes) à attendre avant d\'exécuter l\'action par défaut (par exemple, la navigation vers un lien ou la soumission d\'un formulaire) après l\'envoi de l\'événement GA4. Cela garantit que l\'événement est suivi correctement avant que l\'action ne soit terminée. Laissez vide pour utiliser la valeur par défaut.';
 $_['help_generate_lead']                    = 'Cet événement mesure lorsqu\'un lead a été généré, en suivant spécifiquement les abonnements à la newsletter et les soumissions de formulaires de contact. Utilisez-le pour comprendre l\'efficacité de vos campagnes marketing et combien de clients réengagent avec votre entreprise après un remarketing.';
+$_['help_qualify_lead']                     = 'Cet événement mesure quand un lead est qualifié, par exemple après une interaction significative avec un client ou une action à forte valeur ajoutée, comme le début du processus de paiement. Utilisez-le pour évaluer la qualité de vos leads et suivre la progression des clients potentiels dans votre entonnoir de vente.';
 $_['help_sign_up']                          = 'Cet événement indique qu\'un utilisateur s\'est inscrit à un compte. Utilisez-le pour comprendre les comportements différents des utilisateurs connectés et non connectés.';
 $_['help_login']                            = 'Envoyez cet événement pour signifier qu\'un utilisateur s\'est connecté à votre site ou application.';
 $_['help_add_to_wishlist']                  = 'Cet événement signifie qu\'un article a été ajouté à une liste de souhaits. Utilisez-le pour identifier les articles populaires pour les cadeaux dans votre application.';
