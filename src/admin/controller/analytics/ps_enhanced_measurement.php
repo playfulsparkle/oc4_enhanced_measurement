@@ -299,6 +299,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
             $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->install();
+
+            $this->load->model('setting/cron');
+
+            $this->model_setting_cron->addCron('ps_enhanced_measurement', '', 'day', 'extension/ps_enhanced_measurement/cron/ps_enhanced_measurement', true);
         }
     }
 
@@ -312,6 +316,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
             $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->uninstall();
+
+            $this->load->model('setting/cron');
+
+            $this->model_setting_cron->deleteCronByCode('ps_enhanced_measurement');
         }
     }
 
@@ -425,6 +433,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function sendRefund(): void
     {
+        if (
+            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
+            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
+        ) {
+            return;
+        }
+
         $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -676,7 +691,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $params['debug_mode'] = true;
                     }
 
-                    $json['event_data'] = [
+                    $event_data = [
                         'client_id' => $client_info['client_id'],
                         'user_id' => $client_info['user_id'],
                         'non_personalized_ads' => true,
@@ -688,7 +703,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         ],
                     ];
 
-                    $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
+                    if ($this->sendGAAnalyticsData($event_data)) {
+                        $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveRefundedState($order_id);
+
+                        $json['success'] = $this->language->get('text_refund_successfully_sent');
+                    } else {
+                        $json['error'] = $this->language->get('error_refund_send');
+                    }
                 } else {
                     $json['error'] = $this->language->get('error_client_id');
                 }
@@ -704,23 +725,47 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json, JSON_NUMERIC_CHECK));
     }
 
+    protected function sendGAAnalyticsData(array $data): bool
+    {
+        $ps_google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+        $ps_mp_api_secret = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
+
+        $json_payload = json_encode($data, JSON_NUMERIC_CHECK);
+
+        $url = 'https://www.google-analytics.com/mp/collect?measurement_id=' . $ps_google_tag_id . '&api_secret=' . $ps_mp_api_secret;
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_payload);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($json_payload),
+        ]);
+
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $response === false ? false : true;
+    }
+
     public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
+        if (!$this->config->get('analytics_ps_enhanced_measurement_google_tag_id') || !$this->config->get('analytics_ps_enhanced_measurement_mp_api_secret')) {
+            return;
+        }
+
+
         $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement', 'ps');
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-
-        $ps_google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
-        $ps_mp_api_secret = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
-
-        if (!$ps_google_tag_id || !$ps_mp_api_secret) {
-            return;
-        }
 
         if (isset($this->request->get['order_id'])) {
             $order_id = (int) $this->request->get['order_id'];
@@ -730,14 +775,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_button_refund'] = $this->language->get('ps_button_refund');
             $args['ps_button_refund_all'] = $this->language->get('ps_button_refund_all');
             $args['ps_button_refund_selected'] = $this->language->get('ps_button_refund_selected');
-            $args['ps_text_refund_successfully_sent'] = $this->language->get('ps_text_refund_successfully_sent');
-            $args['ps_error_refund_send'] = $this->language->get('ps_error_refund_send');
             $args['ps_error_no_refundable_selected'] = $this->language->get('ps_error_no_refundable_selected');
             $args['ps_text_product_already_refunded'] = $this->language->get('ps_text_product_already_refunded');
 
-            $args['ps_ga_server_url'] = 'https://www.google-analytics.com/mp/collect';
-            $args['ps_google_tag_id'] = $ps_google_tag_id;
-            $args['ps_mp_api_secret'] = $ps_mp_api_secret;
             $args['ps_is_refundable'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id);
 
             $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);

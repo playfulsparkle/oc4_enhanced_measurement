@@ -133,20 +133,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             .then(data => {
                                 if (data.error) {
                                     $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> ' + data.error + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                                }
-
-                                if (data.event_data) {
-                                    return fetch("{{ ps_ga_server_url }}?measurement_id={{ ps_google_tag_id }}&api_secret={{ ps_mp_api_secret }}&debug_mode=1", { method: "POST", body: JSON.stringify(data.event_data) });
-                                }
-                            })
-                            .then(ga_response => { return ga_response; })
-                            .then(ga_response_data => {
-                                if (ga_response_data.status) {
-                                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> {{ ps_text_refund_successfully_sent }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
-                                } else {
-                                    $('#alert').prepend('<div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_error_refund_send }} <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
 
                                     console.error(ga_response_data.statusText);
+                                }
+
+                                if (data.success) {
+                                    $('#alert').prepend('<div class="alert alert-success alert-dismissible"><i class="fa-solid fa-check-circle"></i> ' + data.success + ' <button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
                                 }
 
                                 refundInputs.each(function () {
@@ -176,11 +168,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             KEY `order_id` (`order_id`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
         ");
+
+        $this->db->query("ALTER TABLE `" . DB_PREFIX . "cart` ADD `ps_disqualified_lead` TINYINT NOT NULL DEFAULT '0' AFTER `price`");
     }
 
     public function uninstall()
     {
         $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "ps_refund_order`");
+        $this->db->query("TABLE `" . DB_PREFIX . "cart` DROP `ps_disqualified_lead`");
     }
 
     public function getClientIdByOrderId($orderId)
