@@ -46,6 +46,10 @@ $_['text_gcm_info']                         = 'El Modo de Consentimiento de Goog
 $_['text_close_convert_lead']               = 'Cerrar cliente potencial como convertido (por ejemplo, Pedido completado con éxito)';
 $_['text_close_unconvert_lead']             = 'Cerrar cliente potencial como no convertido (por ejemplo, Pedido cancelado)';
 $_['text_disqualify_lead']                  = 'Descalificación del cliente potencial (por ejemplo, Carrito abandonado)';
+$_['text_working_lead_success']             = 'El evento „Working Lead“ se ha enviado correctamente.';
+$_['text_close_convert_lead_success']       = 'El evento „Close Convert Lead“ se ha enviado correctamente.';
+$_['text_close_unconvert_lead_success']     = 'El evento „Close Unconvert Lead“ se ha enviado correctamente.';
+$_['text_disqualify_lead_success']          = 'El evento „Disqualify Lead“ se ha enviado correctamente.';
 
 // Column
 $_['column_refund_quantity']                = 'Cantidad de Reembolso';
@@ -110,7 +114,6 @@ $_['entry_gcm_profiles']                    = 'Perfiles de GCM';
 $_['entry_lead_associations']               = 'Asociaciones de clientes potenciales';
 $_['entry_lead_type']                       = 'Tipo de cliente potencial';
 $_['entry_order_status']                    = 'Estado del pedido';
-$_['']                   = 'Estado del pedido reembolsado';
 $_['entry_working_lead']                    = '(GA4) Enviar evento de "Working Lead"';
 
 // Button
@@ -174,3 +177,7 @@ $_['error_refund_no_order_id']              = 'Advertencia: Faltan o son incompl
 $_['error_analytics_extension']             = 'Parece que otra herramienta de análisis ya está activa en su sitio. Tener más de una herramienta de este tipo puede generar problemas, como seguimiento duplicado o faltante. Verifique la configuración de su sitio.';
 $_['error_tracking_delay']                  = 'El retraso de seguimiento debe ser al menos de 100 milisegundos para asegurar un seguimiento adecuado de los eventos.';
 $_['error_wait_for_update']                 = 'El valor de Esperar para actualización debe ser un número entre 0 y 10000 milisegundos.';
+$_['error_working_lead']                    = 'Error al enviar el evento „Working Lead“.';
+$_['error_close_convert_lead']              = 'Error al enviar el evento „Close Convert Lead“.';
+$_['error_close_unconvert_lead']            = 'Error al enviar el evento „Close Unconvert Lead“.';
+$_['error_disqualify_lead']                 = 'Error al enviar el evento „Disqualify Lead“.';

@@ -47,6 +47,10 @@ $_['text_qualify_lead']                     = 'Qualification du prospect (par ex
 $_['text_close_convert_lead']               = 'Fermer le prospect comme converti (par ex., Commande terminée avec succès)';
 $_['text_close_unconvert_lead']             = 'Fermer le prospect comme non converti (par ex., Commande annulée)';
 $_['text_disqualify_lead']                  = 'Disqualification du prospect (par ex., Panier abandonné)';
+$_['text_working_lead_success']             = 'L’événement „Working Lead“ a été envoyé avec succès.';
+$_['text_close_convert_lead_success']       = 'L’événement „Close Convert Lead“ a été envoyé avec succès.';
+$_['text_close_unconvert_lead_success']     = 'L’événement „Close Unconvert Lead“ a été envoyé avec succès.';
+$_['text_disqualify_lead_success']          = 'L’événement „Disqualify Lead“ a été envoyé avec succès.';
 
 // Column
 $_['column_refund_quantity']                = 'Quantité de remboursement';
@@ -174,3 +178,7 @@ $_['error_refund_no_order_id']              = 'Avertissement : Des paramètres d
 $_['error_analytics_extension']             = 'Il semble qu\'un autre outil d\'analyse soit déjà actif sur votre site. Avoir plus d\'un tel outil peut entraîner des problèmes, tels que le suivi en double ou manquant. Veuillez vérifier les paramètres de votre site.';
 $_['error_tracking_delay']                  = 'Le délai de suivi doit être d\'au moins 100 millisecondes pour garantir un suivi des événements approprié.';
 $_['error_wait_for_update']                 = 'La valeur de "Attendre la mise à jour" doit être un nombre compris entre 0 et 10000 millisecondes.';
+$_['error_working_lead']                    = 'Erreur lors de l’envoi de l’événement „Working Lead“.';
+$_['error_close_convert_lead']              = 'Erreur lors de l’envoi de l’événement „Close Convert Lead“.';
+$_['error_close_unconvert_lead']            = 'Erreur lors de l’envoi de l’événement „Close Unconvert Lead“.';
+$_['error_disqualify_lead']                 = 'Erreur lors de l’envoi de l’événement „Disqualify Lead“.';

@@ -784,13 +784,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $json_response = json_decode($this->response->getOutput(), true);
+
+        if (!$json_response || !isset($json_response['success'])) {
+            return;
+        }
+
         if (isset($this->request->post['order_id'])) {
             $order_id = (int) $this->request->post['order_id'];
         } else {
             $order_id = 0;
         }
 
-        if ($order_id <= 0) {
+        if ($order_id === 0) {
             return;
         }
 
@@ -807,6 +813,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
+        $this->load->language('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
         $this->load->model('sale/order');
         $this->load->model('localisation/order_status');
@@ -814,6 +822,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $order_info = $this->model_sale_order->getOrder($order_id);
 
         $client_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id);
+
 
         if ($working_lead === 1) {
             $params = [
@@ -838,11 +847,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $params['debug_mode'] = true;
             }
 
-            $this->sendGAAnalyticsData($event_data);
+            if ($this->sendGAAnalyticsData($event_data)) {
+                $json_response['ps_success'] = $this->language->get('text_working_lead_success');
+            } else {
+                $json_response['ps_error'] = $this->language->get('error_working_lead');
+            }
         } else {
             $config_close_convert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
             $config_close_unconvert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_unconvert_lead_status');
             $config_disqualify_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_disqualify_lead_status');
+
 
             $order_statuses = $this->model_localisation_order_status->getOrderStatuses();
 
@@ -853,6 +867,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $order_status_text = $order_status['name'];
                 }
             }
+
 
             if ($config_close_convert_lead_status && in_array($order_status_id, $config_close_convert_lead_status)) {
                 $params = [
@@ -876,7 +891,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $params['debug_mode'] = true;
                 }
 
-                $this->sendGAAnalyticsData($event_data);
+                if ($this->sendGAAnalyticsData($event_data)) {
+                    $json_response['ps_success'] = $this->language->get('text_close_convert_lead_success');
+                } else {
+                    $json_response['ps_error'] = $this->language->get('error_close_convert_lead');
+                }
             } else if ($config_close_unconvert_lead_status && in_array($order_status_id, $config_close_unconvert_lead_status)) {
                 $params = [
                     'currency' => $order_info['currency_code'],
@@ -900,7 +919,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $params['debug_mode'] = true;
                 }
 
-                $this->sendGAAnalyticsData($event_data);
+                if ($this->sendGAAnalyticsData($event_data)) {
+                    $json_response['ps_success'] = $this->language->get('text_close_unconvert_lead_success');
+                } else {
+                    $json_response['ps_error'] = $this->language->get('error_close_unconvert_lead');
+                }
             } else if ($config_disqualify_lead_status && in_array($order_status_id, $config_disqualify_lead_status)) {
                 $params = [
                     'currency' => $order_info['currency_code'],
@@ -924,9 +947,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $params['debug_mode'] = true;
                 }
 
-                $this->sendGAAnalyticsData($event_data);
+                if ($this->sendGAAnalyticsData($event_data)) {
+                    $json_response['ps_success'] = $this->language->get('text_disqualify_lead_success');
+                } else {
+                    $json_response['ps_error'] = $this->language->get('error_disqualify_lead');
+                }
             }
         }
+
+        $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
     public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void

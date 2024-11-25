@@ -46,6 +46,10 @@ $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funzion
 $_['text_close_convert_lead']               = 'Chiudi il lead come convertito (es., Ordine completato con successo)';
 $_['text_close_unconvert_lead']             = 'Chiudi il lead come non convertito (es., Ordine annullato)';
 $_['text_disqualify_lead']                  = 'Squalifica il lead (es., Carrello abbandonato)';
+$_['text_working_lead_success']             = 'L’evento „Working Lead“ è stato inviato con successo.';
+$_['text_close_convert_lead_success']       = 'L’evento „Close Convert Lead“ è stato inviato con successo.';
+$_['text_close_unconvert_lead_success']     = 'L’evento „Close Unconvert Lead“ è stato inviato con successo.';
+$_['text_disqualify_lead_success']          = 'L’evento „Disqualify Lead“ è stato inviato con successo.';
 
 // Column
 $_['column_refund_quantity']                = 'Quantità di Rimborso';
@@ -110,7 +114,6 @@ $_['entry_gcm_profiles']                    = 'Profili GCM';
 $_['entry_lead_associations']               = 'Associazioni di lead';
 $_['entry_lead_type']                       = 'Tipo di lead';
 $_['entry_order_status']                    = 'Stato dell\'ordine';
-$_['']                   = 'Stato degli ordini rimborsati';
 $_['entry_working_lead']                    = '(GA4) Invia evento "Working Lead"';
 
 // Button
@@ -174,3 +177,7 @@ $_['error_refund_no_order_id']              = 'Attenzione: Mancano o sono incomp
 $_['error_analytics_extension']             = 'Sembra che un altro strumento di analisi sia già attivo sul tuo sito. Avere più di uno strumento di questo tipo può creare problemi, come il tracciamento duplicato o mancante. Controlla le impostazioni del tuo sito.';
 $_['error_tracking_delay']                  = 'Il Tracking Delay deve essere almeno di 100 millisecondi per garantire il corretto tracciamento degli eventi.';
 $_['error_wait_for_update']                 = 'Il valore di Wait for Update deve essere un numero compreso tra 0 e 10000 millisecondi.';
+$_['error_working_lead']                    = 'Errore durante l’invio dell’evento „Working Lead“.';
+$_['error_close_convert_lead']              = 'Errore durante l’invio dell’evento „Close Convert Lead“.';
+$_['error_close_unconvert_lead']            = 'Errore durante l’invio dell’evento „Close Unconvert Lead“.';
+$_['error_disqualify_lead']                 = 'Errore durante l’invio dell’evento „Disqualify Lead“.';

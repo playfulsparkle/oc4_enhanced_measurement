@@ -46,6 +46,10 @@ $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funguje
 $_['text_close_convert_lead']               = 'Uzavřít potenciálního zákazníka jako konvertovaného (např. Objednávka úspěšně dokončena)';
 $_['text_close_unconvert_lead']             = 'Uzavřít potenciálního zákazníka jako nekonvertovaného (např. Objednávka zrušena)';
 $_['text_disqualify_lead']                  = 'Diskvalifikace potenciálního zákazníka (např. Opuštěný košík)';
+$_['text_working_lead_success']             = 'Událost „Working Lead“ byla úspěšně odeslána.';
+$_['text_close_convert_lead_success']       = 'Událost „Close Convert Lead“ byla úspěšně odeslána.';
+$_['text_close_unconvert_lead_success']     = 'Událost „Close Unconvert Lead“ byla úspěšně odeslána.';
+$_['text_disqualify_lead_success']          = 'Událost „Disqualify Lead“ byla úspěšně odeslána.';
 
 // Column
 $_['column_refund_quantity']                = 'Množství refundace';
@@ -173,3 +177,7 @@ $_['error_refund_no_order_id']              = 'Varování: Chybí nebo jsou neú
 $_['error_analytics_extension']             = 'Vypadá to, že na vašem webu je již aktivní jiný analytický nástroj. Mít více než jeden nástroj tohoto typu může způsobit problémy, jako jsou duplicitní nebo chybějící sledování. Zkontrolujte nastavení svého webu.';
 $_['error_tracking_delay']                  = 'Zpoždění sledování musí být alespoň 100 milisekund, aby bylo zajištěno správné sledování událostí.';
 $_['error_wait_for_update']                 = 'Hodnota pro Počkejte na aktualizaci musí být číslo mezi 0 a 10000 milisekundami.';
+$_['error_working_lead']                    = 'Chyba při odesílání události „Working Lead“.';
+$_['error_close_convert_lead']              = 'Chyba při odesílání události „Close Convert Lead“.';
+$_['error_close_unconvert_lead']            = 'Chyba při odesílání události „Close Unconvert Lead“.';
+$_['error_disqualify_lead']                 = 'Chyba při odesílání události „Disqualify Lead“.';

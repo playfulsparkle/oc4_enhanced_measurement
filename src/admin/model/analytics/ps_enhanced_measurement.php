@@ -74,6 +74,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         ];
 
         $views[] = [
+            'search' => "if (json['success']) {",
+            'replace' => "if (json['ps_success']) {
+                $('#alert').prepend('<div class=\"alert alert-success alert-dismissible\"><i class=\"fa-solid fa-check-circle\"></i> ' + json['ps_success'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
+            }
+
+            if (json['ps_error']) {
+                $('#alert').prepend('<div class=\"alert alert-danger alert-dismissible\"><i class=\"fa-solid fa-circle-exclamation\"></i> ' + json['ps_error'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
+            }
+
+            if (json['success']) {",
+        ];
+
+        $views[] = [
             'search' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>',
             'replace' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>
                     </div>
@@ -169,8 +182,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                                     $(this).val(0);
                                 });
                             },
-                            error: function(xhr, status, error) {
-                                console.error(error);
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                console.log(thrownError + "\\r\\n" + xhr.statusText + "\\r\\n" + xhr.responseText);
                             }
                         });
 

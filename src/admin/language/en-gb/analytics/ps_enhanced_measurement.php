@@ -46,6 +46,10 @@ $_['text_gcm_info']                         = 'Google Consent Mode (GCM) works o
 $_['text_close_convert_lead']               = 'Close Lead as Converted (e.g., Order Successfully Completed)';
 $_['text_close_unconvert_lead']             = 'Close Lead as Unconverted (e.g., Order Canceled)';
 $_['text_disqualify_lead']                  = 'Disqualify Lead (e.g., Abandoned Cart)';
+$_['text_working_lead_success']             = 'The "Working Lead" event has been successfully sent.';
+$_['text_close_convert_lead_success']       = 'The "Close Convert Lead" event has been successfully sent.';
+$_['text_close_unconvert_lead_success']     = 'The "Close Unconvert Lead" event has been successfully sent.';
+$_['text_disqualify_lead_success']          = 'The "Disqualify Lead" event has been successfully sent.';
 
 // Column
 $_['column_refund_quantity']                = 'Refund Quantity';
@@ -110,7 +114,6 @@ $_['entry_gcm_profiles']                    = 'GCM Profiles';
 $_['entry_lead_associations']               = 'Lead Associations';
 $_['entry_lead_type']                       = 'Lead type';
 $_['entry_order_status']                    = 'Order Status';
-$_['']                   = 'Refunded Order Status';
 $_['entry_working_lead']                    = '(GA4) Send Working Lead Event';
 
 // Button
@@ -174,3 +177,7 @@ $_['error_refund_no_order_id']              = 'Warning: Required request paramet
 $_['error_analytics_extension']             = 'It looks like another analytics tool is already active on your site. Having more than one tool like this can create problems, such as duplicate or missing tracking. Please check your site’s settings.';
 $_['error_tracking_delay']                  = 'The Tracking Delay must be at least 100 milliseconds to ensure proper event tracking.';
 $_['error_wait_for_update']                 = 'The Wait for Update value must be a number between 0 and 10000 milliseconds.';
+$_['error_working_lead']                    = 'An error occurred while sending the "Working Lead" event.';
+$_['error_close_convert_lead']              = 'An error occurred while sending the "Close Convert Lead" event.';
+$_['error_close_unconvert_lead']            = 'An error occurred while sending the "Close Unconvert Lead" event.';
+$_['error_disqualify_lead']                 = 'An error occurred while sending the "Disqualify Lead" event.';
