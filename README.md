@@ -40,7 +40,6 @@ Events are specific actions your customers take on your website. For example, ad
 | `Add to Cart`              | When a product is added to the shopping cart.                                                          |
 | `Add to Wishlist`          | When a product is saved to a wishlist for later.                                                       |
 | `Begin Checkout`           | When a customer starts the checkout process.                                                           |
-| `Generate Lead`            | When a customer shows interest, such as by filling out a contact form.                                 |
 | `Login`                    | When a customer logs into their account.                                                               |
 | `Purchase`                 | When a customer completes an order, including the total spent and items purchased.                     |
 | `Refund`                   | When a refund is issued for an order.                                                                  |
@@ -53,6 +52,12 @@ Events are specific actions your customers take on your website. For example, ad
 | `View Item`                | When a customer views a single product page.                                                           |
 | `View Item List`           | When a customer views a list of products, like on a category or search results page.                   |
 | `View Promotion`           | When a customer sees promotional content, such as banners or ads.                                      |
+| `Generate Lead`            | When a customer shows interest, such as by filling out a contact form.                                 |
+| `Close Convert Lead`       | When a potential lead is marked as converted, e.g., when an order is successfully completed.           |
+| `Close Unconvert Lead`     | When a potential lead is marked as unconverted, e.g., when an order is canceled.                       |
+| `Disqualify Lead`          | When a potential lead is disqualified, e.g., due to an abandoned cart.                                 |
+| `Qualify Lead`             | When a potential lead is qualified, e.g., when a customer shows interest or proceeds to checkout.      |
+| `Working Lead`             | When a lead is being worked on, e.g., when a customer is contacted or engaged.                         |
 
 ### Simplified Examples
 

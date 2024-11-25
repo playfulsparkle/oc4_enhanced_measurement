@@ -43,7 +43,6 @@ $_['text_group_security_settings']          = 'Biztonsági beállítások';
 $_['text_group_advanced_settings']          = 'Speciális beállítások';
 $_['text_product_already_refunded']         = 'Ez a termék már visszatérítésre került. További műveletek nem érhetők el.';
 $_['text_gcm_info']                         = 'A Google Consent Mode (GCM) csak akkor működik, ha a Mérési implementáció legördülő menüben a Google Tag Manager van kiválasztva. Nem működik a Global Site Tag - gtag.js használatakor. A funkció használatához szükséges egy süti-értesítési sáv telepítése. Ez a bővítmény alapértelmezés szerint egy alapvető hozzájárulási állapotot állít be, de a süti-értesítési sáv felelős a hozzájárulási állapot frissítéséért az adatok gyűjtésének engedélyezéséhez.';
-$_['text_qualify_lead']                     = 'Potenciális vásárló kvalifikálása (pl. Megrendelés feldolgozása)';
 $_['text_close_convert_lead']               = 'Potenciális vásárló lezárása konvertáltként (pl. Megrendelés sikeresen befejezve)';
 $_['text_close_unconvert_lead']             = 'Potenciális vásárló lezárása nem konvertáltként (pl. Megrendelés törölve)';
 $_['text_disqualify_lead']                  = 'Potenciális vásárló diszkvalifikálása (pl. Elhagyott kosár)';
@@ -111,7 +110,7 @@ $_['entry_lead_associations']               = 'Potenciális vásárlók társít
 $_['entry_lead_type']                       = 'Potenciális vásárló típusa';
 $_['entry_order_status']                    = 'Megrendelés állapota';
 $_['entry_refund_status']                   = 'Visszatérített megrendelés állapota';
-$_['entry_working_lead']                    = '(GA4) „Munkafolyamatban lévő potenciális vásárló” esemény küldése';
+$_['entry_working_lead']                    = '(GA4) „Working Lead” esemény küldése';
 
 // Button
 $_['button_fix_event_handler']              = 'Eseménykezelő javítása';
@@ -155,7 +154,7 @@ $_['help_wait_for_update']                  = 'Beállítja az időt (ezredmásod
 $_['help_ads_data_redaction']               = 'Azonosítható információk elrejtésével biztosítja a hirdetési adatok védelmét és a felhasználói adatok titkosságát.';
 $_['help_url_passthrough']                  = 'Lehetővé teszi az URL átengedését a hozzájárulás-ellenőrzéseken, hasznos a felhasználói útvonalak követéséhez személyes adatok tárolása nélkül.';
 $_['help_gcm_status']                       = 'Engedélyezi a Google Consent Mode használatát, amely lehetővé teszi a webhely számára, hogy a Google címkék viselkedését a felhasználói hozzájárulási beállításokhoz igazítsa. Ez a mód adatvédelmi szempontból barátságos nyomkövetést biztosít, amely megfelel a hozzájárulási preferenciáknak, miközben lehetővé teszi az analitikát és a hirdetések működését.';
-$_['help_working_lead']                     = 'Bekapcsolás esetén a „Munkafolyamatban lévő potenciális vásárló” esemény el lesz küldve a Google Analyticsbe, amikor felveszi a kapcsolatot az ügyféllel.';
+$_['help_working_lead']                     = 'Kapcsolja be, hogy a „Working Lead” esemény elküldésre kerüljön a Google Analytics számára, amikor kapcsolatba lép az ügyféllel.';
 
 // Error
 $_['error_permission']                      = 'Figyelem: Nincs jogosultsága a (GA4) Enhanced Measurement beállításainak módosításához!';

@@ -43,7 +43,6 @@ $_['text_group_security_settings']          = 'Configuración de seguridad';
 $_['text_group_advanced_settings']          = 'Configuración avanzada';
 $_['text_product_already_refunded']         = 'Este producto ya ha sido reembolsado. No se pueden realizar más acciones.';
 $_['text_gcm_info']                         = 'El Modo de Consentimiento de Google (GCM) solo funciona cuando eliges Google Tag Manager en el menú desplegable de Implementación de Medición. No funciona con Global Site Tag (gtag.js). Para usar esta función, asegúrate de tener un banner de cookies instalado. Esta extensión establece un estado básico de consentimiento por defecto, pero el banner de cookies es responsable de actualizar el consentimiento para permitir la recolección de datos.';
-$_['text_qualify_lead']                     = 'Calificación del cliente potencial (por ejemplo, Pedido en proceso)';
 $_['text_close_convert_lead']               = 'Cerrar cliente potencial como convertido (por ejemplo, Pedido completado con éxito)';
 $_['text_close_unconvert_lead']             = 'Cerrar cliente potencial como no convertido (por ejemplo, Pedido cancelado)';
 $_['text_disqualify_lead']                  = 'Descalificación del cliente potencial (por ejemplo, Carrito abandonado)';
@@ -111,7 +110,7 @@ $_['entry_lead_associations']               = 'Asociaciones de clientes potencia
 $_['entry_lead_type']                       = 'Tipo de cliente potencial';
 $_['entry_order_status']                    = 'Estado del pedido';
 $_['entry_refund_status']                   = 'Estado del pedido reembolsado';
-$_['entry_working_lead']                    = '(GA4) Enviar evento de "Cliente potencial en proceso"';
+$_['entry_working_lead']                    = '(GA4) Enviar evento de "Working Lead"';
 
 // Button
 $_['button_fix_event_handler']              = 'Corregir Controlador de Eventos';
@@ -155,7 +154,7 @@ $_['help_wait_for_update']                  = 'Establece el tiempo (en milisegun
 $_['help_ads_data_redaction']               = 'Redacta los datos del usuario relacionados con los anuncios, asegurando la privacidad al ocultar cierta información identificable.';
 $_['help_url_passthrough']                  = 'Permite que la URL pase por los controles de consentimiento, útil para rastrear caminos específicos de los usuarios sin almacenar datos personales.';
 $_['help_gcm_status']                       = 'Habilita el Modo de Consentimiento de Google, permitiendo que tu sitio ajuste el comportamiento de las etiquetas de Google según los ajustes de consentimiento del usuario. Este modo proporciona un seguimiento respetuoso con la privacidad, permitiendo que los análisis y anuncios funcionen en conformidad con las preferencias de consentimiento.';
-$_['help_working_lead']                     = 'Activar para enviar el evento "Cliente potencial en proceso" a Google Analytics cuando contacte al cliente.';
+$_['help_working_lead']                     = 'Activa esta opción para enviar el evento de "Working Lead" a Google Analytics cuando contactes al cliente.';
 
 // Error
 $_['error_permission']                      = 'Advertencia: No tiene permiso para modificar la configuración de (GA4) Enhanced Measurement.';

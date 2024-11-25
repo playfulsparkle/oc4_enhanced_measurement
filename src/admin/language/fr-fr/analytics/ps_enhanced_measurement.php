@@ -111,7 +111,7 @@ $_['entry_lead_associations']               = 'Associations de prospects';
 $_['entry_lead_type']                       = 'Type de prospect';
 $_['entry_order_status']                    = 'Statut de la commande';
 $_['entry_refund_status']                   = 'Statut des commandes remboursées';
-$_['entry_working_lead']                    = '(GA4) Envoyer l\'événement "Prospect en cours"';
+$_['entry_working_lead']                    = '(GA4) Envoyer l’événement « Working Lead »';
 
 // Button
 $_['button_fix_event_handler']              = 'Corriger le gestionnaire d\'événements';
@@ -155,7 +155,7 @@ $_['help_wait_for_update']                  = 'Définit le temps (en millisecond
 $_['help_ads_data_redaction']               = 'Rédige les données utilisateur liées aux publicités, assurant la confidentialité en masquant certaines informations identifiables.';
 $_['help_url_passthrough']                  = 'Permet au URL de passer à travers les vérifications de consentement, utile pour suivre des chemins d\'utilisateurs spécifiques sans stocker de données personnelles.';
 $_['help_gcm_status']                       = 'Active le Mode de Consentement Google, permettant à votre site d\'ajuster le comportement des balises Google en fonction des paramètres de consentement de l\'utilisateur. Ce mode offre un suivi respectueux de la vie privée, permettant à la fois les analyses et les publicités de fonctionner conformément aux préférences de consentement.';
-$_['help_working_lead']                     = 'Activez pour envoyer l\'événement "Prospect en cours" à Google Analytics lorsque vous contactez le client.';
+$_['help_working_lead']                     = 'Activez pour envoyer l’événement « Working Lead » à Google Analytics lorsque vous contactez le client.';
 
 // Error
 $_['error_permission']                      = 'Avertissement : Vous n\'avez pas l\'autorisation de modifier les paramètres de Playful Sparkle - (GA4) Enhanced Measurement !';

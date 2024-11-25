@@ -43,7 +43,6 @@ $_['text_group_security_settings']          = 'Nastavení zabezpečení';
 $_['text_group_advanced_settings']          = 'Pokročilá nastavení';
 $_['text_product_already_refunded']         = 'Tento produkt již byl vrácen. Další akce nejsou k dispozici.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funguje pouze při výběru Google Tag Manager (GTM) nebo Global Site Tag (gtag.js). Pokud používáte jiný měřící nástroj, GCM nebude podporován.';
-$_['text_qualify_lead']                     = 'Kvalifikace potenciálního zákazníka (např. Zpracování objednávky)';
 $_['text_close_convert_lead']               = 'Uzavřít potenciálního zákazníka jako konvertovaného (např. Objednávka úspěšně dokončena)';
 $_['text_close_unconvert_lead']             = 'Uzavřít potenciálního zákazníka jako nekonvertovaného (např. Objednávka zrušena)';
 $_['text_disqualify_lead']                  = 'Diskvalifikace potenciálního zákazníka (např. Opuštěný košík)';
@@ -111,7 +110,7 @@ $_['entry_lead_associations']               = 'Asociace potenciálních zákazn�
 $_['entry_lead_type']                       = 'Typ potenciálního zákazníka';
 $_['entry_order_status']                    = 'Stav objednávky';
 $_['entry_refund_status']                   = 'Stav vrácené objednávky';
-$_['entry_working_lead']                    = '(GA4) Odeslat událost „Pracovní kvalifikace“';
+$_['entry_working_lead']                    = '(GA4) Odeslat událost „Working Lead“';
 
 // Button
 $_['button_fix_event_handler']              = 'Opravit obslužnou rutinu událostí';
@@ -155,7 +154,7 @@ $_['help_wait_for_update']                  = 'Nastavuje čas (v milisekundách)
 $_['help_ads_data_redaction']               = 'Rediguje uživatelská data související s reklamami, čímž zajišťuje ochranu soukromí skrytím některých identifikovatelných informací.';
 $_['help_url_passthrough']                  = 'Umožňuje, aby URL prošla kontrolami souhlasu, což je užitečné pro sledování konkrétních uživatelských cest bez ukládání osobních údajů.';
 $_['help_gcm_status']                       = 'Povoluje režim souhlasu Google, což umožňuje vaší stránce přizpůsobit chování Google značek na základě nastavení souhlasu uživatele. Tento režim poskytuje sledování šetrné k soukromí, což umožňuje, aby analytika a reklamy fungovaly v souladu se souhlasnými preferencemi.';
-$_['help_working_lead']                     = 'Přepnout pro odeslání události „Pracovní kvalifikace“ do Google Analytics při kontaktování zákazníka.';
+$_['help_working_lead']                     = 'Přepněte pro odeslání události „Working Lead“ do Google Analytics, když kontaktujete zákazníka.';
 
 // Error
 $_['error_permission']                      = 'Varování: Nemáte oprávnění upravit nastavení (GA4) vylepšeného měření!';

@@ -43,7 +43,6 @@ $_['text_group_security_settings']          = 'Security Settings';
 $_['text_group_advanced_settings']          = 'Advanced Settings';
 $_['text_product_already_refunded']         = 'This product has already been refunded. No further actions are available.';
 $_['text_gcm_info']                         = 'Google Consent Mode (GCM) works only when you choose Google Tag Manager in the Measurement Implementation dropdown. It doesn’t work with Global Site Tag (gtag.js). To use this feature, make sure you have a cookie banner installed. This extension sets a basic consent state by default, but the cookie banner is responsible for updating consent to allow data collection.';
-$_['text_qualify_lead']                     = 'Qualify Lead (e.g., Processing Order)';
 $_['text_close_convert_lead']               = 'Close Lead as Converted (e.g., Order Successfully Completed)';
 $_['text_close_unconvert_lead']             = 'Close Lead as Unconverted (e.g., Order Canceled)';
 $_['text_disqualify_lead']                  = 'Disqualify Lead (e.g., Abandoned Cart)';

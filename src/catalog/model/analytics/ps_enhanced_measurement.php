@@ -523,7 +523,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<h1>{{ heading_title }}</h1>',
             'replace' => '<h1>{{ heading_title }}</h1>
-            {% if ps_begin_checkout %}<script>ps_dataLayer.pushEventData(\'begin_checkout\', {{ ps_begin_checkout }});</script>{% endif %}'
+            {% if ps_begin_checkout %}<script>ps_dataLayer.pushEventData(\'begin_checkout\', {{ ps_begin_checkout }});</script>{% endif %}
+            {% if ps_qualify_lead %}<script>ps_dataLayer.pushEventData(\'qualify_lead\', {{ ps_qualify_lead }});</script>{% endif %}'
         ];
 
         return $views;

@@ -3385,6 +3385,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
 
 
+        $ps_qualify_lead = [
+            'currency' => $currency,
+            'value' => $this->currency->format($total_price, $currency, 0, false),
+        ];
+
+        $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
+
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);
 
         $template = $this->replaceViews($route, $template, $views);

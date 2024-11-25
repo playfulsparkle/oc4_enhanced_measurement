@@ -95,12 +95,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
         $data['analytics_ps_enhanced_measurement_refund_status'] = (int) $this->config->get('analytics_ps_enhanced_measurement_refund_status');
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status')) {
-            $data['analytics_ps_enhanced_measurement_qualify_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status');
-        } else {
-            $data['analytics_ps_enhanced_measurement_qualify_lead_status'] = [];
-        }
-
         if ($this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status')) {
             $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
         } else {
@@ -835,7 +829,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $this->sendGAAnalyticsData($event_data);
         } else {
-            $config_qualify_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_qualify_lead_status');
             $config_close_convert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
             $config_close_unconvert_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_close_unconvert_lead_status');
             $config_disqualify_lead_status = (array) $this->config->get('analytics_ps_enhanced_measurement_disqualify_lead_status');
@@ -850,21 +843,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            if ($config_qualify_lead_status && in_array($order_status_id, $config_qualify_lead_status)) {
-                $event_data = [
-                    'events' => [
-                        [
-                            'name' => 'qualify_lead',
-                            'params' => [
-                                'currency' => $order_info['currency_code'],
-                                'value' => $this->currency->format($order_info['total'], $order_info['currency_code'], 0, false),
-                            ],
-                        ],
-                    ],
-                ];
-
-                $this->sendGAAnalyticsData($event_data);
-            } else if ($config_close_convert_lead_status && in_array($order_status_id, $config_close_convert_lead_status)) {
+            if ($config_close_convert_lead_status && in_array($order_status_id, $config_close_convert_lead_status)) {
                 $event_data = [
                     'events' => [
                         [
