@@ -14,23 +14,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
-        $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
-        $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
-        $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
-        $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
-        $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
-        $analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
-        $functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
-        $personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
-        $security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
-        $wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
-        $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
-        $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
-
 
         $html = '';
 
         if ($measurement_implementation === 'gtag') {
+            $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+
+
             $gtag_config = [];
 
             if ($this->config->get('analytics_ps_enhanced_measurement_gtag_debug_mode')) {
@@ -62,11 +52,27 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $html .= "</script>" . PHP_EOL;
         } else if ($measurement_implementation === 'gtm') {
+            $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+
+
             $html = "<script>" . PHP_EOL;
             $html .= "window.dataLayer = window.dataLayer || [];" . PHP_EOL;
             $html .= "function gtag() { dataLayer.push(arguments); }" . PHP_EOL;
 
             if ($this->config->get('analytics_ps_enhanced_measurement_gcm_status')) {
+                $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
+                $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
+                $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
+                $analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
+                $functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
+                $personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
+                $security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
+
+                $wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
+                $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
+                $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
+
+
                 $default_consent = [
                     'ad_storage' => $ad_storage ? 'granted' : 'denied',
                     'ad_user_data' => $ad_user_data ? 'granted' : 'denied',
@@ -76,6 +82,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     'personalization_storage' => $personalization_storage ? 'granted' : 'denied',
                     'security_storage' => $security_storage ? 'granted' : 'denied',
                 ];
+
 
                 if ($wait_for_update > 0) {
                     $default_consent['wait_for_update'] = $wait_for_update;
