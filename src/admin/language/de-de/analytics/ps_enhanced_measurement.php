@@ -46,10 +46,10 @@ $_['text_gcm_info']                         = 'Der Google Consent Mode (GCM) fun
 $_['text_close_convert_lead']               = 'Lead als konvertiert abschließen (z. B. Bestellung erfolgreich abgeschlossen)';
 $_['text_close_unconvert_lead']             = 'Lead als nicht konvertiert abschließen (z. B. Bestellung storniert)';
 $_['text_disqualify_lead']                  = 'Lead-Diskqualifikation (z. B. Warenkorb abgebrochen)';
-$_['text_working_lead_success']             = 'Das Ereignis „Working Lead“ wurde erfolgreich gesendet.';
-$_['text_close_convert_lead_success']       = 'Das Ereignis „Close Convert Lead“ wurde erfolgreich gesendet.';
-$_['text_close_unconvert_lead_success']     = 'Das Ereignis „Close Unconvert Lead“ wurde erfolgreich gesendet.';
-$_['text_disqualify_lead_success']          = 'Das Ereignis „Disqualify Lead“ wurde erfolgreich gesendet.';
+$_['text_working_lead_success']             = 'Das Ereignis „Bearbeiteter Interessent“ wurde erfolgreich gesendet.';
+$_['text_close_convert_lead_success']       = 'Das Ereignis „Abgeschlossener konvertierter Interessent“ wurde erfolgreich gesendet.';
+$_['text_close_unconvert_lead_success']     = 'Das Ereignis „Abgeschlossener nicht-konvertierter Interessent“ wurde erfolgreich gesendet.';
+$_['text_disqualify_lead_success']          = 'Das Ereignis „Disqualifizierter Interessent“ wurde erfolgreich gesendet.';
 
 // Column
 $_['column_refund_quantity']                = 'Rückerstattungsmenge';
@@ -177,7 +177,7 @@ $_['error_refund_no_order_id']              = 'Warnung: Erforderliche Anforderun
 $_['error_analytics_extension']             = 'Es scheint, dass bereits ein anderes Analysetool auf Ihrer Seite aktiv ist. Mehr als ein solches Tool kann Probleme verursachen, wie z.B. doppelte oder fehlende Tracking-Daten. Bitte überprüfen Sie die Einstellungen Ihrer Seite.';
 $_['error_tracking_delay']                  = 'Die Tracking-Verzögerung muss mindestens 100 Millisekunden betragen, um eine ordnungsgemäße Ereignisverfolgung sicherzustellen.';
 $_['error_wait_for_update']                 = 'Der Wert „Warten auf Aktualisierung“ muss eine Zahl zwischen 0 und 10000 Millisekunden sein.';
-$_['error_working_lead']                    = 'Fehler beim Senden des Ereignisses „Working Lead“.';
-$_['error_close_convert_lead']              = 'Fehler beim Senden des Ereignisses „Close Convert Lead“.';
-$_['error_close_unconvert_lead']            = 'Fehler beim Senden des Ereignisses „Close Unconvert Lead“.';
-$_['error_disqualify_lead']                 = 'Fehler beim Senden des Ereignisses „Disqualify Lead“.';
+$_['error_working_lead']                    = 'Beim Senden des Ereignisses „Bearbeiteter Interessent“ ist ein Fehler aufgetreten.';
+$_['error_close_convert_lead']              = 'Beim Senden des Ereignisses „Abgeschlossener konvertierter Interessent“ ist ein Fehler aufgetreten.';
+$_['error_close_unconvert_lead']            = 'Beim Senden des Ereignisses „Abgeschlossener nicht-konvertierter Interessent“ ist ein Fehler aufgetreten.';
+$_['error_disqualify_lead']                 = 'Beim Senden des Ereignisses „Disqualifizierter Interessent“ ist ein Fehler aufgetreten.';

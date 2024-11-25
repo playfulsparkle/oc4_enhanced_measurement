@@ -46,10 +46,10 @@ $_['text_gcm_info']                         = 'A Google Consent Mode (GCM) csak 
 $_['text_close_convert_lead']               = 'Potenciális vásárló lezárása konvertáltként (pl. Megrendelés sikeresen befejezve)';
 $_['text_close_unconvert_lead']             = 'Potenciális vásárló lezárása nem konvertáltként (pl. Megrendelés törölve)';
 $_['text_disqualify_lead']                  = 'Potenciális vásárló diszkvalifikálása (pl. Elhagyott kosár)';
-$_['text_working_lead_success']             = 'A „Working Lead” esemény sikeresen elküldve.';
-$_['text_close_convert_lead_success']       = 'A „Close Convert Lead” esemény sikeresen elküldve.';
-$_['text_close_unconvert_lead_success']     = 'A „Close Unconvert Lead” esemény sikeresen elküldve.';
-$_['text_disqualify_lead_success']          = 'A „Disqualify Lead” esemény sikeresen elküldve.';
+$_['text_working_lead_success']             = 'A „Folyamatban lévő érdeklődő” esemény sikeresen elküldve.';
+$_['text_close_convert_lead_success']       = 'A „Sikeresen lezárt érdeklődő” esemény sikeresen elküldve.';
+$_['text_close_unconvert_lead_success']     = 'A „Sikeresen lezárt nem konvertált érdeklődő” esemény sikeresen elküldve.';
+$_['text_disqualify_lead_success']          = 'A „Kizárt érdeklődő” esemény sikeresen elküldve.';
 
 // Column
 $_['column_refund_quantity']                = 'Visszatérített mennyiség';
@@ -177,7 +177,7 @@ $_['error_refund_no_order_id']              = 'Figyelem: Hiányoznak vagy hiány
 $_['error_analytics_extension']             = 'Úgy tűnik, egy másik analitikai eszköz már aktív az oldalán. Több ilyen eszköz használata problémákat okozhat, például duplikált vagy hiányzó nyomkövetést. Kérjük, ellenőrizze webhelye beállításait.';
 $_['error_tracking_delay']                  = 'A nyomkövetési késleltetésnek legalább 100 ezredmásodpercnek kell lennie az események megfelelő nyomon követése érdekében.';
 $_['error_wait_for_update']                 = 'A várakozás a frissítésre értékének 0 és 10000 ezredmásodperc közé kell esnie.';
-$_['error_working_lead']                    = 'Hiba történt a „Working Lead” esemény elküldése során.';
-$_['error_close_convert_lead']              = 'Hiba történt a „Close Convert Lead” esemény elküldése során.';
-$_['error_close_unconvert_lead']            = 'Hiba történt a „Close Unconvert Lead” esemény elküldése során.';
-$_['error_disqualify_lead']                 = 'Hiba történt a „Disqualify Lead” esemény elküldése során.';
+$_['error_working_lead']                    = 'Hiba történt a „Folyamatban lévő érdeklődő” esemény elküldése során.';
+$_['error_close_convert_lead']              = 'Hiba történt a „Sikeresen lezárt érdeklődő” esemény elküldése során.';
+$_['error_close_unconvert_lead']            = 'Hiba történt a „Sikeresen lezárt nem konvertált érdeklődő” esemény elküldése során.';
+$_['error_disqualify_lead']                 = 'Hiba történt a „Kizárt érdeklődő” esemény elküldése során.';

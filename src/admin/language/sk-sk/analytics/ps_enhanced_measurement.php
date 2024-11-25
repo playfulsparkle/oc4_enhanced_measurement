@@ -46,10 +46,10 @@ $_['text_gcm_info']                         = 'Google Consent Mode (GCM) funguje
 $_['text_close_convert_lead']               = 'Uzavretie potenciálneho zákazníka ako konvertovaného (napr. Objednávka úspešne dokončená)';
 $_['text_close_unconvert_lead']             = 'Uzavretie potenciálneho zákazníka ako nekonvertovaného (napr. Objednávka zrušená)';
 $_['text_disqualify_lead']                  = 'Diskvalifikácia potenciálneho zákazníka (napr. Opuštený košík)';
-$_['text_working_lead_success']             = 'Udalosť „Working Lead“ bola úspešne odoslaná.';
-$_['text_close_convert_lead_success']       = 'Udalosť „Close Convert Lead“ bola úspešne odoslaná.';
-$_['text_close_unconvert_lead_success']     = 'Udalosť „Close Unconvert Lead“ bola úspešne odoslaná.';
-$_['text_disqualify_lead_success']          = 'Udalosť „Disqualify Lead“ bola úspešne odoslaná.';
+$_['text_working_lead_success']             = 'Udalosť „Rozpracovaný potenciálny zákazník” bola úspešne odoslaná.';
+$_['text_close_convert_lead_success']       = 'Udalosť „Uzavretý konvertovaný potenciálny zákazník” bola úspešne odoslaná.';
+$_['text_close_unconvert_lead_success']     = 'Udalosť „Uzavretý nekonvertovaný potenciálny zákazník” bola úspešne odoslaná.';
+$_['text_disqualify_lead_success']          = 'Udalosť „Diskvalifikovaný potenciálny zákazník” bola úspešne odoslaná.';
 
 // Column
 $_['column_refund_quantity']                = 'Množstvo refundácie';
@@ -177,7 +177,7 @@ $_['error_refund_no_order_id']              = 'Upozornenie: Chýbajú alebo sú 
 $_['error_analytics_extension']             = 'Zdá sa, že na vašom webe je už aktívny iný analytický nástroj. Používanie viacerých nástrojov tohto typu môže spôsobiť problémy, ako sú duplicitné alebo chýbajúce sledovania. Skontrolujte nastavenia svojho webu.';
 $_['error_tracking_delay']                  = 'Zdržanie sledovania musí byť najmenej 100 milisekúnd, aby bolo zabezpečené správne sledovanie udalostí.';
 $_['error_wait_for_update']                 = 'Hodnota pre Počkať na aktualizáciu musí byť číslo medzi 0 a 10000 milisekundami.';
-$_['error_working_lead']                    = 'Chyba pri odosielaní udalosti „Working Lead“.';
-$_['error_close_convert_lead']              = 'Chyba pri odosielaní udalosti „Close Convert Lead“.';
-$_['error_close_unconvert_lead']            = 'Chyba pri odosielaní udalosti „Close Unconvert Lead“.';
-$_['error_disqualify_lead']                 = 'Chyba pri odosielaní udalosti „Disqualify Lead“.';
+$_['error_working_lead']                    = 'Pri odoslaní udalosti „Rozpracovaný potenciálny zákazník” došlo k chybe.';
+$_['error_close_convert_lead']              = 'Pri odoslaní udalosti „Uzavretý konvertovaný potenciálny zákazník” došlo k chybe.';
+$_['error_close_unconvert_lead']            = 'Pri odoslaní udalosti „Uzavretý nekonvertovaný potenciálny zákazník” došlo k chybe.';
+$_['error_disqualify_lead']                 = 'Pri odoslaní udalosti „Diskvalifikovaný potenciálny zákazník” došlo k chybe.';
