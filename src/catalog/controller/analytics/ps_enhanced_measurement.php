@@ -2746,6 +2746,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['coupon'] = $product_coupon;
             }
 
+            if ((float) $product_info['special']) {
+                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+            }
+
             $item['index'] = 0;
 
             $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
@@ -2795,7 +2801,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $variants = $product_option_info['variant'];
 
 
-            $base_price = $product_info['price'];
+            if ((float) $product_info['special']) {
+                $base_price = $product_info['special'] - ($product_info['price'] - $product_info['special']);
+            } else {
+                $base_price = $product_info['price'];
+            }
 
             $product_discount_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductDiscount($product_info['product_id'], $quantity);
 
@@ -2837,7 +2847,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            $price = $this->tax->calculate(($base_price + $option_price) * $quantity, $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $item_price_tax);
+
+            $value_price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -2846,7 +2858,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $json_response['ps_add_to_cart'] = [
                 'ecommerce' => [
                     'currency' => $currency,
-                    'value' => $this->currency->format($price, $currency, 0, false),
+                    'value' => $this->currency->format($value_price * $quantity, $currency, 0, false),
                     'items' => [$item],
                 ],
             ];
