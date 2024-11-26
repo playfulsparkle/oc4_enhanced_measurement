@@ -376,7 +376,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $events = [
             ['trigger' => 'admin/view/sale/order_info/before', 'actionName' => 'eventAdminViewSaleOrderInfoBefore'],
-            ['trigger' => 'admin/controller/sale/order.call/after', 'actionName' => 'eventAdminControllerSaleOrderAddHistoryAfter'],
+            ['trigger' => 'admin/controller/sale/order' . $separator . 'call/after', 'actionName' => 'eventAdminControllerSaleOrderAddHistoryAfter'],
 
             ['trigger' => 'catalog/view/common/header/before', 'actionName' => 'eventCatalogViewCommonHeaderBefore'],
 
@@ -393,9 +393,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
             ['trigger' => 'catalog/view/account/account/before', 'actionName' => 'eventCatalogViewAccountAccountBefore'],
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewAccountSuccessBefore'],
-            ['trigger' => 'catalog/controller/account/login.login/after', 'actionName' => 'eventCatalogControllerAccountLoginLoginAfter'],
-            ['trigger' => 'catalog/controller/account/newsletter.save/after', 'actionName' => 'eventCatalogControllerAccountNewsletterSaveAfter'],
-            ['trigger' => 'catalog/controller/account/register.register/after', 'actionName' => 'eventCatalogControllerAccountRegisterRegisterAfter'],
+            ['trigger' => 'catalog/controller/account/login' . $separator . 'login/after', 'actionName' => 'eventCatalogControllerAccountLoginLoginAfter'],
+            ['trigger' => 'catalog/controller/account/newsletter' . $separator . 'save/after', 'actionName' => 'eventCatalogControllerAccountNewsletterSaveAfter'],
+            ['trigger' => 'catalog/controller/account/register' . $separator . 'register/after', 'actionName' => 'eventCatalogControllerAccountRegisterRegisterAfter'],
 
             ['trigger' => 'catalog/view/checkout/payment_method/before', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodBefore'],
             ['trigger' => 'catalog/view/checkout/shipping_method/before', 'actionName' => 'eventCatalogViewCheckoutShippingMethodBefore'],
@@ -408,17 +408,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/checkout/cart_info/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'], // cart button widget
             ['trigger' => 'catalog/view/common/cart/before', 'actionName' => 'eventCatalogViewCheckoutCartInfoBefore'], // standard cart page
             ['trigger' => 'catalog/view/checkout/register/before', 'actionName' => 'eventCatalogViewCheckoutRegisterBefore'],
-            ['trigger' => 'catalog/controller/checkout/payment_method.save/after', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodSaveAfter'],
-            ['trigger' => 'catalog/controller/checkout/shipping_method.save/after', 'actionName' => 'eventCatalogViewCheckoutShippingMethodSaveAfter'],
-            ['trigger' => 'catalog/controller/checkout/cart.add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
-            ['trigger' => 'catalog/controller/checkout/register.save/after', 'actionName' => 'eventCatalogControllerCheckoutRegisterSaveAfter'],
+            ['trigger' => 'catalog/controller/checkout/payment_method' . $separator . 'save/after', 'actionName' => 'eventCatalogViewCheckoutPaymentMethodSaveAfter'],
+            ['trigger' => 'catalog/controller/checkout/shipping_method' . $separator . 'save/after', 'actionName' => 'eventCatalogViewCheckoutShippingMethodSaveAfter'],
+            ['trigger' => 'catalog/controller/checkout/cart' . $separator . 'add/after', 'actionName' => 'eventCatalogControllerCheckoutCartAddAfter'],
+            ['trigger' => 'catalog/controller/checkout/register' . $separator . 'save/after', 'actionName' => 'eventCatalogControllerCheckoutRegisterSaveAfter'],
 
             ['trigger' => 'catalog/controller/extension/opencart/module/bestseller/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleBestsellerAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/featured/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleFeaturedAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/latest/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleLatestAfter'],
             ['trigger' => 'catalog/controller/extension/opencart/module/special/after', 'actionName' => 'eventCatalogViewExtensionOpencartModuleSpecialAfter'],
 
-            ['trigger' => 'catalog/controller/information/contact.send/after', 'actionName' => 'eventCatalogControllerInformationContactSendAfter'],
+            ['trigger' => 'catalog/controller/information/contact' . $separator . 'send/after', 'actionName' => 'eventCatalogControllerInformationContactSendAfter'],
             ['trigger' => 'catalog/view/common/success/before', 'actionName' => 'eventCatalogViewInformationContactSuccessBefore'],
         ];
 
@@ -439,6 +439,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             foreach ($events as $event) {
                 $result += $this->model_setting_event->addEvent(
                     'analytics_ps_enhanced_measurement',
+                    '',
                     $event['trigger'],
                     'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement' . $separator . $event['actionName']
                 );
@@ -549,7 +550,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                         $item['index'] = $index;
 
-                        $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                        $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                         if ($manufacturer_info) {
                             $item['item_brand'] = $manufacturer_info['name'];
@@ -617,7 +618,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $item['index'] = $index;
 
-                    $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                    $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                     if ($manufacturer_info) {
                         $item['item_brand'] = $manufacturer_info['name'];
@@ -987,7 +988,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_entry_working_lead'] = $this->language->get('ps_entry_working_lead');
             $args['ps_help_working_lead'] = $this->language->get('ps_help_working_lead');
 
-            $args['ps_is_refundable'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->isRefundableByOrderId($order_id);
+            if ($refund_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getClientIdByOrderId($order_id)) {
+                $args['ps_refunded'] = (bool) $refund_info['refunded'];
+                $args['ps_client_info'] = true;
+            } else {
+                $args['ps_refunded'] = false;
+                $args['ps_client_info'] = false;
+            }
 
             $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);
 

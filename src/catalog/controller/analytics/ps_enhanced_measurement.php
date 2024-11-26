@@ -136,7 +136,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_enhanced_measurement_script = 'extension/ps_enhanced_measurement/catalog/view/javascript/ps-enhanced-measurement.js';
 
         if (isset($args['scripts'])) {
-            $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
+            if (version_compare(VERSION, '4.0.1.0', '>=')) {
+                $args['scripts'][$ps_enhanced_measurement_script] = ['href' => $ps_enhanced_measurement_script];
+            } else {
+                $args['scripts'][$ps_enhanced_measurement_script] = $ps_enhanced_measurement_script;
+            }
         }
 
 
@@ -345,7 +349,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -659,7 +663,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -943,7 +947,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
             if ($manufacturer_info) {
                 $item['item_brand'] = $manufacturer_info['name'];
@@ -1169,7 +1173,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
             if ($manufacturer_info) {
                 $item['item_brand'] = $manufacturer_info['name'];
@@ -1446,7 +1450,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
             if ($manufacturer_info) {
                 $item['item_brand'] = $manufacturer_info['name'];
@@ -1685,7 +1689,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -1910,7 +1914,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -2206,7 +2210,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['index'] = 0;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
             if ($manufacturer_info) {
                 $item['item_brand'] = $manufacturer_info['name'];
@@ -2342,7 +2346,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -2535,12 +2539,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
+        $separator = version_compare(VERSION, '4.0.2.0', '>=') ? '.' : '|';
+
         if (!isset($this->request->get['route'])) {
             return;
-        } else if ($this->request->get['route'] !== 'information/contact.success') {
+        } else if ($this->request->get['route'] !== 'information/contact' . $separator . 'success') {
             return;
         }
-
 
         if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
             unset($this->session->data['ps_generate_lead_contact_form_event']);
@@ -2716,7 +2721,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['index'] = 0;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
             if ($manufacturer_info) {
                 $item['item_brand'] = $manufacturer_info['name'];
@@ -2996,12 +3001,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->request->post['payment_method'])) {
             $this->load->model('setting/extension');
 
-            $code = substr($this->request->post['payment_method'], 0, strpos($this->request->post['payment_method'], '.'));
+            $code = $this->request->post['payment_method'];
 
             if ($extension_info = $this->model_setting_extension->getExtensionByCode('payment', $code)) {
                 $this->load->language('extension/' . $extension_info['extension'] . '/payment/' . $extension_info['code'], 'extension');
 
                 $payment_type = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+            }
+
+            if (!$payment_type) {
+                $code = substr($this->request->post['payment_method'], 0, strpos($this->request->post['payment_method'], '.'));
+
+                if ($extension_info = $this->model_setting_extension->getExtensionByCode('payment', $code)) {
+                    $this->load->language('extension/' . $extension_info['extension'] . '/payment/' . $extension_info['code'], 'extension');
+
+                    $payment_type = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+                }
             }
         }
 
@@ -3185,12 +3200,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->request->post['shipping_method'])) {
             $this->load->model('setting/extension');
 
-            $code = substr($this->request->post['shipping_method'], 0, strpos($this->request->post['shipping_method'], '.'));
+            $code = $this->request->post['shipping_method'];
 
             if ($extension_info = $this->model_setting_extension->getExtensionByCode('shipping', $code)) {
                 $this->load->language('extension/' . $extension_info['extension'] . '/shipping/' . $extension_info['code'], 'extension');
 
                 $shipping_tier = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+            }
+
+            if (!$shipping_tier) {
+                $code = substr($this->request->post['shipping_method'], 0, strpos($this->request->post['shipping_method'], '.'));
+
+                if ($extension_info = $this->model_setting_extension->getExtensionByCode('shipping', $code)) {
+                    $this->load->language('extension/' . $extension_info['extension'] . '/shipping/' . $extension_info['code'], 'extension');
+
+                    $shipping_tier = $this->language->get('extension_heading_title') . ' (' . $code . ')';
+                }
             }
         }
 
@@ -4452,7 +4477,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -4670,7 +4695,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -4812,7 +4837,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
 
-        if (version_compare(VERSION, '4.0.2.3', '>=')) {
+        if (version_compare(VERSION, '4.0.2.3', '>=')) { // Added extension/opencart/module/latest
             $this->load->model('extension/opencart/module/latest');
         } else {
             $this->load->model('catalog/product');
@@ -4849,7 +4874,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $setting = isset($args[0]) ? $args[0] : ['limit' => 0, 'name' => ''];
 
-        if (version_compare(VERSION, '4.0.2.3', '>=')) {
+        if (version_compare(VERSION, '4.0.2.3', '>=')) { // Added extension/opencart/module/latest
             $products = $this->model_extension_opencart_module_latest->getLatest($setting['limit']);
         } else {
             $products = $this->model_catalog_product->getLatest($setting['limit']);
@@ -4889,7 +4914,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];
@@ -5106,7 +5131,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
+                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
                 if ($manufacturer_info) {
                     $item['item_brand'] = $manufacturer_info['name'];

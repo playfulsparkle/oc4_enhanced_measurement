@@ -19,15 +19,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<div class="container-fluid">',
             'replace' => '<div class="container-fluid">
-            {% if not ps_is_refundable %}<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_text_product_already_refunded }}</div>{% endif %}',
+            {% if ps_refunded and ps_client_info %}<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ ps_text_product_already_refunded }}</div>{% endif %}',
             'positions' => [2],
         ];
 
         $views[] = [
             'search' => '<div class="float-end">',
             'replace' => '<div class="float-end">
-            <button type="button" id="ps-refund-selected-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_selected }}" class="btn btn-primary"{% if not order_id or not ps_is_refundable %} disabled{% endif %}><i class="fa-solid fa-check-circle"></i> {{ ps_button_refund_selected }}</button>
-            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or not ps_is_refundable %} disabled{% endif %}><i class="fa-solid fa-sync"></i> {{ ps_button_refund_all }}</button> '
+            <button type="button" id="ps-refund-selected-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_selected }}" class="btn btn-primary"{% if not order_id or ps_refunded %} disabled{% endif %}><i class="fa-solid fa-check-circle"></i> {{ ps_button_refund_selected }}</button>
+            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or ps_refunded %} disabled{% endif %}><i class="fa-solid fa-sync"></i> {{ ps_button_refund_all }}</button> '
         ];
 
         $views[] = [
@@ -42,7 +42,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <td class="text-start">
                 <div class="input-group">
                     <div class="input-group-text">{{ ps_text_refund_quantity }}</div>
-                    <input type="number" name="refund[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or not ps_is_refundable %} disabled{% endif %}>
+                    <input type="number" name="refund[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or ps_refunded %} disabled{% endif %}>
                     <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-check-circle"></i></button>
                 </div>
             </td>',
@@ -60,35 +60,36 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             html += '  <td class=\"text-start\"></td>';",
         ];
 
-        $views[] = [
-            'search' => "$('#form-product-add').prepend('<div class=\"alert alert-success",
-            'replace' => "$('#ps-refund-selected-button').prop('disabled', true);
-            $('#ps-refund-all-button').prop('disabled', true);
-            $('#form-product-add').prepend('<div class=\"alert alert-success",
-        ];
+        if ($args['order_id'] && $args['ps_client_info']) {
+            $views[] = [
+                'search' => "$('#form-product-add').prepend('<div class=\"alert alert-success",
+                'replace' => "$('#ps-refund-selected-button').prop('disabled', true);
+                $('#ps-refund-all-button').prop('disabled', true);
+                $('#form-product-add').prepend('<div class=\"alert alert-success",
+            ];
 
-        $views[] = [
-            'search' => "$('#input-history').val('');",
-            'replace' => "$('#input-history').val('');
-            $('#input-working-lead').prop('checked', false);",
-        ];
+            $views[] = [
+                'search' => "$('#input-history').val('');",
+                'replace' => "$('#input-history').val('');
+                $('#input-working-lead').prop('checked', false);",
+            ];
 
-        $views[] = [
-            'search' => "if (json['success']) {",
-            'replace' => "if (json['ps_success']) {
-                $('#alert').prepend('<div class=\"alert alert-success alert-dismissible\"><i class=\"fa-solid fa-check-circle\"></i> ' + json['ps_success'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
-            }
+            $views[] = [
+                'search' => "if (json['success']) {",
+                'replace' => "if (json['ps_success']) {
+                    $('#alert').prepend('<div class=\"alert alert-success alert-dismissible\"><i class=\"fa-solid fa-check-circle\"></i> ' + json['ps_success'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
+                }
 
-            if (json['ps_error']) {
-                $('#alert').prepend('<div class=\"alert alert-danger alert-dismissible\"><i class=\"fa-solid fa-circle-exclamation\"></i> ' + json['ps_error'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
-            }
+                if (json['ps_error']) {
+                    $('#alert').prepend('<div class=\"alert alert-danger alert-dismissible\"><i class=\"fa-solid fa-circle-exclamation\"></i> ' + json['ps_error'] + ' <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\"></button></div>');
+                }
 
-            if (json['success']) {",
-        ];
+                if (json['success']) {",
+            ];
 
-        $views[] = [
-            'search' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>',
-            'replace' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>
+            $views[] = [
+                'search' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>',
+                'replace' => '<input type="checkbox" name="notify" value="1" id="input-notify" class="form-check-input"/>
                     </div>
                   </div>
                 </div>
@@ -97,13 +98,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                   <div class="col-sm-10">
                     <div class="form-check form-switch form-switch-lg">
                       <input type="hidden" name="working_lead" value="0"/>
-                      <input type="checkbox" name="working_lead" value="1" id="input-working-lead" class="form-check-input"/>
+                      <input type="checkbox" name="working_lead" value="1" id="input-working-lead" class="form-check-input">
                     </div>
                     <div class="form-text">{{ ps_help_working_lead }}'
-        ];
+            ];
+        }
 
-
-        if ($args['ps_is_refundable']) {
+        if ($args['order_id'] && $args['ps_client_info'] && !$args['ps_refunded']) {
             $views[] = [
                 'search' => '<script type="text/javascript"><!--',
                 'replace' => <<<HTML
@@ -218,7 +219,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function getClientIdByOrderId($order_id)
     {
-        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != ''");
+        $query = $this->db->query("SELECT `user_id`, `client_id`, `refunded` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != ''");
 
         if ($query->num_rows) {
             return $query->row;
@@ -229,9 +230,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function isRefundableByOrderId($order_id)
     {
-        $query = $this->db->query("SELECT `user_id`, `client_id` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != '' AND `refunded` != '1'");
+        $query = $this->db->query("SELECT `user_id`, `client_id`, `refunded` FROM `" . DB_PREFIX . "ps_refund_order` WHERE `order_id` = '" . (int) $order_id . "' AND `client_id` != '' AND `refunded` != '1'");
 
-        return $query->num_rows > 0;
+        if ($query->num_rows) {
+            return $query->row;
+        }
+
+        return false;
     }
 
     public function saveRefundedState($order_id): void
