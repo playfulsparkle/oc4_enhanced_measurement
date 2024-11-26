@@ -2810,13 +2810,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            if ($item_price_tax) {
-                $price = $this->tax->calculate(($base_price + $option_price), $product_info['tax_class_id'], $this->config->get('config_tax'));
-                $total = $this->tax->calculate(($base_price + $option_price) * $quantity, $product_info['tax_class_id'], $this->config->get('config_tax'));
-            } else {
-                $price = ($base_price + $option_price);
-                $total = ($base_price + $option_price) * $quantity;
-            }
+            $price = $this->tax->calculate(($base_price + $option_price) * $quantity, $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -2825,7 +2819,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $json_response['ps_add_to_cart'] = [
                 'ecommerce' => [
                     'currency' => $currency,
-                    'value' => $this->currency->format($total, $currency, 0, false),
+                    'value' => $this->currency->format($price, $currency, 0, false),
                     'items' => [$item],
                 ],
             ];
@@ -4069,7 +4063,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
-        $single_prices = [];
+        $total_prices = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -4132,16 +4126,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($item_price_tax) {
-                $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
-                $single_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
             } else {
-                $price = $product_info['price'] * $product_info['quantity'];
-                $single_price = $product_info['price'];
+                $price = $product_info['price'];
+                $total_price = $product_info['price'];
             }
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
-            $single_prices[(int) $product_info['cart_id']] = $this->currency->format($single_price, $currency, 0, false);
+            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -4172,7 +4166,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => $total_prices[$cart_id],
                         'items' => [$item],
                     ],
                 ];
@@ -4181,7 +4175,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($config_track_add_to_cart) {
             foreach ($items as $cart_id => $item) {
-                $item['price'] = $single_prices[$cart_id];
                 $item['quantity'] = $minimums[$cart_id];
 
                 $ps_merge_items['add_to_cart_' . $cart_id] = [
@@ -4271,6 +4264,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
+        $total_prices = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -4333,12 +4327,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ($item_price_tax) {
-                $price = $this->tax->calculate($product_info['price'] * $product_info['quantity'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
+                $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax'));
             } else {
-                $price = $product_info['price'] * $product_info['quantity'];
+                $price = $product_info['price'];
+                $total_price = $product_info['price'];
             }
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
+
+            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -4363,7 +4361,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => $total_prices[$cart_id],
                         'items' => [$item],
                     ],
                 ];
