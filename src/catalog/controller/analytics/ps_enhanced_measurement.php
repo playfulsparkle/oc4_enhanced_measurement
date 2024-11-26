@@ -2801,11 +2801,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $variants = $product_option_info['variant'];
 
 
-            if ((float) $product_info['special']) {
-                $base_price = $product_info['special'] - ($product_info['price'] - $product_info['special']);
-            } else {
-                $base_price = $product_info['price'];
-            }
+            $base_price = $product_info['price'];
 
             $product_discount_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductDiscount($product_info['product_id'], $quantity);
 
@@ -2847,9 +2843,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-            $price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $item_price_tax);
+            if ((float) $product_info['special']) {
+                $price = $this->tax->calculate(($base_price + $option_price) - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+            } else {
+                $price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $item_price_tax);
+            }
 
-            $value_price = $this->tax->calculate($base_price, $product_info['tax_class_id'], $item_price_tax);
+            $value_price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
