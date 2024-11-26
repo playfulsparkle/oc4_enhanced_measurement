@@ -932,7 +932,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                 $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
@@ -1156,7 +1156,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                 $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
@@ -1431,7 +1431,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                 $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
@@ -1668,7 +1668,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -1891,7 +1891,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -2185,7 +2185,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                 $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
@@ -2319,7 +2319,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -2956,7 +2956,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -3151,7 +3151,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -3352,7 +3352,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -3705,9 +3705,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-                $total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $item_price_tax);
+            $total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -3922,7 +3922,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4083,8 +4083,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
-                $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4279,8 +4279,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $item['location_id'] = $location_id;
             }
 
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
-                $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
+            $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
@@ -4412,7 +4412,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -4628,7 +4628,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -4845,7 +4845,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
@@ -5060,7 +5060,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                        $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
                     $item['discount'] = $this->currency->format($discount, $currency, 0, false);
                 }
