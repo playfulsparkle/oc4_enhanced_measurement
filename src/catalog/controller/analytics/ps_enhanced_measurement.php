@@ -325,6 +325,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -379,7 +380,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -449,7 +454,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -463,7 +468,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
@@ -637,6 +642,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -691,7 +697,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -784,7 +794,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -919,6 +929,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $items = [];
         $minimums = [];
         $promotions = [];
+        $value_prices = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -973,7 +984,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
             } else {
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
@@ -1043,7 +1058,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                         'items' => [$item],
                     ],
                 ];
@@ -1057,7 +1072,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                         'items' => [$item],
                     ],
                 ];
@@ -1141,6 +1156,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $items = [];
         $minimums = [];
         $promotions = [];
+        $value_prices = [];
 
         foreach ($this->session->data['compare'] as $index => $product_id) {
             $product_info = $this->model_catalog_product->getProduct($product_id);
@@ -1197,7 +1213,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
             } else {
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
@@ -1267,7 +1287,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                         'items' => [$item],
                     ],
                 ];
@@ -1281,7 +1301,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                         'items' => [$item],
                     ],
                 ];
@@ -1418,6 +1438,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $items = [];
         $minimums = [];
         $promotions = [];
+        $value_prices = [];
 
         foreach ($products as $index => $product_info) {
             $item = [];
@@ -1472,7 +1493,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
             } else {
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
@@ -1542,7 +1567,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                         'items' => [$item],
                     ],
                 ];
@@ -1556,7 +1581,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                         'items' => [$item],
                     ],
                 ];
@@ -1647,6 +1672,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $items = [];
         $minimums = [];
         $promotions = [];
+        $value_prices = [];
 
         foreach ($products as $index => $product) {
             $product_info = $this->model_catalog_product->getProduct($product['product_id']);
@@ -1709,7 +1735,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -1875,6 +1905,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $items = [];
         $minimums = [];
         $promotions = [];
+        $value_prices = [];
 
         foreach ($wishlist_items as $index => $wishlist_item) {
             $product_info = $this->model_catalog_product->getProduct($wishlist_item['product_id']);
@@ -1932,7 +1963,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -2003,7 +2038,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                         'items' => [$item],
                     ],
                 ];
@@ -2017,7 +2052,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $currency,
-                        'value' => $item['price'] * $minimums[$product_id],
+                        'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                         'items' => [$item],
                     ],
                 ];
@@ -2173,6 +2208,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($product_info) {
             $items = [];
+            $value_prices = [];
 
             $item = [];
 
@@ -2240,7 +2276,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
             } else {
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
@@ -2255,7 +2295,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_view_item = [
                 'ecommerce' => [
                     'currency' => $currency,
-                    'value' => $item['price'],
+                    'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                     'items' => array_values($items),
                 ],
             ];
@@ -2276,7 +2316,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -2286,7 +2326,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -2306,6 +2346,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -2360,7 +2401,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -2413,7 +2458,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -2427,7 +2472,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
@@ -4399,6 +4444,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -4453,7 +4499,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -4510,7 +4560,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -4524,7 +4574,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
@@ -4615,6 +4665,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -4669,7 +4720,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -4726,7 +4781,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -4740,7 +4795,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
@@ -4832,6 +4887,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -4886,7 +4942,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -4943,7 +5003,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -4957,7 +5017,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
@@ -5047,6 +5107,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items = [];
             $minimums = [];
             $promotions = [];
+            $value_prices = [];
 
             foreach ($products as $index => $product_info) {
                 $item = [];
@@ -5101,7 +5162,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+                    $price = $this->tax->calculate($product_info['special'] - ($product_info['price'] - $product_info['special']), $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
+
+                    $value_prices[(int) $product_info['product_id']] = $this->currency->format($value_price, $currency, 0, false);
                 } else {
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
@@ -5158,7 +5223,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']),
                             'items' => [$item],
                         ],
                     ];
@@ -5172,7 +5237,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $currency,
-                            'value' => $item['price'] * $minimums[$product_id],
+                            'value' => (isset($value_prices[$product_id]) ? $value_prices[$product_id] : $item['price']) * $minimums[$product_id],
                             'items' => [$item],
                         ],
                     ];
