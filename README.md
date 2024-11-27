@@ -75,7 +75,7 @@ This feature allows you to get a full picture of how customers use your store, f
 1. Download the latest version from this repository.
 2. Log in to your OpenCart admin panel.
 3. Navigate to `Extensions > Installer`.
-4. Click the `Upload` button and upload the `ps_gtm.ocmod.zip` file.
+4. Click the `Upload` button and upload the `ps_enhanced_measurement.ocmod.zip` file.
 5. Locate the extension in the `Installed Extensions` list and click the `Install` button.
 6. Navigate to `Extensions > Extensions` and select `Analytics` from the `Choose the extension type` dropdown list.
 7. Locate the extension in the `Analytics` list and click the `Install` button.
