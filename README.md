@@ -58,6 +58,7 @@ Events are specific actions your customers take on your website. For example, ad
 | `Disqualify Lead`          | When a potential lead is disqualified, e.g., due to an abandoned cart.                                 |
 | `Qualify Lead`             | When a potential lead is qualified, e.g., when a customer shows interest or proceeds to checkout.      |
 | `Working Lead`             | When a lead is being worked on, e.g., when a customer is contacted or engaged.                         |
+| `File Download`            | When a user clicks to download a file from the website.                                                |
 
 ### Simplified Examples
 

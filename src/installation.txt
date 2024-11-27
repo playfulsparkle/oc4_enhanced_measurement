@@ -79,6 +79,7 @@ Supported Events
   interest or proceeds to checkout.
 - Working Lead - When a lead is being worked on, e.g., when a customer is
   contacted or engaged.
+- File Download - When a user clicks to download a file from the website.
 
 Demo frontend: https://opencart4.playfulsparkle.com/
 Demo backend: https://opencart4.playfulsparkle.com/admin/
