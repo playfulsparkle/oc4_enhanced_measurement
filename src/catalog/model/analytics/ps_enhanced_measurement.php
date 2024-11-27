@@ -62,13 +62,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         }{% endif %}
                     },
                     pushEventData: function(eventName, data) {
-                        {% if ps_enhanced_measurement_implementation == 'gtag' %}
+                    {% if ps_enhanced_measurement_implementation == 'gtag' %}
+                        if (data.hasOwnProperty('ecommerce')) {
                             gtag('event', eventName, data.ecommerce);
-                        {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
-                            dataLayer.push({ ecommerce: null });
-                            dataLayer.push({ event: eventName, ...data });
-                        {% endif %}
-                        {% if ps_enhanced_measurement_debug_mode %}console.log('Enhanced Measurement (Info):\\r\\n' + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4));{% endif %}
+                        } else {
+                            gtag('event', eventName, data);
+                        }
+                    {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
+                        dataLayer.push({ ecommerce: null });
+                        dataLayer.push( data );
+                    {% endif %}
+                    {% if ps_enhanced_measurement_debug_mode %}this.debug(eventName, data);{% endif %}
+                    },
+                    debug: function(eventName, data) {
+                    {% if ps_enhanced_measurement_implementation == 'gtag' %}
+                        if (data.hasOwnProperty('ecommerce')) {
+                            console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data.ecommerce, undefined, 4) +");");
+                        } else {
+                            console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data, undefined, 4) +");");
+                        }
+                    {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
+                        console.log('dataLayer.push({ ecommerce: null });\\r\\n');
+                        console.log("dataLayer.push(" + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4) + ");");
+                    {% endif %}
                     }
                 };
             </script>
