@@ -289,6 +289,30 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         return $views;
     }
 
+    public function replaceCatalogViewAccountDownloadBefore(array $args): array
+    {
+        $views = [];
+
+        $views[] = [
+            'search' => '<a href="{{ download.href }}"',
+            'replace' => '<a href="{{ download.href }}"
+                data-ps-track-id="{{ download.order_id }}"
+                {% if ps_track_file_download %}data-ps-track-event="file_download"{% endif %}
+            ',
+        ];
+
+        $views[] = [
+            'search' => '{{ footer }}',
+            'replace' => <<<HTML
+            {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
+            {{ footer }}
+            HTML
+        ];
+
+        return $views;
+    }
+
+
     public function replaceCatalogViewAccountOrderInfoBefore(array $args): array
     {
         $views = [];

@@ -176,6 +176,69 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $headerViews);
     }
 
+    public function eventCatalogViewAccountDownloadBefore(string &$route, array &$args, string &$template): void
+    {
+        if (
+            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
+            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
+        ) {
+            return;
+        }
+
+
+        $config_track_file_download = $this->config->get('analytics_ps_enhanced_measurement_track_file_download');
+
+        if (!$config_track_file_download) {
+            return;
+        }
+
+
+        if (isset($this->request->get['page'])) {
+            $page = (int) $this->request->get['page'];
+        } else {
+            $page = 1;
+        }
+
+        $limit = 10;
+
+
+        $this->load->language('extension/ps_enhanced_measurement/module/ps_enhanced_measurement');
+
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('account/download');
+
+
+        $ps_merge_items = [];
+
+        $downloads = $this->model_account_download->getDownloads(($page - 1) * $limit, $limit);
+
+        foreach ($downloads as $download) {
+            $filename = $download['filename'];
+            $filename = substr($filename, 0, strrpos($filename, '.'));
+
+            $link_url = $this->url->link('account/download.download', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&download_id=' . $download['download_id']);
+
+            $ps_merge_items['file_download_' . $download['order_id']] = [
+                'ecommerce' => [
+                    'file_extension' => pathinfo($filename, PATHINFO_EXTENSION),
+                    'file_name' => $filename,
+                    'link_text' => $download['name'],
+                    'link_url' => str_replace('&amp;', '&', $link_url),
+                ],
+            ];
+        }
+
+        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
+
+
+        $args['ps_track_file_download'] = $config_track_file_download;
+
+
+        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountDownloadBefore($args);
+
+        $template = $this->replaceViews($route, $template, $headerViews);
+    }
+
     public function eventCatalogViewProductThumbBefore(string &$route, array &$args, string &$template): void
     {
         if (

@@ -83,6 +83,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_track_add_payment_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info');
         $data['analytics_ps_enhanced_measurement_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info');
         $data['analytics_ps_enhanced_measurement_track_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
+        $data['analytics_ps_enhanced_measurement_track_file_download'] = $this->config->get('analytics_ps_enhanced_measurement_track_file_download');
         $data['analytics_ps_enhanced_measurement_gcm_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
         $data['analytics_ps_enhanced_measurement_ad_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
         $data['analytics_ps_enhanced_measurement_ad_user_data'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
@@ -312,6 +313,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
+                'analytics_ps_enhanced_measurement_track_file_download' => 1,
                 'analytics_ps_enhanced_measurement_wait_for_update' => 500,
             ];
 
@@ -390,6 +392,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             ['trigger' => 'catalog/view/product/manufacturer_info/before', 'actionName' => 'eventCatalogViewProductManufacturerInfoBefore'],
 
             ['trigger' => 'catalog/view/account/order_info/before', 'actionName' => 'eventCatalogViewAccountOrderInfoBefore'],
+            ['trigger' => 'catalog/view/account/download/before', 'actionName' => 'eventCatalogViewAccountDownloadBefore'],
             ['trigger' => 'catalog/view/account/wishlist/before', 'actionName' => 'eventCatalogViewAccountWishlistBefore'],
             ['trigger' => 'catalog/view/account/wishlist_list/before', 'actionName' => 'eventCatalogViewAccountWishlistListBefore'],
             ['trigger' => 'catalog/view/account/account/before', 'actionName' => 'eventCatalogViewAccountAccountBefore'],

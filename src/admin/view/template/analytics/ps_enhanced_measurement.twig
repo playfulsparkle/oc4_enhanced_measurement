@@ -627,6 +627,17 @@
 								</div>
 							</div>
 
+							<div class="row mb-3">
+								<label for="input-file-download" class="col-sm-2 col-form-label">{{ entry_file_download }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_track_file_download" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_file_download" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_file_download %} checked{% endif %} id="input-file-download" />
+									</div>
+									<div class="form-text">{{ help_file_download }}</div>
+								</div>
+							</div>
+
 						</div>
 						<div id="tab-support" class="tab-pane">
 							<h3>{{ heading_getting_started }}</h3>
