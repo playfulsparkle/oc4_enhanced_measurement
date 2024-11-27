@@ -2976,6 +2976,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
+            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
+
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -2983,8 +2985,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['cart_id']] = $item;
         }
 
-
-        $total_price = $this->getCartTotalPrice($item_price_tax);
 
         $payment_type = '';
 
@@ -3013,7 +3013,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json_response['ps_add_payment_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $this->currency->format($total_price, $currency, 0, false),
+                'value' => $total_price,
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'payment_type' => $payment_type,
                 'items' => array_values($items),
@@ -3179,6 +3179,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
+            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
+
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3186,8 +3188,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $items[(int) $product_info['cart_id']] = $item;
         }
 
-
-        $total_price = $this->getCartTotalPrice($item_price_tax);
 
         $shipping_tier = '';
 
@@ -3216,7 +3216,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json_response['ps_add_shipping_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $this->currency->format($total_price, $currency, 0, false),
+                'value' => $total_price,
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'shipping_tier' => $shipping_tier,
                 'items' => array_values($items),
@@ -3388,6 +3388,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
+            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
+
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3401,14 +3403,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $total_price = $this->getCartTotalPrice($item_price_tax);
-
-
         if ($config_track_begin_checkout) {
             $ps_begin_checkout = [
                 'ecommerce' => [
                     'currency' => $currency,
-                    'value' => $this->currency->format($total_price, $currency, 0, false),
+                    'value' => $total_price,
                     'coupon' => $product_coupon ? $product_coupon : '',
                     'items' => array_values($items),
                 ],
@@ -3423,7 +3422,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($config_track_qualify_lead) {
             $ps_qualify_lead = [
                 'currency' => $currency,
-                'value' => $this->currency->format($total_price, $currency, 0, false),
+                'value' => $total_price,
             ];
 
             $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
@@ -3974,6 +3973,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
+            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
+
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3987,12 +3988,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $total_price = $this->getCartTotalPrice($item_price_tax);
-
         $ps_view_cart = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $this->currency->format($total_price, $currency, 0, false),
+                'value' => $total_price,
                 'items' => array_values($items),
             ],
         ];
@@ -5277,29 +5276,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         return $subscription_description;
-    }
-
-    public function getCartTotalPrice($item_price_tax): float
-    {
-        $total_calculations = [];
-        $taxes = $this->cart->getTaxes();
-        $total = 0;
-        $tax = 0;
-
-        ($this->model_checkout_cart->getTotals)($total_calculations, $taxes, $total);
-
-        foreach ($total_calculations as $total_calculation) {
-            if ($total_calculation['code'] === 'tax') {
-                $tax = $total_calculation['value'];
-                break;
-            }
-        }
-
-        if ($item_price_tax) {
-            return $total;
-        } else {
-            return $total - $tax;
-        }
     }
 
     protected function getCategoryType1(int $product_id): array
