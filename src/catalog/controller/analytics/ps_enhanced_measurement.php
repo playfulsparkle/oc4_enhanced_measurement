@@ -3200,15 +3200,36 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_select_item')) {
+
+        $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
+        $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
+
+        if (
+            !$config_track_select_item &&
+            !$config_track_select_promotion
+        ) {
             return;
         }
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('catalog/product');
+        $this->load->model('checkout/cart');
 
 
-        $args['ps_track_select_item'] = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
+        $products = $this->model_checkout_cart->getProducts();
+
+        foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
+            if (isset($args['products'][$index])) {
+                $args['products'][$index]['special'] = $real_product_info['special'];
+            }
+        }
+
+        
+        $args['ps_track_select_item'] = $config_track_select_item;
+        $args['ps_track_select_promotion'] = $config_track_select_promotion;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutConfirmBefore($args);
@@ -3388,7 +3409,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else {
             $args['ps_qualify_lead'] = null;
         }
-
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);
 
@@ -3967,11 +3987,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
         $config_track_remove_from_cart = $this->config->get('analytics_ps_enhanced_measurement_track_remove_from_cart');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
+        $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
         if (
             !$config_track_add_to_cart &&
             !$config_track_remove_from_cart &&
-            !$config_track_select_item
+            !$config_track_select_item &&
+            !$config_track_select_promotion
         ) {
             return;
         }
@@ -4014,6 +4036,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $items = [];
         $minimums = [];
+        $promotions = [];
         $total_prices = [];
 
         foreach ($products as $index => $product_info) {
@@ -4102,6 +4125,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $minimums[(int) $product_info['cart_id']] = 1;
             }
 
+            $promotions[(int) $product_info['cart_id']] = (float) $real_product_info['special'] > 0;
+
+            if (isset($args['products'][$index])) {
+                $args['products'][$index]['special'] = $real_product_info['special'];
+            }
+
             $items[(int) $product_info['cart_id']] = $item;
         }
 
@@ -4109,14 +4138,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $cart_id => $item) {
-            if ($config_track_select_item) {
-                $ps_merge_items['select_item_' . $cart_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+            if ($promotions[$cart_id]) {
+                if ($config_track_select_promotion) {
+                    $ps_merge_items['select_promotion_' . $cart_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
+            } else {
+                if ($config_track_select_item) {
+                    $ps_merge_items['select_item_' . $cart_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($config_track_remove_from_cart) {
@@ -4150,6 +4191,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_track_add_to_cart'] = $config_track_add_to_cart;
         $args['ps_track_remove_from_cart'] = $config_track_remove_from_cart;
         $args['ps_track_select_item'] = $config_track_select_item;
+        $args['ps_track_select_promotion'] = $config_track_select_promotion;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartListBefore($args);
@@ -4168,10 +4210,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
+        $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_remove_from_cart = $this->config->get('analytics_ps_enhanced_measurement_track_remove_from_cart');
 
         if (
             !$config_track_select_item &&
+            !$config_track_select_promotion &&
             !$config_track_remove_from_cart
         ) {
             return;
@@ -4215,6 +4259,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
+        $promotions = [];
         $total_prices = [];
 
         foreach ($products as $index => $product_info) {
@@ -4297,6 +4342,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['quantity'] = $product_info['quantity'];
 
+            $promotions[(int) $product_info['cart_id']] = (float) $real_product_info['special'] > 0;
+
+            if (isset($args['products'][$index])) {
+                $args['products'][$index]['special'] = $real_product_info['special'];
+            }
+
             $items[(int) $product_info['cart_id']] = $item;
         }
 
@@ -4304,14 +4355,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_merge_items = [];
 
         foreach ($items as $cart_id => $item) {
-            if ($config_track_select_item) {
-                $ps_merge_items['select_item_' . $cart_id] = [
-                    'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => [$item],
-                    ],
-                ];
+            if ($promotions[$cart_id]) {
+                if ($config_track_select_promotion) {
+                    $ps_merge_items['select_promotion_' . $cart_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
+            } else {
+                if ($config_track_select_item) {
+                    $ps_merge_items['select_item_' . $cart_id] = [
+                        'ecommerce' => [
+                            'item_list_id' => $item_list_id,
+                            'item_list_name' => $item_list_name,
+                            'items' => [$item],
+                        ],
+                    ];
+                }
             }
 
             if ($config_track_remove_from_cart) {
@@ -4329,6 +4392,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $args['ps_track_select_item'] = $config_track_select_item;
+        $args['ps_track_select_promotion'] = $config_track_select_promotion;
         $args['ps_track_remove_from_cart'] = $config_track_remove_from_cart;
 
 
