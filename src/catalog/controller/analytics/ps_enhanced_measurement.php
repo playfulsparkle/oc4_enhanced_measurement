@@ -1134,7 +1134,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-            
+
             if ($affiliation) {
                 $item['affiliation'] = $affiliation;
             }
@@ -2875,7 +2875,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
-        $total_price = 0;
 
         foreach ($products as $index => $product_info) {
             $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
@@ -2950,8 +2949,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
-
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -2987,7 +2984,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json_response['ps_add_payment_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $total_price,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'payment_type' => $payment_type,
                 'items' => array_values($items),
@@ -3075,7 +3072,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
-        $total_price = 0;
 
         foreach ($products as $index => $product_info) {
             $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
@@ -3150,8 +3146,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
-
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3187,7 +3181,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $json_response['ps_add_shipping_info'] = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $total_price,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'shipping_tier' => $shipping_tier,
                 'items' => array_values($items),
@@ -3281,7 +3275,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
-        $total_price = 0;
 
         foreach ($products as $index => $product_info) {
             $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
@@ -3356,8 +3349,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
-
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3375,7 +3366,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $ps_begin_checkout = [
                 'ecommerce' => [
                     'currency' => $currency,
-                    'value' => $total_price,
+                    'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                     'coupon' => $product_coupon ? $product_coupon : '',
                     'items' => array_values($items),
                 ],
@@ -3390,7 +3381,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($config_track_qualify_lead) {
             $ps_qualify_lead = [
                 'currency' => $currency,
-                'value' => $total_price,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
             ];
 
             $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
@@ -3860,7 +3851,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         $items = [];
-        $total_price = 0;
 
         foreach ($products as $index => $product_info) {
             $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
@@ -3935,8 +3925,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $total_price += $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) * $product_info['quantity'], $currency, 0, false);
-
             $item['price'] = $this->currency->format($price, $currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
@@ -3953,7 +3941,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_view_cart = [
             'ecommerce' => [
                 'currency' => $currency,
-                'value' => $total_price,
+                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
                 'items' => array_values($items),
             ],
         ];
