@@ -207,7 +207,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<button type="submit" id="button-confirm"',
             'replace' => '<button type="submit" id="button-confirm"
                 data-ps-track-id="{{ product.product_id }}"
-                {% if ps_has_options %}
+                {% if product.ps_has_options %}
                     {% if ps_track_select_promotion and product.special %}data-ps-track-event="select_promotion"
                     {% elseif ps_track_select_item and not product.special %}data-ps-track-event="select_item"{% endif %}
                 {% else %}
@@ -277,7 +277,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
             'replace' => '<button type="submit" formaction="{{ add_to_cart }}"
                 data-ps-track-id="{{ product.product_id }}"
-                {% if ps_has_options %}
+                {% if product.ps_has_options %}
                     {% if ps_track_select_promotion and product.special %}data-ps-track-event="select_promotion"
                     {% elseif ps_track_select_item and not product.special %}data-ps-track-event="select_item"{% endif %}
                 {% else %}
@@ -306,7 +306,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<a href="{{ product.reorder }}"',
             'replace' => '<a href="{{ product.reorder }}"
                 data-ps-track-id="{{ product.product_id }}"
-                {% if ps_has_options %}
+                {% if product.ps_has_options %}
                     {% if ps_track_select_promotion and product.special %}data-ps-track-event="select_promotion"
                     {% elseif ps_track_select_item and not product.special %}data-ps-track-event="select_item"{% endif %}
                 {% else %}
