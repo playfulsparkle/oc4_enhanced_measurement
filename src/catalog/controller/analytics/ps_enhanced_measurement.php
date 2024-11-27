@@ -2907,14 +2907,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3102,14 +3110,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3303,14 +3319,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3656,14 +3680,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3873,14 +3905,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_price = 0;
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -4034,14 +4074,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_prices = [];
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -4230,14 +4278,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $total_prices = [];
 
         foreach ($products as $index => $product_info) {
+            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+
             $item = [];
 
-            $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+            $item['item_id'] = isset($real_product_info[$item_id_option]) && !empty($real_product_info[$item_id_option]) ? $this->formatListId($real_product_info[$item_id_option]) : $real_product_info['product_id'];
             $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
             $item['affiliation'] = $affiliation;
 
             if ($product_coupon) {
                 $item['coupon'] = $product_coupon;
+            }
+
+            if ((float) $real_product_info['special']) {
+                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
+
+                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
             }
 
             $item['index'] = $index;
