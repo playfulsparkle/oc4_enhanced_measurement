@@ -70,7 +70,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         }
                     {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
                         dataLayer.push({ ecommerce: null });
-                        dataLayer.push( data );
+                        dataLayer.push( { 'event': eventName, ...data } );
                     {% endif %}
                     {% if ps_enhanced_measurement_debug_mode %}this.debug(eventName, data);{% endif %}
                     },
