@@ -212,23 +212,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $downloads = $this->model_account_download->getDownloads(($page - 1) * $limit, $limit);
 
-        foreach ($downloads as $download) {
-            $filename = $download['filename'];
-            $filename = substr($filename, 0, strrpos($filename, '.'));
+        if ($downloads) {
+            foreach ($downloads as $download) {
+                $filename = $download['filename'];
+                $filename = substr($filename, 0, strrpos($filename, '.'));
 
-            $link_url = $this->url->link('account/download.download', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&download_id=' . $download['download_id']);
+                $link_url = $this->url->link('account/download.download', 'language=' . $this->config->get('config_language') . '&customer_token=' . $this->session->data['customer_token'] . '&download_id=' . $download['download_id']);
 
-            $ps_merge_items['file_download_' . $download['order_id']] = [
-                'ecommerce' => [
+                $ps_merge_items['file_download_' . $download['order_id']] = [
                     'file_extension' => pathinfo($filename, PATHINFO_EXTENSION),
                     'file_name' => $filename,
                     'link_text' => $download['name'],
                     'link_url' => str_replace('&amp;', '&', $link_url),
-                ],
-            ];
-        }
+                ];
+            }
 
-        $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
+            $args['ps_merge_items'] = $ps_merge_items ? json_encode($ps_merge_items, JSON_NUMERIC_CHECK) : null;
+        } else {
+            $args['ps_merge_items'] = null;
+        }
 
 
         $args['ps_track_file_download'] = $config_track_file_download;
