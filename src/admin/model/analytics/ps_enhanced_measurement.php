@@ -26,8 +26,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '<div class="float-end">',
             'replace' => '<div class="float-end">
-            <button type="button" id="ps-refund-selected-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_selected }}" class="btn btn-primary"{% if not order_id or ps_refunded %} disabled{% endif %}><i class="fa-solid fa-check-circle"></i> {{ ps_button_refund_selected }}</button>
-            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or ps_refunded %} disabled{% endif %}><i class="fa-solid fa-sync"></i> {{ ps_button_refund_all }}</button> '
+            <button type="button" id="ps-refund-selected-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_selected }}" class="btn btn-primary"{% if not order_id or ps_refunded or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-check-circle"></i> {{ ps_button_refund_selected }}</button>
+            <button type="button" id="ps-refund-all-button" data-bs-toggle="tooltip" title="{{ ps_button_refund_all }}" class="btn btn-primary"{% if not order_id or ps_refunded or not ps_client_info %} disabled{% endif %}><i class="fa-solid fa-sync"></i> {{ ps_button_refund_all }}</button> '
         ];
 
         $views[] = [
@@ -42,7 +42,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <td class="text-start">
                 <div class="input-group">
                     <div class="input-group-text">{{ ps_text_refund_quantity }}</div>
-                    <input type="number" name="refund[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or ps_refunded %} disabled{% endif %}>
+                    <input type="number" name="refund[{{ order_product.order_product_id }}]" value="0" min="0" max="{{ order_product.quantity }}" class="form-control" style="flex: 0 1 30%;"{% if not order_id or ps_refunded or not ps_client_info %} disabled{% endif %}>
                     <button type="button" id="ps-refund-button-{{ order_product.order_product_id }}" data-bs-toggle="tooltip" title="{{ ps_button_refund }}" class="btn btn-primary" disabled><i class="fa-solid fa-check-circle"></i></button>
                 </div>
             </td>',
