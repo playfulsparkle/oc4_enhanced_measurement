@@ -290,6 +290,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_item_price_tax' => (bool) $this->config->get('config_tax'),
                 'analytics_ps_enhanced_measurement_debug_mode' => 0,
                 'analytics_ps_enhanced_measurement_gtag_debug_mode' => 0,
+                'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
                 'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
                 'analytics_ps_enhanced_measurement_track_user_id' => 1,
