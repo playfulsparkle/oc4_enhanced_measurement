@@ -99,18 +99,18 @@ $_['entry_file_download']                   = '„Fájlletöltés” esemény k�
 $_['entry_user_id']                         = 'Felhasználói azonosító küldése';
 $_['entry_gcm_status']                      = 'GCM engedélyezése';
 $_['entry_ad_storage']                      = 'Hirdetés tárolása';
-$_['entry_ad_user_data']                    = 'Hirdetési felhasználói adatok';
-$_['entry_ad_personalization']              = 'Hirdetési személyre szabás';
-$_['entry_analytics_storage']               = 'Analitikai adatok tárolása';
-$_['entry_functionality_storage']           = 'Funkcionalitási adatok tárolása';
-$_['entry_personalization_storage']         = 'Személyre szabási adatok tárolása';
-$_['entry_security_storage']                = 'Biztonsági adatok tárolása';
+$_['entry_ad_user_data']                    = 'Hirdetés felhasználói adatok';
+$_['entry_ad_personalization']              = 'Hirdetés személyre szabása';
+$_['entry_analytics_storage']               = 'Analitika tárolása';
+$_['entry_functionality_storage']           = 'Funkcionalitás tárolása';
+$_['entry_personalization_storage']         = 'Személyre szabás tárolása';
+$_['entry_security_storage']                = 'Biztonsági tárolás';
 $_['entry_wait_for_update']                 = 'Várakozás frissítésre';
-$_['entry_ads_data_redaction']              = 'Hirdetési adatok csökkentése';
+$_['entry_ads_data_redaction']              = 'Hirdetési adatok visszatartása';
 $_['entry_url_passthrough']                 = 'URL továbbítás';
 $_['entry_strict']                          = 'Szigorú';
 $_['entry_balanced']                        = 'Kiegyensúlyozott';
-$_['entry_custom']                          = 'Egyéni';
+$_['entry_custom']                          = 'Egyedi';
 $_['entry_gcm_profiles']                    = 'GCM profilok';
 $_['entry_lead_associations']               = 'Potenciális vásárlók társításai';
 $_['entry_lead_type']                       = 'Potenciális vásárló típusa';
@@ -125,7 +125,7 @@ $_['button_refund_all']                     = 'Összes visszatérítése';
 
 // Help
 $_['help_google_tag_id_locate']             = 'A Google Tag ID azonosítót a <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">Google Analytics fiókjában</a> találhatja meg. Lépjen az Admin szekcióba, válassza ki a nyomon követni kívánt tulajdont, és keresse meg a Google Tag ID-t. Az azonosító "G-" betűvel kezdődik, majd betűk és számok egyedi kombinációja követi, például "G-XXXXXXXXXX." <a href="https://support.google.com/analytics/answer/9539598?hl=hu" target="_blank" rel="external noopener noreferrer">Részletes útmutató itt</a>.';
-$_['help_gtm_id_locate']                    = 'A Measurement ID azonosítót a <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">Google Tag Manager fiókjában</a> találhatja meg a munkaterület irányítópultjának tetején. Az azonosító "GTM-" betűkkel kezdődik, amelyet betűk és számok egyedi kombinációja követ, például "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=hu" target="_blank" rel="external noopener noreferrer">Részletes útmutató itt</a>.';
+$_['help_gtm_id_locate']                    = 'A Measurement ID azonosítót a <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">Google Tag Manager fiókjában</a> találhatja meg a munkaterület irányítópultjának tetején. Az azonosító "GTM-" betűkkel kezdődik, amelyet betűk és számok egyedi kombinációja követ, például "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=hu" target="_blank" rel="external noopener noreferrer">Részletes útmutató itt</a>. Ha még nem állította be a Google Tag Manager tárolóját, egyszerűsítheti a folyamatot, ha <a href="https://drive.google.com/file/d/1Fl4-9H3SdSKZD2AD23MVitKYltxWPwZ9/view?usp=drive_link" target="_blank" rel="external noopener noreferrer">letölti és importálja az előre konfigurált tárolóbeállításokat</a>, amelyek tartalmazzák az összes alapvető címkét, változót és triggert. Alternatív megoldásként, ha inkább saját maga szeretné beállítani, tekintse meg a <a href="https://developers.google.com/analytics/devguides/collection/ga4/reference/events?hl=hu" target="_blank" rel="external noopener noreferrer">Google hivatalos útmutatóját</a>, amely lépésről lépésre mutatja be a Google Tag Manager tároló konfigurálását.';
 $_['help_mp_api_secret_locate']             = 'A Measurement Protocol API Secret azonosítót a <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">Google Analytics fiókjában</a> találhatja meg. Az Admin menüpontra kattintva, a Tulajdon beállításai között válassza az Adatfolyamokat. Válassza ki az adatfolyamot, majd görgessen le a Measurement Protocol API secrets szekcióhoz. Itt új API Secret-t hozhat létre, vagy meglévőket találhat. Az API Secret egy egyedi karakterlánc, például XXXXXXX-XXXXXXX-XXXXXX, amelyet szerveroldali kérések hitelesítésére használnak.';
 $_['help_affiliation']                      = 'Adja meg az üzlet vagy részleg nevét az e-kereskedelmi nyomkövetés <strong>affiliation</strong> mezőjéhez. Ha üresen hagyja, az alapértelmezett üzletnév kerül felhasználásra a beállításokból.';
 $_['help_location_id']                      = 'A termék fizikai helye, például az üzlet, ahol értékesítik. Javasolt a <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">Google Place ID</a> használata, de egyéni helyazonosítót is megadhat.';
@@ -150,17 +150,17 @@ $_['help_add_shipping_info']                = 'Ez az esemény azt jelzi, hogy a 
 $_['help_purchase']                         = 'Ez az esemény azt jelzi, hogy egy vagy több tételt megvásárolt egy felhasználó.';
 $_['help_file_download']                    = 'Ez az esemény jelzi, hogy a felhasználó rákattintott egy fájl letöltésére.';
 $_['help_user_id']                          = 'Ez az opció engedélyezi a bejelentkezett felhasználói azonosítók követését, lehetővé téve a felhasználói viselkedés jobb megértését munkamenetek és eszközök között, pontosabb és részletesebb elemzéseket nyújtva.';
-$_['help_ad_storage']                       = 'Szabályozza, hogy az adatokat reklámokkal kapcsolatos célokra, például kattintások vagy konverziók nyomon követésére tárolják-e.';
-$_['help_ad_user_data']                     = 'Meghatározza, hogy tárolják-e az adatokat a reklámokkal interakcióban álló felhasználókról, növelve a reklámcélzási lehetőségeket.';
-$_['help_ad_personalization']               = 'Lehetővé teszi a hirdetések személyre szabását a felhasználói adatok alapján, relevánsabb reklámokat biztosítva.';
-$_['help_analytics_storage']                = 'Engedélyezi az analitikai célokra használt adatok tárolását, segítve a webhely teljesítményének és a felhasználói viselkedés nyomon követését.';
-$_['help_functionality_storage']            = 'Lehetővé teszi az adatok tárolását a funkciók támogatása érdekében, például a felhasználói preferenciák vagy a webhely funkcióinak javítása céljából.';
-$_['help_personalization_storage']          = 'Szabályozza az adatok tárolását a felhasználói élmény személyre szabása érdekében, például ajánlott tartalmak vagy beállítások.';
-$_['help_security_storage']                 = 'Biztosítja a biztonsági célú adatok, például csalás megelőzési és támadás felderítési adatok tárolását.';
-$_['help_wait_for_update']                  = 'Beállítja az időt (ezredmásodpercben), amely késlelteti a hozzájárulási állapot frissítését annak érdekében, hogy minden beállítás érvényesüljön.';
-$_['help_ads_data_redaction']               = 'Azonosítható információk elrejtésével biztosítja a hirdetési adatok védelmét és a felhasználói adatok titkosságát.';
-$_['help_url_passthrough']                  = 'Lehetővé teszi az URL átengedését a hozzájárulás-ellenőrzéseken, hasznos a felhasználói útvonalak követéséhez személyes adatok tárolása nélkül.';
-$_['help_gcm_status']                       = 'Engedélyezi a Google Consent Mode használatát, amely lehetővé teszi a webhely számára, hogy a Google címkék viselkedését a felhasználói hozzájárulási beállításokhoz igazítsa. Ez a mód adatvédelmi szempontból barátságos nyomkövetést biztosít, amely megfelel a hozzájárulási preferenciáknak, miközben lehetővé teszi az analitikát és a hirdetések működését.';
+$_['help_ad_storage']                       = 'Szabályozza az adatok hirdetési célú tárolását, mint például hirdetési kattintások és konverziók nyomkövetése.';
+$_['help_ad_user_data']                     = 'Megadja, hogy a hirdetésekkel interakcióba lépő felhasználókról szóló adatok tárolásra kerülnek-e, ezáltal javítva a hirdetési célzást.';
+$_['help_ad_personalization']               = 'Lehetővé teszi a hirdetések személyre szabását felhasználói adatok alapján, relevánsabb hirdetéseket biztosítva a felhasználók számára.';
+$_['help_analytics_storage']                = 'Lehetővé teszi az analitikai célokra használt adatok tárolását, segítve ezzel a weboldal teljesítményének és a felhasználói viselkedés nyomon követését.';
+$_['help_functionality_storage']            = 'Lehetővé teszi az adatok tárolását a weboldal funkcionális elemeinek támogatására, például felhasználói preferenciák vagy weboldal jellemzők javítására.';
+$_['help_personalization_storage']          = 'Szabályozza a felhasználói élmény személyre szabásához szükséges adatok tárolását, például tartalom vagy ajánlások személyre szabását.';
+$_['help_security_storage']                 = 'Biztosítja a biztonsággal kapcsolatos adatok tárolását, beleértve a csalásmegelőzést és a biztonságos hozzáférés-ellenőrzést.';
+$_['help_wait_for_update']                  = 'Beállítja azt az időt (ezredmásodpercben), amelyet a hozzájárulási állapot frissítése előtt várni kell, ezzel biztosítva, hogy minden beállítás alkalmazva legyen.';
+$_['help_ads_data_redaction']               = 'Visszatartja a hirdetésekkel kapcsolatos felhasználói adatokat, ezáltal védve a felhasználók magánéletét és elrejtve a személyazonosításra alkalmas információkat.';
+$_['help_url_passthrough']                  = 'Lehetővé teszi, hogy az URL átmenjen a hozzájárulási ellenőrzéseken, ami segíti a konkrét felhasználói útvonalak nyomkövetését anélkül, hogy személyes adatokat tárolna.';
+$_['help_gcm_status']                       = 'Engedélyezi a Google Hozzájárulás Módot (GCM), lehetővé téve az Ön weboldala számára, hogy alkalmazkodjon a felhasználói hozzájárulási beállításokhoz a Google címkék viselkedésének megváltoztatásával. Ez a mód adatvédelmi szempontból barátságos nyomkövetést tesz lehetővé, biztosítva az analitikai és hirdetési funkciók összhangját a hozzájárulási preferenciákkal.';
 $_['help_working_lead']                     = 'Kapcsolja be, hogy a „Working Lead” esemény elküldésre kerüljön a Google Analytics számára, amikor kapcsolatba lép az ügyféllel.';
 
 // Error

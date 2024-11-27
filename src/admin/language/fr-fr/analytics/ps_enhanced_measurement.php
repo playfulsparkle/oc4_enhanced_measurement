@@ -99,16 +99,16 @@ $_['entry_purchase']                        = 'Suivre l\'événement « Achat »
 $_['entry_file_download']                   = 'Suivre l\'événement de téléchargement de fichier';
 $_['entry_user_id']                         = 'Envoyer l\'ID utilisateur';
 $_['entry_gcm_status']                      = 'Activer le mode de consentement Google (GCM)';
-$_['entry_ad_storage']                      = 'Stockage des données publicitaires';
-$_['entry_ad_user_data']                    = 'Données utilisateur des publicités';
-$_['entry_ad_personalization']              = 'Personnalisation des publicités';
-$_['entry_analytics_storage']               = 'Stockage des données analytiques';
+$_['entry_ad_storage']                      = 'Stockage des annonces';
+$_['entry_ad_user_data']                    = 'Données utilisateur des annonces';
+$_['entry_ad_personalization']              = 'Personnalisation des annonces';
+$_['entry_analytics_storage']               = 'Stockage des analyses';
 $_['entry_functionality_storage']           = 'Stockage des fonctionnalités';
 $_['entry_personalization_storage']         = 'Stockage de la personnalisation';
-$_['entry_security_storage']                = 'Stockage des données de sécurité';
+$_['entry_security_storage']                = 'Stockage de la sécurité';
 $_['entry_wait_for_update']                 = 'Attendre la mise à jour';
-$_['entry_ads_data_redaction']              = 'Réduction des données publicitaires';
-$_['entry_url_passthrough']                 = 'Passage des URL';
+$_['entry_ads_data_redaction']              = 'Rédaction des données publicitaires';
+$_['entry_url_passthrough']                 = 'Passage d\'URL';
 $_['entry_strict']                          = 'Strict';
 $_['entry_balanced']                        = 'Équilibré';
 $_['entry_custom']                          = 'Personnalisé';
@@ -126,7 +126,7 @@ $_['button_refund_all']                     = 'Rembourser tout';
 
 // Help
 $_['help_google_tag_id_locate']             = 'Pour trouver votre identifiant Google Tag, connectez-vous à votre <a href="https://analytics.google.com" target="_blank" rel="external noopener noreferrer">compte Analytics</a>. Accédez à la section Admin, sélectionnez la propriété que vous souhaitez suivre, puis trouvez votre identifiant Google Tag. Il commencera par "G-" suivi d\'une combinaison unique de lettres et de chiffres, comme "G-XXXXXXXXXX". <a href="https://support.google.com/analytics/answer/9539598?hl=fr" target="_blank" rel="external noopener noreferrer">Instructions détaillées ici</a>.';
-$_['help_gtm_id_locate']                    = 'Pour trouver votre identifiant Measurement ID pour votre <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">compte Google Tag Manager</a>, recherchez l\'ID en haut du tableau de bord de l\'espace de travail — il commence par "GTM-" suivi d\'une série unique de lettres et de chiffres, comme "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=fr" target="_blank" rel="external noopener noreferrer">Instructions détaillées ici</a>.';
+$_['help_gtm_id_locate']                    = 'Pour trouver votre identifiant Measurement ID pour votre <a href="https://tagmanager.google.com" target="_blank" rel="external noopener noreferrer">compte Google Tag Manager</a>, recherchez l\'ID en haut du tableau de bord de l\'espace de travail — il commence par "GTM-" suivi d\'une série unique de lettres et de chiffres, comme "GTM-XXXXXXXX". <a href="https://support.google.com/analytics/answer/12270356?hl=fr" target="_blank" rel="external noopener noreferrer">Instructions détaillées ici</a>. Si votre conteneur Google Tag Manager n’a pas encore été configuré, vous pouvez simplifier le processus en <a href="https://drive.google.com/file/d/1Fl4-9H3SdSKZD2AD23MVitKYltxWPwZ9/view?usp=drive_link" target="_blank" rel="external noopener noreferrer">téléchargeant et en important des paramètres de conteneur préconfigurés</a>, comprenant toutes les balises, variables et déclencheurs essentiels. Sinon, pour une configuration plus personnalisée, consultez le <a href="https://developers.google.com/analytics/devguides/collection/ga4/reference/events?hl=fr" target="_blank" rel="external noopener noreferrer">manuel officiel de Google</a>, qui fournit des instructions étape par étape pour configurer votre conteneur Google Tag Manager.';
 $_['help_mp_api_secret_locate']             = 'Pour trouver votre secret API du Measurement Protocol, allez dans votre <a href="https://analytics.google.com/" target="_blank" rel="external noopener noreferrer">compte Google Analytics</a>. Naviguez vers Admin dans le menu de gauche, puis sous Paramètres de la propriété, sélectionnez Flux de données. Choisissez votre flux de données, puis faites défiler jusqu\'à la section des secrets API du Measurement Protocol. Ici, vous pouvez créer un nouveau secret API ou trouver ceux existants. Le secret API est une chaîne unique, par exemple XXXXXXX-XXXXXXX-XXXXXX, utilisée pour authentifier les requêtes côté serveur.';
 $_['help_affiliation']                      = 'Entrez le nom du magasin ou du département pour la partie <strong>affiliation</strong> du suivi eCommerce. Si vous laissez ce champ vide, le nom par défaut du magasin sera utilisé automatiquement.';
 $_['help_location_id']                      = 'L\'emplacement physique de l\'article, comme le magasin où il est vendu. Il est préférable d\'utiliser l\'<a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="external noopener noreferrer">identifiant Google Place</a> pour cet emplacement, mais vous pouvez également utiliser un identifiant de lieu personnalisé.';
