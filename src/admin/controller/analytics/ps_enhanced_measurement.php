@@ -515,10 +515,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->load->model('catalog/product');
 
 
-        $item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
-        $item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
-        $location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
-        $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+        $config_item_category_option = (int) $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
+        $config_item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
+        $config_location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
+        $config_item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
 
         $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
@@ -526,10 +526,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $config_currency = $this->session->data['currency'];
         }
 
-        $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
+        $config_affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        if (empty($affiliation)) {
-            $affiliation = $this->config->get('config_name');
+        if (empty($config_affiliation)) {
+            $config_affiliation = $this->config->get('config_name');
         }
 
         $refund = isset($this->request->post['refund']) ? (array) $this->request->post['refund'] : [];
@@ -575,9 +575,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                         $item = [];
 
-                        $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                        $item['item_id'] = isset($product_info[$config_item_id_option]) && !empty($product_info[$config_item_id_option]) ? $this->formatListId($product_info[$config_item_id_option]) : $product_info['product_id'];
                         $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-                        $item['affiliation'] = $affiliation;
+                        $item['affiliation'] = $config_affiliation;
 
                         if ($product_coupon) {
                             $item['coupon'] = $product_coupon;
@@ -591,7 +591,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                             $item['item_brand'] = $manufacturer_info['name'];
                         }
 
-                        switch ($item_category_option) {
+                        switch ($config_item_category_option) {
                             case 0:
                                 $categories = $this->getCategoryType1($product_info['product_id']);
                                 break;
@@ -613,11 +613,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                             }
                         }
 
-                        if ($location_id) {
-                            $item['location_id'] = $location_id;
+                        if ($config_location_id) {
+                            $item['location_id'] = $config_location_id;
                         }
 
-                        if ($item_price_tax) {
+                        if ($config_item_price_tax) {
                             $price = $product['price'] + $product['tax'];
                         } else {
                             $price = $product['price'];
@@ -643,9 +643,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $item = [];
 
-                    $item['item_id'] = isset($product_info[$item_id_option]) && !empty($product_info[$item_id_option]) ? $this->formatListId($product_info[$item_id_option]) : $product_info['product_id'];
+                    $item['item_id'] = isset($product_info[$config_item_id_option]) && !empty($product_info[$config_item_id_option]) ? $this->formatListId($product_info[$config_item_id_option]) : $product_info['product_id'];
                     $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
-                    $item['affiliation'] = $affiliation;
+                    $item['affiliation'] = $config_affiliation;
 
                     if ($product_coupon) {
                         $item['coupon'] = $product_coupon;
@@ -659,7 +659,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $item['item_brand'] = $manufacturer_info['name'];
                     }
 
-                    switch ($item_category_option) {
+                    switch ($config_item_category_option) {
                         case 0:
                             $categories = $this->getCategoryType1($product_info['product_id']);
                             break;
@@ -681,11 +681,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         }
                     }
 
-                    if ($location_id) {
-                        $item['location_id'] = $location_id;
+                    if ($config_location_id) {
+                        $item['location_id'] = $config_location_id;
                     }
 
-                    if ($item_price_tax) {
+                    if ($config_item_price_tax) {
                         $price = $product['price'] + $product['tax'];
                     } else {
                         $price = $product['price'];
