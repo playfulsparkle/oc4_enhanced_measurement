@@ -15,6 +15,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
         $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
         $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
@@ -76,6 +77,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $html .= "gtag('set', 'ads_data_redaction', '" . ($ads_data_redaction ? 'granted' : 'denied') . "');" . PHP_EOL;
             $html .= "gtag('set', 'url_passthrough', '" . ($url_passthrough ? 'granted' : 'denied') . "');" . PHP_EOL;
+        }
+
+        if ($adwords_status && $adwords_enhanced_conversion && $user_data_json = $this->getAdwordsEnhancedConversion()) {
+            $html .= "gtag('set', 'user_data', " . json_encode($user_data_json) . ");" . PHP_EOL;
         }
 
 
@@ -3797,6 +3802,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
+        $adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
+        $adwords_purchase_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
+
         $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
         if (empty($currency)) {
@@ -3947,6 +3956,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_NUMERIC_CHECK) : null;
 
+        if ($adwords_status) {
+            $ps_adwords_conversion = [
+                'send_to' => $adwords_id . '/' . $adwords_purchase_label,
+                'value' => $this->currency->format($purchase_data['total'], $currency, 0, false),
+                'currency' => $currency,
+                'transaction_id' => $this->session->data['order_id'],
+            ];
+
+            $this->session->data['ps_adwords_conversion'] = $items ? json_encode($ps_adwords_conversion, JSON_NUMERIC_CHECK) : null;
+        }
+
 
         if (isset($this->request->cookie['_ga'])) {
             $gaCookie = $this->request->cookie['_ga'];
@@ -3970,8 +3990,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $config_track_purchase = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
+        $config_adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
 
-        if (!$config_track_purchase) {
+        if (
+            !$config_track_purchase &&
+            !$config_adwords_status
+        ) {
             return;
         }
 
@@ -3983,14 +4007,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $args['ps_purchase'] = isset($this->session->data['ps_purchase']) ? $this->session->data['ps_purchase'] : null;
+        $args['ps_adwords_conversion'] = isset($this->session->data['ps_adwords_conversion']) ? $this->session->data['ps_adwords_conversion'] : null;
+        $args['ps_enhanced_conversion'] = isset($this->session->data['ps_enhanced_conversion']) ? $this->session->data['ps_enhanced_conversion'] : null;
 
-        unset($this->session->data['ps_purchase']);
+        unset(
+            $this->session->data['ps_purchase'],
+            $this->session->data['ps_adwords_conversion'],
+            $this->session->data['ps_enhanced_conversion']
+        );
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
 
         $args['ps_track_purchase'] = $config_track_purchase;
+        $args['ps_adwords_status'] = $config_adwords_status;
 
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
@@ -5456,6 +5487,83 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         return $subscription_description;
+    }
+
+    public function getAdwordsEnhancedConversion(): array
+    {
+        $result = [];
+
+        $is_logged = $this->customer->isLogged();
+
+        if ($is_logged) {
+            if ($email = $this->customer->getEmail()) {
+                $result['email'] = hash('sha256', $email);
+            }
+
+            if ($phone_number = $this->customer->getTelephone()) {
+                $result['phone_number'] = hash('sha256', $phone_number);
+            }
+
+            if ($first_name = $this->customer->getFirstName()) {
+                $result['address']['first_name'] = hash('sha256', $first_name);
+            }
+
+            if ($last_name = $this->customer->getLastName()) {
+                $result['address']['last_name'] = hash('sha256', $last_name);
+            }
+        }
+
+        if (!isset($result['address']['first_name'])) {
+            if (isset($this->session->data['customer']['firstname']) && $this->session->data['customer']['firstname']) {
+                $result['address']['first_name'] = hash('sha256', $this->session->data['customer']['firstname']);
+            } else if (isset($this->session->data['payment_address']['firstname']) && $this->session->data['payment_address']['firstname']) {
+                $result['address']['first_name'] = hash('sha256', $this->session->data['payment_address']['firstname']);
+            } else if (isset($this->session->data['shipping_address']['firstname']) && $this->session->data['shipping_address']['firstname']) {
+                $result['address']['first_name'] = hash('sha256', $this->session->data['shipping_address']['firstname']);
+            }
+        }
+
+        if (!isset($result['address']['last_name'])) {
+            if (isset($this->session->data['customer']['lastname']) && $this->session->data['customer']['lastname']) {
+                $result['address']['last_name'] = hash('sha256', $this->session->data['customer']['lastname']);
+            } else if (isset($this->session->data['payment_address']['lastname']) && $this->session->data['payment_address']['lastname']) {
+                $result['address']['last_name'] = hash('sha256', $this->session->data['payment_address']['lastname']);
+            } else if (isset($this->session->data['shipping_address']['lastname']) && $this->session->data['shipping_address']['lastname']) {
+                $result['address']['last_name'] = hash('sha256', $this->session->data['shipping_address']['lastname']);
+            }
+        }
+
+        if (isset($this->session->data['payment_address']['address_1']) && $this->session->data['payment_address']['address_1']) {
+            $result['address']['street'] = hash('sha256', $this->session->data['payment_address']['address_1']);
+        } else if (isset($this->session->data['shipping_address']['address_1']) && $this->session->data['shipping_address']['address_1']) {
+            $result['address']['street'] = hash('sha256', $this->session->data['shipping_address']['address_1']);
+        }
+
+        if (isset($this->session->data['payment_address']['city']) && $this->session->data['payment_address']['city']) {
+            $result['address']['city'] = hash('sha256', $this->session->data['payment_address']['city']);
+        } else if (isset($this->session->data['shipping_address']['city']) && $this->session->data['shipping_address']['city']) {
+            $result['address']['city'] = hash('sha256', $this->session->data['shipping_address']['city']);
+        }
+
+        if (isset($this->session->data['payment_address']['zone']) && $this->session->data['payment_address']['zone']) {
+            $result['address']['region'] = hash('sha256', $this->session->data['payment_address']['zone']);
+        } else if (isset($this->session->data['shipping_address']['zone']) && $this->session->data['shipping_address']['zone']) {
+            $result['address']['region'] = hash('sha256', $this->session->data['shipping_address']['zone']);
+        }
+
+        if (isset($this->session->data['payment_address']['postcode']) && $this->session->data['payment_address']['postcode']) {
+            $result['address']['postal_code'] = hash('sha256', $this->session->data['payment_address']['postcode']);
+        } else if (isset($this->session->data['shipping_address']['postcode']) && $this->session->data['shipping_address']['postcode']) {
+            $result['address']['postal_code'] = hash('sha256', $this->session->data['shipping_address']['postcode']);
+        }
+
+        if (isset($this->session->data['payment_address']['country']) && $this->session->data['payment_address']['country']) {
+            $result['address']['country'] = hash('sha256', $this->session->data['payment_address']['country']);
+        } else if (isset($this->session->data['shipping_address']['country']) && $this->session->data['shipping_address']['country']) {
+            $result['address']['country'] = hash('sha256', $this->session->data['shipping_address']['country']);
+        }
+
+        return $result;
     }
 
     protected function getCategoryType1(int $product_id): array

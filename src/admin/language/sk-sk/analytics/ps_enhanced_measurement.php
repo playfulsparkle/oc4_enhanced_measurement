@@ -121,14 +121,14 @@ $_['entry_order_status']                    = 'Stav objednávky';
 $_['entry_working_lead']                    = 'Odoslať udalosť „Working Lead“';
 $_['entry_adwords_status']                  = 'Povoliť Google Adwords';
 $_['entry_adwords_id']                      = 'Google Adwords ID';
-$_['entry_adwords_purchase']                = 'Pre nákup';
-$_['entry_adwords_add_to_cart']             = 'Pre pridanie do košíka';
-$_['entry_adwords_begin_checkout']          = 'Pre začiatok pokladne';
-$_['entry_adwords_subscribe']               = 'Pre prihlásenie';
-$_['entry_adwords_contact']                 = 'Pre kontakt';
-$_['entry_adwords_lead']                    = 'Pre odoslanie formulára lead';
-$_['entry_adwords_sign_up']                 = 'Pre registráciu';
-$_['entry_adwords_page_view']               = 'Pre zobrazenie stránky';
+$_['entry_adwords_purchase_label']          = 'Pre nákup';
+$_['entry_adwords_add_to_cart_label']       = 'Pre pridanie do košíka';
+$_['entry_adwords_begin_checkout_label']    = 'Pre začiatok pokladne';
+$_['entry_adwords_subscribe_label']         = 'Pre prihlásenie';
+$_['entry_adwords_contact_label']           = 'Pre kontakt';
+$_['entry_adwords_lead_label']              = 'Pre odoslanie formulára lead';
+$_['entry_adwords_sign_up_label']           = 'Pre registráciu';
+$_['entry_adwords_page_view_label']         = 'Pre zobrazenie stránky';
 $_['entry_adwords_enhanced_conversion']     = 'Povoliť vylepšené konverzie';
 
 // Button

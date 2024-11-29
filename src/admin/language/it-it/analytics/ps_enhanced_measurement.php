@@ -121,14 +121,14 @@ $_['entry_order_status']                    = 'Stato dell\'ordine';
 $_['entry_working_lead']                    = 'Invia evento "Working Lead"';
 $_['entry_adwords_status']                  = 'Abilita Google Adwords';
 $_['entry_adwords_id']                      = 'Google Adwords ID';
-$_['entry_adwords_purchase']                = 'Per l\'acquisto';
-$_['entry_adwords_add_to_cart']             = 'Per aggiungere al carrello';
-$_['entry_adwords_begin_checkout']          = 'Per iniziare il checkout';
-$_['entry_adwords_subscribe']               = 'Per iscriversi';
-$_['entry_adwords_contact']                 = 'Per contattare';
-$_['entry_adwords_lead']                    = 'Per inviare il modulo di contatto';
-$_['entry_adwords_sign_up']                 = 'Per la registrazione';
-$_['entry_adwords_page_view']               = 'Per la visualizzazione della pagina';
+$_['entry_adwords_purchase_label']          = 'Per l\'acquisto';
+$_['entry_adwords_add_to_cart_label']       = 'Per aggiungere al carrello';
+$_['entry_adwords_begin_checkout_label']    = 'Per iniziare il checkout';
+$_['entry_adwords_subscribe_label']         = 'Per iscriversi';
+$_['entry_adwords_contact_label']           = 'Per contattare';
+$_['entry_adwords_lead_label']              = 'Per inviare il modulo di contatto';
+$_['entry_adwords_sign_up_label']           = 'Per la registrazione';
+$_['entry_adwords_page_view_label']         = 'Per la visualizzazione della pagina';
 $_['entry_adwords_enhanced_conversion']     = 'Abilita conversioni avanzate';
 
 // Button

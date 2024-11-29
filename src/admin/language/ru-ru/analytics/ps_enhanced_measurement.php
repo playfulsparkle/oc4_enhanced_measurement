@@ -121,14 +121,14 @@ $_['entry_order_status']                    = 'Статус заказа';
 $_['entry_working_lead']                    = 'Отправить событие «Working Lead»';
 $_['entry_adwords_status']                  = 'Включить Google Adwords';
 $_['entry_adwords_id']                      = 'Google Adwords ID';
-$_['entry_adwords_purchase']                = 'Для покупки';
-$_['entry_adwords_add_to_cart']             = 'Для добавления в корзину';
-$_['entry_adwords_begin_checkout']          = 'Для начала оформления заказа';
-$_['entry_adwords_subscribe']               = 'Для подписки';
-$_['entry_adwords_contact']                 = 'Для контакта';
-$_['entry_adwords_lead']                    = 'Для отправки формы лидов';
-$_['entry_adwords_sign_up']                 = 'Для регистрации';
-$_['entry_adwords_page_view']               = 'Для просмотра страницы';
+$_['entry_adwords_purchase_label']          = 'Для покупки';
+$_['entry_adwords_add_to_cart_label']       = 'Для добавления в корзину';
+$_['entry_adwords_begin_checkout_label']    = 'Для начала оформления заказа';
+$_['entry_adwords_subscribe_label']         = 'Для подписки';
+$_['entry_adwords_contact_label']           = 'Для контакта';
+$_['entry_adwords_lead_label']              = 'Для отправки формы лидов';
+$_['entry_adwords_sign_up_label']           = 'Для регистрации';
+$_['entry_adwords_page_view_label']         = 'Для просмотра страницы';
 $_['entry_adwords_enhanced_conversion']     = 'Включить улучшенные конверсии';
 
 // Button

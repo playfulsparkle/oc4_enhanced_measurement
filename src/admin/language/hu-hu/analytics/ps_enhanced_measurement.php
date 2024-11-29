@@ -121,14 +121,14 @@ $_['entry_order_status']                    = 'Megrendelés állapota';
 $_['entry_working_lead']                    = '„Working Lead” esemény küldése';
 $_['entry_adwords_status']                  = 'Google Adwords engedélyezése';
 $_['entry_adwords_id']                      = 'Google Adwords ID';
-$_['entry_adwords_purchase']                = 'Vásárlás esetén';
-$_['entry_adwords_add_to_cart']             = 'Kosárhoz adás esetén';
-$_['entry_adwords_begin_checkout']          = 'Pénztár indítása esetén';
-$_['entry_adwords_subscribe']               = 'Feliratkozás esetén';
-$_['entry_adwords_contact']                 = 'Kapcsolatfelvétel esetén';
-$_['entry_adwords_lead']                    = 'Lead űrlap beküldése esetén';
-$_['entry_adwords_sign_up']                 = 'Regisztráció esetén';
-$_['entry_adwords_page_view']               = 'Oldalmegtekintés esetén';
+$_['entry_adwords_purchase_label']          = 'Vásárlás esetén';
+$_['entry_adwords_add_to_cart_label']       = 'Kosárhoz adás esetén';
+$_['entry_adwords_begin_checkout_label']    = 'Pénztár indítása esetén';
+$_['entry_adwords_subscribe_label']         = 'Feliratkozás esetén';
+$_['entry_adwords_contact_label']           = 'Kapcsolatfelvétel esetén';
+$_['entry_adwords_lead_label']              = 'Lead űrlap beküldése esetén';
+$_['entry_adwords_sign_up_label']           = 'Regisztráció esetén';
+$_['entry_adwords_page_view_label']         = 'Oldalmegtekintés esetén';
 $_['entry_adwords_enhanced_conversion']     = 'Fejlett konverziók engedélyezése';
 
 // Button
