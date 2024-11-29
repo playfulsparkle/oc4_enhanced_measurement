@@ -16,9 +16,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
         $adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
+        $adwords_page_view_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_page_view_label');
         $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
         $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+
+        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+
+        if (empty($currency)) {
+            $currency = $this->session->data['currency'];
+        }
 
 
         $html = '';
@@ -81,6 +88,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($adwords_status && $adwords_enhanced_conversion && $user_data_json = $this->getAdwordsEnhancedConversion()) {
             $html .= "gtag('set', 'user_data', " . json_encode($user_data_json) . ");" . PHP_EOL;
+        }
+
+        if ($adwords_status && $adwords_page_view_label && $cart_total = $this->cart->getTotal()) {
+            $ps_adwords_page_view_label = [
+                'send_to' => $adwords_id . '/' . $adwords_page_view_label,
+                'value' => $this->currency->format($cart_total, $currency, 0, false),
+                'currency' => $currency,
+            ];
+
+            $html .= "gtag('event', 'conversion', " . json_encode($ps_adwords_page_view_label) . ");" . PHP_EOL;
         }
 
 
