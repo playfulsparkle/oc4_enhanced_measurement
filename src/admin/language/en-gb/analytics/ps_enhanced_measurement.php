@@ -21,7 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Item Options';
 $_['text_store_options_group']              = 'Store Options';
-$_['text_google_adwords_label_group']       = 'Google Adwords Label';
+$_['text_adwords_label_group']       = 'Google Adwords Label';
 $_['text_product_id']                       = 'Product ID';
 $_['text_model']                            = 'Model';
 $_['text_sku']                              = 'SKU';
@@ -119,16 +119,17 @@ $_['entry_lead_associations']               = 'Lead Associations';
 $_['entry_lead_type']                       = 'Lead type';
 $_['entry_order_status']                    = 'Order Status';
 $_['entry_working_lead']                    = 'Send Working Lead Event';
-$_['entry_google_adwords_status']           = 'Enable Google Adwords';
-$_['entry_google_adwords_id']               = 'Google Adwords ID';
-$_['entry_google_adwords_purchase']         = 'for Purchase';
-$_['entry_google_adwords_add_to_cart']      = 'for Add to cart';
-$_['entry_google_adwords_begin_checkout']   = 'for Begin checkout';
-$_['entry_google_adwords_subscribe']        = 'for Subscribe';
-$_['entry_google_adwords_contact']          = 'for Contact';
-$_['entry_google_adwords_lead']             = 'for Submit lead form';
-$_['entry_google_adwords_sign_up']          = 'for Sign-Up';
-$_['entry_google_adwords_page_view']        = 'for Page view';
+$_['entry_adwords_status']                  = 'Enable Google Adwords';
+$_['entry_adwords_id']                      = 'Google Adwords ID';
+$_['entry_adwords_purchase']                = 'for Purchase';
+$_['entry_adwords_add_to_cart']             = 'for Add to cart';
+$_['entry_adwords_begin_checkout']          = 'for Begin checkout';
+$_['entry_adwords_subscribe']               = 'for Subscribe';
+$_['entry_adwords_contact']                 = 'for Contact';
+$_['entry_adwords_lead']                    = 'for Submit lead form';
+$_['entry_adwords_sign_up']                 = 'for Sign-Up';
+$_['entry_adwords_page_view']               = 'for Page view';
+$_['entry_adwords_enhanced_conversion']     = 'Enable Enhanced Conversions';
 
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
@@ -176,7 +177,8 @@ $_['help_ads_data_redaction']               = 'Redacts user data related to ads,
 $_['help_url_passthrough']                  = 'Allows the URL to pass through consent checks, useful for tracking specific user paths without storing personal data.';
 $_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behavior based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
 $_['help_working_lead']                     = 'Toggle to send the "Working Lead" event to Google Analytics when you contact the customer.';
-$_['help_google_adwords_id_locate']         = 'To find your Google Ads ID, sign in to your <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads account</a>, click on the tools icon in the top right corner, select "Account Settings" under "Setup", and find the 10-digit ID under "Account Information". It will be formatted as AW-XXXXXXXXX.';
+$_['help_adwords_id_locate']                = 'To find your Google Ads ID, sign in to your <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads account</a>, click on the tools icon in the top right corner, select "Account Settings" under "Setup", and find the 10-digit ID under "Account Information". It will be formatted as AW-XXXXXXXXX.';
+$_['help_adwords_enhanced_conversion']      = 'Activate Enhanced Conversions to improve tracking accuracy by securely sending hashed first-party data (e.g., email, phone, address) to Google Ads for better conversion attribution.';
 
 // Error
 $_['error_permission']                      = 'Warning: You do not have permission to modify Enhanced Measurement settings!';
@@ -184,8 +186,8 @@ $_['error_refund_send']                     = 'Warning: Failed to send refund da
 $_['error_no_refundable_selected']          = 'Warning: No products were selected for refund. Please select at least one product to process the refund.';
 $_['error_google_tag_id']                   = 'The Google Tag ID field is required. Please enter your Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'The Google Tag ID format is incorrect. Ensure it follows the format G-XXXXXXXXXX.';
-$_['error_google_adwords_id']               = 'The Google AdWords ID field is required. Please enter your Google AdWords ID.';
-$_['error_google_adwords_id_invalid']       = 'The Google AdWords ID format is incorrect. Ensure it follows the format AW-XXXXXXXXX.';
+$_['error_adwords_id']               = 'The Google AdWords ID field is required. Please enter your Google AdWords ID.';
+$_['error_adwords_id_invalid']       = 'The Google AdWords ID format is incorrect. Ensure it follows the format AW-XXXXXXXXX.';
 $_['error_gtm_id']                          = 'The GTM ID field is required. Please enter your Measurement ID.';
 $_['error_gtm_id_invalid']                  = 'The GTM ID format is incorrect. Ensure it follows the format GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'The Measurement Protocol API secret field is required. Please enter your Measurement Protocol API secret.';

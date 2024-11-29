@@ -21,7 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Artikeloptionen';
 $_['text_store_options_group']              = 'Shop-Optionen';
-$_['text_google_adwords_label_group']       = 'Google Adwords Label';
+$_['text_adwords_label_group']              = 'Google Adwords Label';
 $_['text_product_id']                       = 'Produkt-ID';
 $_['text_model']                            = 'Modell';
 $_['text_sku']                              = 'SKU';
@@ -119,16 +119,17 @@ $_['entry_lead_associations']               = 'Lead-Zuordnungen';
 $_['entry_lead_type']                       = 'Lead-Typ';
 $_['entry_order_status']                    = 'Bestellstatus';
 $_['entry_working_lead']                    = '„Working Lead“-Ereignis senden';
-$_['entry_google_adwords_status']           = 'Google Adwords aktivieren';
-$_['entry_google_adwords_id']               = 'Google Adwords ID';
-$_['entry_google_adwords_purchase']         = 'Für den Kauf';
-$_['entry_google_adwords_add_to_cart']      = 'Für den Warenkorb';
-$_['entry_google_adwords_begin_checkout']   = 'Für den Beginn des Checkouts';
-$_['entry_google_adwords_subscribe']        = 'Für die Anmeldung';
-$_['entry_google_adwords_contact']          = 'Für den Kontakt';
-$_['entry_google_adwords_lead']             = 'Für das Absenden des Lead-Formulars';
-$_['entry_google_adwords_sign_up']          = 'Für die Anmeldung';
-$_['entry_google_adwords_page_view']        = 'Für die Seitenansicht';
+$_['entry_adwords_status']                  = 'Google Adwords aktivieren';
+$_['entry_adwords_id']                      = 'Google Adwords ID';
+$_['entry_adwords_purchase']                = 'Für den Kauf';
+$_['entry_adwords_add_to_cart']             = 'Für den Warenkorb';
+$_['entry_adwords_begin_checkout']          = 'Für den Beginn des Checkouts';
+$_['entry_adwords_subscribe']               = 'Für die Anmeldung';
+$_['entry_adwords_contact']                 = 'Für den Kontakt';
+$_['entry_adwords_lead']                    = 'Für das Absenden des Lead-Formulars';
+$_['entry_adwords_sign_up']                 = 'Für die Anmeldung';
+$_['entry_adwords_page_view']               = 'Für die Seitenansicht';
+$_['entry_adwords_enhanced_conversion']     = 'Erweiterte Conversions aktivieren';
 
 // Button
 $_['button_fix_event_handler']              = 'Ereignishandler beheben';
@@ -176,16 +177,16 @@ $_['help_ads_data_redaction']               = 'Reduziert Benutzerdaten, die mit 
 $_['help_url_passthrough']                  = 'Ermöglicht es, dass die URL die Zustimmungsprüfung passiert, was nützlich ist, um bestimmte Benutzerpfade zu verfolgen, ohne persönliche Daten zu speichern.';
 $_['help_gcm_status']                       = 'Aktiviert den Google Consent Mode, der es Ihrer Website ermöglicht, das Verhalten von Google-Tags basierend auf den Zustimmungspräferenzen der Benutzer anzupassen. Dieser Modus bietet datenschutzfreundliches Tracking, das die Funktionalität von Analysen und Werbung im Einklang mit den Zustimmungspräferenzen ermöglicht.';
 $_['help_working_lead']                     = 'Schalten Sie diese Option ein, um das Ereignis „Working Lead“ an Google Analytics zu senden, wenn Sie den Kunden kontaktieren.';
-$_['help_google_adwords_id_locate']         = 'Um Ihre Google Ads ID zu finden, melden Sie sich bei Ihrem <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads-Konto</a> an, klicken Sie auf das Tools-Symbol in der oberen rechten Ecke, wählen Sie unter "Setup" "Kontoeinstellungen" und finden Sie die 10-stellige ID unter "Kontoinformationen". Sie wird im Format AW-XXXXXXXXX angezeigt.';
-
+$_['help_adwords_id_locate']                = 'Um Ihre Google Ads ID zu finden, melden Sie sich bei Ihrem <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads-Konto</a> an, klicken Sie auf das Tools-Symbol in der oberen rechten Ecke, wählen Sie unter "Setup" "Kontoeinstellungen" und finden Sie die 10-stellige ID unter "Kontoinformationen". Sie wird im Format AW-XXXXXXXXX angezeigt.';
+$_['help_adwords_enhanced_conversion']      = 'Aktivieren Sie erweiterte Conversions, um die Tracking-Genauigkeit zu verbessern, indem gehashte Erstanbieterdaten (z. B. E-Mail, Telefon, Adresse) sicher an Google Ads gesendet werden, um eine bessere Zuordnung von Conversions zu ermöglichen.';
 // Error
 $_['error_permission']                      = 'Warnung: Sie haben keine Berechtigung, die Einstellungen für Enhanced Measurement zu ändern!';
 $_['error_refund_send']                     = 'Warnung: Die Rückerstattungsdaten konnten nicht an Google Analytics gesendet werden. Bitte überprüfen Sie Ihre Einstellungen und versuchen Sie es erneut.';
 $_['error_no_refundable_selected']          = 'Warnung: Es wurden keine Produkte für die Rückerstattung ausgewählt. Bitte wählen Sie mindestens ein Produkt aus, um die Rückerstattung zu bearbeiten.';
 $_['error_google_tag_id']                   = 'Das Feld „Google Tag ID“ ist erforderlich. Bitte geben Sie Ihre Google Analytics ID ein.';
 $_['error_google_tag_id_invalid']           = 'Das Format der Google Tag ID ist ungültig. Stellen Sie sicher, dass es dem Format „G-XXXXXXXXXX“ entspricht.';
-$_['error_google_adwords_id']               = 'Das Google AdWords ID-Feld ist erforderlich. Bitte geben Sie Ihre Google AdWords ID ein.';
-$_['error_google_adwords_id_invalid']       = 'Das Format der Google AdWords ID ist ungültig. Stellen Sie sicher, dass es dem Format AW-XXXXXXXXX entspricht.';
+$_['error_adwords_id']                      = 'Das Google AdWords ID-Feld ist erforderlich. Bitte geben Sie Ihre Google AdWords ID ein.';
+$_['error_adwords_id_invalid']              = 'Das Format der Google AdWords ID ist ungültig. Stellen Sie sicher, dass es dem Format AW-XXXXXXXXX entspricht.';
 $_['error_gtm_id']                          = 'Das Feld „GTM ID“ ist erforderlich. Bitte geben Sie Ihre Measurement ID ein.';
 $_['error_gtm_id_invalid']                  = 'Das Format der GTM ID ist ungültig. Stellen Sie sicher, dass es dem Format „GTM-XXXXXXXX“ entspricht.';
 $_['error_mp_api_secret']                   = 'Das Feld für das „Measurement Protocol API Secret“ ist erforderlich. Bitte geben Sie Ihr Measurement Protocol API Secret ein.';

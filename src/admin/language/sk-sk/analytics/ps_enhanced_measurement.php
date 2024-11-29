@@ -21,7 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Možnosti položiek';
 $_['text_store_options_group']              = 'Možnosti obchodu';
-$_['text_google_adwords_label_group']       = 'Google Adwords Label';
+$_['text_adwords_label_group']              = 'Google Adwords Label';
 $_['text_product_id']                       = 'ID produktu';
 $_['text_model']                            = 'Model';
 $_['text_sku']                              = 'SKU';
@@ -119,16 +119,17 @@ $_['entry_lead_associations']               = 'Asociácie potenciálnych zákazn
 $_['entry_lead_type']                       = 'Typ potenciálneho zákazníka';
 $_['entry_order_status']                    = 'Stav objednávky';
 $_['entry_working_lead']                    = 'Odoslať udalosť „Working Lead“';
-$_['entry_google_adwords_status']           = 'Povoliť Google Adwords';
-$_['entry_google_adwords_id']               = 'Google Adwords ID';
-$_['entry_google_adwords_purchase']         = 'Pre nákup';
-$_['entry_google_adwords_add_to_cart']      = 'Pre pridanie do košíka';
-$_['entry_google_adwords_begin_checkout']   = 'Pre začiatok pokladne';
-$_['entry_google_adwords_subscribe']        = 'Pre prihlásenie';
-$_['entry_google_adwords_contact']          = 'Pre kontakt';
-$_['entry_google_adwords_lead']             = 'Pre odoslanie formulára lead';
-$_['entry_google_adwords_sign_up']          = 'Pre registráciu';
-$_['entry_google_adwords_page_view']        = 'Pre zobrazenie stránky';
+$_['entry_adwords_status']                  = 'Povoliť Google Adwords';
+$_['entry_adwords_id']                      = 'Google Adwords ID';
+$_['entry_adwords_purchase']                = 'Pre nákup';
+$_['entry_adwords_add_to_cart']             = 'Pre pridanie do košíka';
+$_['entry_adwords_begin_checkout']          = 'Pre začiatok pokladne';
+$_['entry_adwords_subscribe']               = 'Pre prihlásenie';
+$_['entry_adwords_contact']                 = 'Pre kontakt';
+$_['entry_adwords_lead']                    = 'Pre odoslanie formulára lead';
+$_['entry_adwords_sign_up']                 = 'Pre registráciu';
+$_['entry_adwords_page_view']               = 'Pre zobrazenie stránky';
+$_['entry_adwords_enhanced_conversion']     = 'Povoliť vylepšené konverzie';
 
 // Button
 $_['button_fix_event_handler']              = 'Opraviť obslužnú rutinu udalostí';
@@ -176,7 +177,8 @@ $_['help_ads_data_redaction']               = 'Rediguje užívateľské dáta s�
 $_['help_url_passthrough']                  = 'Umožňuje, aby URL prešla kontrolami súhlasu, čo je užitočné na sledovanie konkrétnych užívateľských ciest bez ukládania osobných údajov.';
 $_['help_gcm_status']                       = 'Povoľuje režim súhlasu Google, čo umožňuje vašej stránke prispôsobiť správanie Google značiek na základe nastavení súhlasu používateľa. Tento režim poskytuje sledovanie šetrné k súkromiu, čo umožňuje, aby analytika a reklamy fungovali v súlade so súhlasnými preferenciami.';
 $_['help_working_lead']                     = 'Prepnite na odoslanie udalosti „Working Lead“ do Google Analytics pri kontakte so zákazníkom.';
-$_['help_google_adwords_id_locate']         = 'Ak chcete nájsť svoje Google Ads ID, prihláste sa do svojho <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">účtu Google Ads</a>, kliknite na ikonu nástrojov v pravom hornom rohu, vyberte "Nastavenia účtu" v sekcii "Nastavenia" a nájdite 10-miestne ID v sekcii "Informácie o účte". Formát bude AW-XXXXXXXXX.';
+$_['help_adwords_id_locate']                = 'Ak chcete nájsť svoje Google Ads ID, prihláste sa do svojho <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">účtu Google Ads</a>, kliknite na ikonu nástrojov v pravom hornom rohu, vyberte "Nastavenia účtu" v sekcii "Nastavenia" a nájdite 10-miestne ID v sekcii "Informácie o účte". Formát bude AW-XXXXXXXXX.';
+$_['help_adwords_enhanced_conversion']      = 'Aktivujte vylepšené konverzie na zlepšenie presnosti sledovania bezpečným odoslaním hashovaných údajov prvej strany (napr. e-mail, telefón, adresa) do Google Ads pre lepšie priradenie konverzií.';
 
 // Error
 $_['error_permission']                      = 'Upozornenie: Nemáte oprávnenie upravovať nastavenia vylepšeného merania!';
@@ -184,8 +186,8 @@ $_['error_refund_send']                     = 'Upozornenie: Nepodarilo sa odosla
 $_['error_no_refundable_selected']          = 'Upozornenie: Neboli vybrané žiadne produkty na vrátenie. Vyberte aspoň jeden produkt na spracovanie vrátenia.';
 $_['error_google_tag_id']                   = 'Pole Google Tag ID je povinné. Zadajte svoje Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'Formát Google Tag ID je neplatný. Uistite sa, že nasleduje formát G-XXXXXXXXXX.';
-$_['error_google_adwords_id']               = 'Pole Google AdWords ID je povinné. Zadajte svoje Google AdWords ID.';
-$_['error_google_adwords_id_invalid']       = 'Formát Google AdWords ID je neplatný. Uistite sa, že dodržiava formát AW-XXXXXXXXX.';
+$_['error_adwords_id']                      = 'Pole Google AdWords ID je povinné. Zadajte svoje Google AdWords ID.';
+$_['error_adwords_id_invalid']              = 'Formát Google AdWords ID je neplatný. Uistite sa, že dodržiava formát AW-XXXXXXXXX.';
 $_['error_gtm_id']                          = 'Pole GTM ID je povinné. Zadajte svoje meracie ID.';
 $_['error_gtm_id_invalid']                  = 'Formát GTM ID je neplatný. Uistite sa, že nasleduje formát GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'Pole tajného kľúča API Measurement Protocol je povinné. Zadajte svoj tajný kľúč API Measurement Protocol.';

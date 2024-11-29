@@ -96,16 +96,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_wait_for_update'] = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
         $data['analytics_ps_enhanced_measurement_ads_data_redaction'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
         $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
-        $data['analytics_ps_enhanced_measurement_google_adwords_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_google_adwords_status');
-        $data['analytics_ps_enhanced_measurement_google_adwords_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_id');
-        $data['analytics_ps_enhanced_measurement_google_adwords_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_purchase');
-        $data['analytics_ps_enhanced_measurement_google_adwords_add_to_cart'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_add_to_cart');
-        $data['analytics_ps_enhanced_measurement_google_adwords_begin_checkout'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_begin_checkout');
-        $data['analytics_ps_enhanced_measurement_google_adwords_subscribe'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_subscribe');
-        $data['analytics_ps_enhanced_measurement_google_adwords_contact'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_contact');
-        $data['analytics_ps_enhanced_measurement_google_adwords_lead'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_lead');
-        $data['analytics_ps_enhanced_measurement_google_adwords_sign_up'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_sign_up');
-        $data['analytics_ps_enhanced_measurement_google_adwords_page_view'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_page_view');
+        $data['analytics_ps_enhanced_measurement_adwords_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $data['analytics_ps_enhanced_measurement_adwords_id'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
+        $data['analytics_ps_enhanced_measurement_adwords_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase');
+        $data['analytics_ps_enhanced_measurement_adwords_add_to_cart'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart');
+        $data['analytics_ps_enhanced_measurement_adwords_begin_checkout'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_begin_checkout');
+        $data['analytics_ps_enhanced_measurement_adwords_subscribe'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_subscribe');
+        $data['analytics_ps_enhanced_measurement_adwords_contact'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_contact');
+        $data['analytics_ps_enhanced_measurement_adwords_lead'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_lead');
+        $data['analytics_ps_enhanced_measurement_adwords_sign_up'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up');
+        $data['analytics_ps_enhanced_measurement_adwords_page_view'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_page_view');
+        $data['analytics_ps_enhanced_measurement_adwords_enhanced_conversion'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
 
         if ($this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status')) {
             $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
@@ -288,11 +289,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $json['error']['input-wait-for-update'] = $this->language->get('error_wait_for_update');
             }
 
-            if ((bool) $this->request->post['analytics_ps_enhanced_measurement_google_adwords_status']) {
-                if (empty($this->request->post['analytics_ps_enhanced_measurement_google_adwords_id'])) {
-                    $json['error']['input-google-adwords-id'] = $this->language->get('error_google_adwords_id');
-                } elseif (preg_match('/^AW-\d{9}$/', $this->request->post['analytics_ps_enhanced_measurement_google_adwords_id']) !== 1) {
-                    $json['error']['input-google-adwords-id'] = $this->language->get('error_google_adwords_id_invalid');
+            if ((bool) $this->request->post['analytics_ps_enhanced_measurement_adwords_status']) {
+                if (empty($this->request->post['analytics_ps_enhanced_measurement_adwords_id'])) {
+                    $json['error']['input-google-adwords-id'] = $this->language->get('error_adwords_id');
+                } elseif (preg_match('/^AW-\d{9}$/', $this->request->post['analytics_ps_enhanced_measurement_adwords_id']) !== 1) {
+                    $json['error']['input-google-adwords-id'] = $this->language->get('error_adwords_id_invalid');
                 }
             }
         }
@@ -343,6 +344,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
                 'analytics_ps_enhanced_measurement_track_file_download' => 1,
+                'analytics_ps_enhanced_measurement_adwords_enhanced_conversion' => 0,
                 'analytics_ps_enhanced_measurement_track_file_download_ext' => '.pdf, .xls, .xlsx, .doc, .docx',
                 'analytics_ps_enhanced_measurement_wait_for_update' => 500,
             ];

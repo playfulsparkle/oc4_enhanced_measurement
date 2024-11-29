@@ -180,9 +180,7 @@
 								</div>
 							</div>
 
-							<br>
 							<hr>
-							<br>
 
 							<div id="group-gtm" class="row mb-3">
 								<label for="input-tracking-delay" class="col-sm-2 col-form-label">{{ entry_tracking_delay }}</label>
@@ -501,82 +499,93 @@
 						<div id="tab-ads-conversion-tracking" class="tab-pane">
 
 							<div class="row mb-3">
-								<label for="input-google_adwords_status" class="col-sm-2 col-form-label">{{ entry_google_adwords_status }}</label>
+								<label for="input-adwords-status" class="col-sm-2 col-form-label">{{ entry_adwords_status }}</label>
 								<div class="col-sm-10">
 									<div class="form-check form-switch form-switch-lg">
-										<input type="hidden" name="analytics_ps_enhanced_measurement_google_adwords_status" value="0" />
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_google_adwords_status" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_status %} checked{% endif %} id="input-google_adwords_status" />
+										<input type="hidden" name="analytics_ps_enhanced_measurement_adwords_status" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_adwords_status" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_adwords_status %} checked{% endif %} id="input-adwords-status" />
 									</div>
 								</div>
 							</div>
 
 							<div class="row mb-3 required">
-								<label for="input-google-adwords-id" class="col-sm-2 col-form-label">{{ entry_google_adwords_id }}</label>
+								<label for="input-google-adwords-id" class="col-sm-2 col-form-label">{{ entry_adwords_id }}</label>
 								<div class="col-sm-10">
-									<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_id" value="{{ analytics_ps_enhanced_measurement_google_adwords_id }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-id" class="form-control" />
+									<input type="text" name="analytics_ps_enhanced_measurement_adwords_id" value="{{ analytics_ps_enhanced_measurement_adwords_id }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-id" class="form-control" />
 									<div id="error-input-google-adwords-id" class="invalid-feedback"></div>
-									<div class="form-text">{{ help_google_adwords_id_locate }}</div>
+									<div class="form-text">{{ help_adwords_id_locate }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-adwords-enhanced-conversion" class="col-sm-2 col-form-label">{{ entry_adwords_enhanced_conversion }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_adwords_enhanced_conversion" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_adwords_enhanced_conversion" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_adwords_enhanced_conversion %} checked{% endif %} id="input-adwords-enhanced-conversion" />
+									</div>
+									<div class="form-text">{{ help_adwords_enhanced_conversion }}</div>
 								</div>
 							</div>
 
 							<br>
 
 							<fieldset id="ad-settings-group" class="border p-3 mb-3">
-								<legend>{{ text_google_adwords_label_group }}</legend>
+								<legend>{{ text_adwords_label_group }}</legend>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-purchase" class="col-sm-2 col-form-label">{{ entry_google_adwords_purchase }}</label>
+									<label for="input-google-adwords-purchase" class="col-sm-2 col-form-label">{{ entry_adwords_purchase }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_purchase" value="{{ analytics_ps_enhanced_measurement_google_adwords_purchase }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-purchase" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_purchase" value="{{ analytics_ps_enhanced_measurement_adwords_purchase }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-purchase" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-add-to-cart" class="col-sm-2 col-form-label">{{ entry_google_adwords_add_to_cart }}</label>
+									<label for="input-google-adwords-add-to-cart" class="col-sm-2 col-form-label">{{ entry_adwords_add_to_cart }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_add_to_cart" value="{{ analytics_ps_enhanced_measurement_google_adwords_add_to_cart }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-add-to-cart" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_add_to_cart" value="{{ analytics_ps_enhanced_measurement_adwords_add_to_cart }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-add-to-cart" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-begin-checkout" class="col-sm-2 col-form-label">{{ entry_google_adwords_begin_checkout }}</label>
+									<label for="input-google-adwords-begin-checkout" class="col-sm-2 col-form-label">{{ entry_adwords_begin_checkout }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_begin_checkout" value="{{ analytics_ps_enhanced_measurement_google_adwords_begin_checkout }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-begin-checkout" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_begin_checkout" value="{{ analytics_ps_enhanced_measurement_adwords_begin_checkout }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-begin-checkout" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-subscribe" class="col-sm-2 col-form-label">{{ entry_google_adwords_subscribe }}</label>
+									<label for="input-google-adwords-subscribe" class="col-sm-2 col-form-label">{{ entry_adwords_subscribe }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_subscribe" value="{{ analytics_ps_enhanced_measurement_google_adwords_subscribe }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-subscribe" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_subscribe" value="{{ analytics_ps_enhanced_measurement_adwords_subscribe }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-subscribe" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-contact" class="col-sm-2 col-form-label">{{ entry_google_adwords_contact }}</label>
+									<label for="input-google-adwords-contact" class="col-sm-2 col-form-label">{{ entry_adwords_contact }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_contact" value="{{ analytics_ps_enhanced_measurement_google_adwords_contact }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-contact" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_contact" value="{{ analytics_ps_enhanced_measurement_adwords_contact }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-contact" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-lead" class="col-sm-2 col-form-label">{{ entry_google_adwords_lead }}</label>
+									<label for="input-google-adwords-lead" class="col-sm-2 col-form-label">{{ entry_adwords_lead }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_lead" value="{{ analytics_ps_enhanced_measurement_google_adwords_lead }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-lead" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_lead" value="{{ analytics_ps_enhanced_measurement_adwords_lead }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-lead" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-sign-up" class="col-sm-2 col-form-label">{{ entry_google_adwords_sign_up }}</label>
+									<label for="input-google-adwords-sign-up" class="col-sm-2 col-form-label">{{ entry_adwords_sign_up }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_sign_up" value="{{ analytics_ps_enhanced_measurement_google_adwords_sign_up }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-sign-up" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_sign_up" value="{{ analytics_ps_enhanced_measurement_adwords_sign_up }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-sign-up" class="form-control" />
 									</div>
 								</div>
 
 								<div class="row mb-3">
-									<label for="input-google-adwords-page-view" class="col-sm-2 col-form-label">{{ entry_google_adwords_page_view }}</label>
+									<label for="input-google-adwords-page-view" class="col-sm-2 col-form-label">{{ entry_adwords_page_view }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_page_view" value="{{ analytics_ps_enhanced_measurement_google_adwords_page_view }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-page-view" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_adwords_page_view" value="{{ analytics_ps_enhanced_measurement_adwords_page_view }}" placeholder="{{ entry_adwords_id }}" id="input-google-adwords-page-view" class="form-control" />
 									</div>
 								</div>
 

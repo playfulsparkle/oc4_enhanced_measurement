@@ -21,7 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Termékopciók csoportja';
 $_['text_store_options_group']              = 'Áruházbeállítások csoportja';
-$_['text_google_adwords_label_group']       = 'Google Adwords Label';
+$_['text_adwords_label_group']              = 'Google Adwords Label';
 $_['text_product_id']                       = 'Termékazonosító';
 $_['text_model']                            = 'Modell';
 $_['text_sku']                              = 'SKU';
@@ -119,16 +119,17 @@ $_['entry_lead_associations']               = 'Potenciális vásárlók társít
 $_['entry_lead_type']                       = 'Potenciális vásárló típusa';
 $_['entry_order_status']                    = 'Megrendelés állapota';
 $_['entry_working_lead']                    = '„Working Lead” esemény küldése';
-$_['entry_google_adwords_status']           = 'Google Adwords engedélyezése';
-$_['entry_google_adwords_id']               = 'Google Adwords ID';
-$_['entry_google_adwords_purchase']         = 'Vásárlás esetén';
-$_['entry_google_adwords_add_to_cart']      = 'Kosárhoz adás esetén';
-$_['entry_google_adwords_begin_checkout']   = 'Pénztár indítása esetén';
-$_['entry_google_adwords_subscribe']        = 'Feliratkozás esetén';
-$_['entry_google_adwords_contact']          = 'Kapcsolatfelvétel esetén';
-$_['entry_google_adwords_lead']             = 'Lead űrlap beküldése esetén';
-$_['entry_google_adwords_sign_up']          = 'Regisztráció esetén';
-$_['entry_google_adwords_page_view']        = 'Oldalmegtekintés esetén';
+$_['entry_adwords_status']                  = 'Google Adwords engedélyezése';
+$_['entry_adwords_id']                      = 'Google Adwords ID';
+$_['entry_adwords_purchase']                = 'Vásárlás esetén';
+$_['entry_adwords_add_to_cart']             = 'Kosárhoz adás esetén';
+$_['entry_adwords_begin_checkout']          = 'Pénztár indítása esetén';
+$_['entry_adwords_subscribe']               = 'Feliratkozás esetén';
+$_['entry_adwords_contact']                 = 'Kapcsolatfelvétel esetén';
+$_['entry_adwords_lead']                    = 'Lead űrlap beküldése esetén';
+$_['entry_adwords_sign_up']                 = 'Regisztráció esetén';
+$_['entry_adwords_page_view']               = 'Oldalmegtekintés esetén';
+$_['entry_adwords_enhanced_conversion']     = 'Fejlett konverziók engedélyezése';
 
 // Button
 $_['button_fix_event_handler']              = 'Eseménykezelő javítása';
@@ -176,16 +177,16 @@ $_['help_ads_data_redaction']               = 'Visszatartja a hirdetésekkel kap
 $_['help_url_passthrough']                  = 'Lehetővé teszi, hogy az URL átmenjen a hozzájárulási ellenőrzéseken, ami segíti a konkrét felhasználói útvonalak nyomkövetését anélkül, hogy személyes adatokat tárolna.';
 $_['help_gcm_status']                       = 'Engedélyezi a Google Hozzájárulás Módot (GCM), lehetővé téve az Ön weboldala számára, hogy alkalmazkodjon a felhasználói hozzájárulási beállításokhoz a Google címkék viselkedésének megváltoztatásával. Ez a mód adatvédelmi szempontból barátságos nyomkövetést tesz lehetővé, biztosítva az analitikai és hirdetési funkciók összhangját a hozzájárulási preferenciákkal.';
 $_['help_working_lead']                     = 'Kapcsolja be, hogy a „Working Lead” esemény elküldésre kerüljön a Google Analytics számára, amikor kapcsolatba lép az ügyféllel.';
-$_['help_google_adwords_id_locate']         = 'A Google Ads ID megtalálásához jelentkezzen be a <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads fiókjába</a>, kattintson a jobb felső sarokban található eszköztár ikonra, válassza az "Fiókbeállítások" lehetőséget a "Beállítások" alatt, majd keresse meg a 10 számjegyű ID-t az "Fiók információk" alatt. Az ID formátuma AW-XXXXXXXXX.';
-
+$_['help_adwords_id_locate']                = 'A Google Ads ID megtalálásához jelentkezzen be a <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads fiókjába</a>, kattintson a jobb felső sarokban található eszköztár ikonra, válassza az "Fiókbeállítások" lehetőséget a "Beállítások" alatt, majd keresse meg a 10 számjegyű ID-t az "Fiók információk" alatt. Az ID formátuma AW-XXXXXXXXX.';
+$_['help_adwords_enhanced_conversion']      = 'Engedélyezze a fejlett konverziókat a nyomkövetési pontosság javítása érdekében azáltal, hogy az első féltől származó adatokat (pl. e-mail, telefon, cím) biztonságosan, hash-elve küldi el a Google Ads-nek a jobb konverzió-hozzárendelés érdekében.';
 // Error
 $_['error_permission']                      = 'Figyelem: Nincs jogosultsága a Enhanced Measurement beállításainak módosításához!';
 $_['error_refund_send']                     = 'Figyelem: Nem sikerült elküldeni a visszatérítési adatokat a Google Analytics számára. Kérjük, ellenőrizze a beállításokat, és próbálja újra.';
 $_['error_no_refundable_selected']          = 'Figyelem: Nem lett kiválasztva egyetlen visszatérítendő termék sem. Kérjük, válasszon legalább egy terméket a visszatérítés feldolgozásához.';
 $_['error_google_tag_id']                   = 'A Google Tag ID mező kitöltése kötelező. Kérjük, adja meg Google Analytics azonosítóját.';
 $_['error_google_tag_id_invalid']           = 'A Google Tag ID formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: G-XXXXXXXXXX.';
-$_['error_google_adwords_id']               = 'A Google AdWords ID mező kitöltése kötelező. Kérjük, adja meg a Google AdWords ID-ját.';
-$_['error_google_adwords_id_invalid']       = 'A Google AdWords ID formátuma helytelen. Győződjön meg róla, hogy az AW-XXXXXXXXX formátumnak megfelelő.';
+$_['error_adwords_id']                      = 'A Google AdWords ID mező kitöltése kötelező. Kérjük, adja meg a Google AdWords ID-ját.';
+$_['error_adwords_id_invalid']              = 'A Google AdWords ID formátuma helytelen. Győződjön meg róla, hogy az AW-XXXXXXXXX formátumnak megfelelő.';
 $_['error_gtm_id']                          = 'A GTM ID mező kitöltése kötelező. Kérjük, adja meg Measurement ID-ját.';
 $_['error_gtm_id_invalid']                  = 'A GTM ID formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'A Measurement Protocol API secret mező kitöltése kötelező. Kérjük, adja meg Measurement Protocol API titkát.';

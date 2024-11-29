@@ -14,19 +14,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
-        $google_adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_google_adwords_status');
-        $google_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_id');
+        $adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
         $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
 
 
         $html = '';
 
-        if ($google_adwords_status || $measurement_implementation === 'gtag') {
+        if ($adwords_status || $measurement_implementation === 'gtag') {
             $html .= '<!-- Google tag (gtag.js) -->' . PHP_EOL;
 
-            if ($google_adwords_status) {
-                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $google_adwords_id . '"></script>' . PHP_EOL;
+            if ($adwords_status) {
+                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $adwords_id . '"></script>' . PHP_EOL;
             }
 
             if ($measurement_implementation === 'gtag') {
@@ -40,6 +40,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($this->config->get('analytics_ps_enhanced_measurement_ga4_gtag_debug_mode')) {
             $ga4_config['debug_mode'] = true;
+        }
+
+        if ($this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion')) {
+            $adwords_config['allow_enhanced_conversions'] = true;
         }
 
         if ($this->request->server['HTTPS']) {
@@ -57,8 +61,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $html .= "gtag('js', new Date());" . PHP_EOL;
 
 
-        if ($google_adwords_status) {
-            $html .= "gtag('config', '" . $google_adwords_id . "'" . ($adwords_config_json ? ", " . $adwords_config_json : "") . ");" . PHP_EOL;
+        if ($adwords_status) {
+            $html .= "gtag('config', '" . $adwords_id . "'" . ($adwords_config_json ? ", " . $adwords_config_json : "") . ");" . PHP_EOL;
         }
 
         if ($measurement_implementation === 'gtag') {
@@ -66,7 +70,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($google_adwords_status || $measurement_implementation === 'gtm') {
+        if ($adwords_status || $measurement_implementation === 'gtm') {
             $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
             $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
 
@@ -75,7 +79,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        if ($measurement_implementation === 'gtm' && $this->config->get('analytics_ps_enhanced_measurement_gcm_status')) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_gcm_status')) {
             $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
             $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
             $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
