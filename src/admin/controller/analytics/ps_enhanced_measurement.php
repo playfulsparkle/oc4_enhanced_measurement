@@ -55,7 +55,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $data['analytics_ps_enhanced_measurement_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
-        $data['analytics_ps_enhanced_measurement_gtag_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_gtag_debug_mode');
+        $data['analytics_ps_enhanced_measurement_ga4_gtag_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_ga4_gtag_debug_mode');
         $data['analytics_ps_enhanced_measurement_item_id'] = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $data['analytics_ps_enhanced_measurement_item_category_option'] = $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $data['analytics_ps_enhanced_measurement_item_price_tax'] = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
@@ -84,6 +84,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_track_add_shipping_info'] = $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info');
         $data['analytics_ps_enhanced_measurement_track_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
         $data['analytics_ps_enhanced_measurement_track_file_download'] = $this->config->get('analytics_ps_enhanced_measurement_track_file_download');
+        $data['analytics_ps_enhanced_measurement_track_file_download_ext'] = $this->config->get('analytics_ps_enhanced_measurement_track_file_download_ext');
         $data['analytics_ps_enhanced_measurement_gcm_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_gcm_status');
         $data['analytics_ps_enhanced_measurement_ad_storage'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
         $data['analytics_ps_enhanced_measurement_ad_user_data'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
@@ -95,6 +96,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_wait_for_update'] = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
         $data['analytics_ps_enhanced_measurement_ads_data_redaction'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
         $data['analytics_ps_enhanced_measurement_url_passthrough'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
+        $data['analytics_ps_enhanced_measurement_google_adwords_status'] = (bool) $this->config->get('analytics_ps_enhanced_measurement_google_adwords_status');
+        $data['analytics_ps_enhanced_measurement_google_adwords_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_id');
+        $data['analytics_ps_enhanced_measurement_google_adwords_purchase'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_purchase');
+        $data['analytics_ps_enhanced_measurement_google_adwords_add_to_cart'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_add_to_cart');
+        $data['analytics_ps_enhanced_measurement_google_adwords_begin_checkout'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_begin_checkout');
+        $data['analytics_ps_enhanced_measurement_google_adwords_subscribe'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_subscribe');
+        $data['analytics_ps_enhanced_measurement_google_adwords_contact'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_contact');
+        $data['analytics_ps_enhanced_measurement_google_adwords_lead'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_lead');
+        $data['analytics_ps_enhanced_measurement_google_adwords_sign_up'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_sign_up');
+        $data['analytics_ps_enhanced_measurement_google_adwords_page_view'] = $this->config->get('analytics_ps_enhanced_measurement_google_adwords_page_view');
 
         if ($this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status')) {
             $data['analytics_ps_enhanced_measurement_close_convert_lead_status'] = $this->config->get('analytics_ps_enhanced_measurement_close_convert_lead_status');
@@ -256,6 +267,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
+            $extensions = $this->request->post['analytics_ps_enhanced_measurement_track_file_download_ext'];
+            $extensions = array_map('trim', explode(',', $extensions));
+
+            foreach ($extensions as $extension) {
+                if (!preg_match('/^\.[a-z]+(\.[a-z]+)*$/', $extension)) {
+                    $json['error']['input-file-download-ext'] = $this->language->get('error_file_download_ext');
+                    break;
+                }
+            }
+
             if ($this->request->post['analytics_ps_enhanced_measurement_tracking_delay'] < 100) {
                 $json['error']['input-tracking-delay'] = $this->language->get('error_tracking_delay');
             }
@@ -265,6 +286,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $this->request->post['analytics_ps_enhanced_measurement_wait_for_update'] > 10000
             ) {
                 $json['error']['input-wait-for-update'] = $this->language->get('error_wait_for_update');
+            }
+
+            if ((bool) $this->request->post['analytics_ps_enhanced_measurement_google_adwords_status']) {
+                if (empty($this->request->post['analytics_ps_enhanced_measurement_google_adwords_id'])) {
+                    $json['error']['input-google-adwords-id'] = $this->language->get('error_google_adwords_id');
+                } elseif (preg_match('/^AW-\d{9}$/', $this->request->post['analytics_ps_enhanced_measurement_google_adwords_id']) !== 1) {
+                    $json['error']['input-google-adwords-id'] = $this->language->get('error_google_adwords_id_invalid');
+                }
             }
         }
 
@@ -290,7 +319,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => (bool) $this->config->get('config_tax'),
                 'analytics_ps_enhanced_measurement_debug_mode' => 0,
-                'analytics_ps_enhanced_measurement_gtag_debug_mode' => 0,
+                'analytics_ps_enhanced_measurement_ga4_gtag_debug_mode' => 0,
                 'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
                 'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
@@ -314,6 +343,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
                 'analytics_ps_enhanced_measurement_track_file_download' => 1,
+                'analytics_ps_enhanced_measurement_track_file_download_ext' => '.pdf, .xls, .xlsx, .doc, .docx',
                 'analytics_ps_enhanced_measurement_wait_for_update' => 500,
             ];
 

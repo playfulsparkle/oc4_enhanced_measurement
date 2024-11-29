@@ -1,3 +1,4 @@
+
 function handleUpdateCartEvent(trackId) {
   var quantityObj = $('#product-quantity-' + trackId);
 

@@ -1,17 +1,17 @@
 <?php
 // Heading
-$_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
+$_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
 $_['heading_fix']                           = 'Gyakori hibák javítása';
 $_['heading_getting_started']               = 'Kezdő lépések';
-$_['heading_setup']                         = '(GA4) Enhanced Measurement beállítása';
+$_['heading_setup']                         = 'Enhanced Measurement beállítása';
 $_['heading_troubleshot']                   = 'Gyakori hibakeresési lépések';
 $_['heading_faq']                           = 'GYIK';
 $_['heading_contact']                       = 'Terméktámogatás';
 
 // Text
 $_['text_extension']                        = 'Bővítmények';
-$_['text_edit']                             = '(GA4) Enhanced Measurement szerkesztése';
-$_['text_success']                          = 'Sikeres módosítás: (GA4) Enhanced Measurement frissítve!';
+$_['text_edit']                             = 'Enhanced Measurement szerkesztése';
+$_['text_success']                          = 'Sikeres módosítás: Enhanced Measurement frissítve!';
 $_['text_getting_started']                  = '<p><strong>Áttekintés:</strong> A Playful Sparkle - GA4 Enhanced Measurement bővítmény fejlett követési funkciókat kínál OpenCart 4 webáruházak számára. Többféle eseménykövetést támogat, beleértve a felhasználói interakciókat, kosárműveleteket és vásárlási eseményeket. Emellett lehetővé teszi a Google Tag Manager vagy a Global Site Tag integrációját, rugalmas méréstechnikai megoldásokat nyújtva.</p><p><strong>Követelmények:</strong> OpenCart 4.x, érvényes Google Analytics GA4-fiók, és a választott mérési implementációhoz tartozó hitelesítő adatok: a Global Site Tag (gtag.js) esetén Google Tag ID és Measurement Protocol API Secret szükséges, míg Google Tag Manager (GTM) választásakor Measurement ID szükséges. Győződjön meg arról, hogy más analitikai bővítmények nincsenek engedélyezve, hogy elkerülje a kódütközéseket.</p>';
 $_['text_setup']                            = '<ul><li>Válassza ki a kívánt mérési implementációt (Global Site Tag vagy Google Tag Manager).</li><li>Ha Global Site Tag-et használ, adja meg a Google Tag ID-t és a Measurement Protocol API Secret-et. Google Tag Manager esetén adja meg a Measurement ID-t.</li><li>Állítsa be a követni kívánt eseményeket, például bejelentkezés, vásárlás vagy kosárhoz adás követése.</li><li>Ellenőrizze, hogy más bővítmények, amelyek követési kódokat injektálnak (pl. Tag Manager vagy Global Site Tag), nincsenek-e aktív állapotban, hogy elkerülje az ütközéseket.</li><li>Mentse a beállításokat, és tesztelje az implementációt a Google Analytics hibakereső eszközök segítségével.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Probléma:</strong> Az események nem láthatók a Google Analytics irányítópultján. <strong>Megoldás:</strong> Ellenőrizze, hogy a Measurement ID vagy Tag ID helyesen van-e megadva, és egyezik-e a GA4 tulajdonával. Ha Global Site Tag-et (gtag.js) használ, győződjön meg arról, hogy a Google Tag ID és a Measurement Protocol API Secret megfelelően van konfigurálva.</li><li><strong>Probléma:</strong> Duplikált események kerülnek követésre. <strong>Megoldás:</strong> Ellenőrizze, hogy más analitikai bővítmények nem injektálnak-e követési kódokat, és tiltsa le őket, ha szükséges. Ellenőrizze továbbá, hogy ugyanaz az esemény nem kerül-e több implementáción keresztül követésre (pl. mind GTM, mind gtag.js).</li><li><strong>Probléma:</strong> A követés nem működik több áruházban. <strong>Megoldás:</strong> Győződjön meg arról, hogy a helyes Tag ID vagy Measurement ID minden áruházhoz be van állítva. GTM esetén győződjön meg arról, hogy minden áruháznál a megfelelő konténer be van állítva a Google Tag Managerben.</li><li><strong>Probléma:</strong> A visszatérítési adatok nem jelennek meg a Google Analytics-ben. <strong>Megoldás:</strong> Hagyjon időt arra, hogy a visszatérítési adatok megjelenjenek a Google Analytics-ben, és győződjön meg arról, hogy a visszatérítés helyesen van konfigurálva részleges vagy teljes visszatérítésként, mivel rendelésenként csak egy beküldés fogadható el.</li></ul>';
@@ -21,6 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Termékopciók csoportja';
 $_['text_store_options_group']              = 'Áruházbeállítások csoportja';
+$_['text_google_adwords_label_group']       = 'Google Adwords Label';
 $_['text_product_id']                       = 'Termékazonosító';
 $_['text_model']                            = 'Modell';
 $_['text_sku']                              = 'SKU';
@@ -57,7 +58,8 @@ $_['column_refund_quantity']                = 'Visszatérített mennyiség';
 // Tab
 $_['tab_general']                           = 'Általános';
 $_['tab_gcm']                               = 'Google Consent Mode (GCM)';
-$_['tab_track_events']                      = 'Események követése';
+$_['tab_enhanced_ecommerce_tracking']       = '(GA4) Fejlett e-kereskedelmi nyomkövetés';
+$_['tab_ads_conversion_tracking']           = 'Hirdetési konverziók követése';
 $_['tab_help_and_support']                  = 'Segítség &amp; Támogatás';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
@@ -75,8 +77,8 @@ $_['entry_affiliation']                     = 'Partnerkapcsolat';
 $_['entry_location_id']                     = 'Helyazonosító';
 $_['entry_item_price_tax']                  = 'Árak megjelenítése adóval';
 $_['entry_currency']                        = 'Pénznem';
-$_['entry_debug_mode']                      = 'Hibakeresési mód';
-$_['entry_gtag_debug_mode']                 = 'Global Site Tag hibakeresése';
+$_['entry_console_log_events']              = 'Események konzol naplózása';
+$_['entry_ga4_gtag_debug_mode']             = 'Global Site Tag hibakeresése';
 $_['entry_generate_lead']                   = '„Lead generálás” esemény követése';
 $_['entry_qualify_lead']                    = 'Kvalifikált lead esemény követése';
 $_['entry_sign_up']                         = '„Regisztráció” esemény követése';
@@ -96,6 +98,7 @@ $_['entry_add_payment_info']                = '„Fizetési adatok hozzáadása�
 $_['entry_add_shipping_info']               = '„Szállítási adatok hozzáadása” esemény követése';
 $_['entry_purchase']                        = '„Vásárlás” esemény követése';
 $_['entry_file_download']                   = '„Fájlletöltés” esemény követése';
+$_['entry_file_download_ext']               = 'Követendő fájlkiterjesztések';
 $_['entry_user_id']                         = 'Felhasználói azonosító küldése';
 $_['entry_gcm_status']                      = 'GCM engedélyezése';
 $_['entry_ad_storage']                      = 'Hirdetés tárolása';
@@ -115,7 +118,17 @@ $_['entry_gcm_profiles']                    = 'GCM profilok';
 $_['entry_lead_associations']               = 'Potenciális vásárlók társításai';
 $_['entry_lead_type']                       = 'Potenciális vásárló típusa';
 $_['entry_order_status']                    = 'Megrendelés állapota';
-$_['entry_working_lead']                    = '(GA4) „Working Lead” esemény küldése';
+$_['entry_working_lead']                    = '„Working Lead” esemény küldése';
+$_['entry_google_adwords_status']           = 'Google Adwords engedélyezése';
+$_['entry_google_adwords_id']               = 'Google Adwords ID';
+$_['entry_google_adwords_purchase']         = 'Vásárlás esetén';
+$_['entry_google_adwords_add_to_cart']      = 'Kosárhoz adás esetén';
+$_['entry_google_adwords_begin_checkout']   = 'Pénztár indítása esetén';
+$_['entry_google_adwords_subscribe']        = 'Feliratkozás esetén';
+$_['entry_google_adwords_contact']          = 'Kapcsolatfelvétel esetén';
+$_['entry_google_adwords_lead']             = 'Lead űrlap beküldése esetén';
+$_['entry_google_adwords_sign_up']          = 'Regisztráció esetén';
+$_['entry_google_adwords_page_view']        = 'Oldalmegtekintés esetén';
 
 // Button
 $_['button_fix_event_handler']              = 'Eseménykezelő javítása';
@@ -149,6 +162,7 @@ $_['help_add_payment_info']                 = 'Ez az esemény azt jelzi, hogy a 
 $_['help_add_shipping_info']                = 'Ez az esemény azt jelzi, hogy a felhasználó megadta a szállítási adatait az e-kereskedelmi fizetési folyamat során.';
 $_['help_purchase']                         = 'Ez az esemény azt jelzi, hogy egy vagy több tételt megvásárolt egy felhasználó.';
 $_['help_file_download']                    = 'Ez az esemény jelzi, hogy a felhasználó rákattintott egy fájl letöltésére.';
+$_['help_file_download_ext']                = 'Adja meg azokat a fájlkiterjesztéseket (pl. .pdf, .xls, .xlsx, .doc, .docx), amelyeket file_download eseményként szeretne követni a GA4-ben. Csak a megadott kiterjesztések váltják ki ezt az eseményt.';
 $_['help_user_id']                          = 'Ez az opció engedélyezi a bejelentkezett felhasználói azonosítók követését, lehetővé téve a felhasználói viselkedés jobb megértését munkamenetek és eszközök között, pontosabb és részletesebb elemzéseket nyújtva.';
 $_['help_ad_storage']                       = 'Szabályozza az adatok hirdetési célú tárolását, mint például hirdetési kattintások és konverziók nyomkövetése.';
 $_['help_ad_user_data']                     = 'Megadja, hogy a hirdetésekkel interakcióba lépő felhasználókról szóló adatok tárolásra kerülnek-e, ezáltal javítva a hirdetési célzást.';
@@ -162,13 +176,16 @@ $_['help_ads_data_redaction']               = 'Visszatartja a hirdetésekkel kap
 $_['help_url_passthrough']                  = 'Lehetővé teszi, hogy az URL átmenjen a hozzájárulási ellenőrzéseken, ami segíti a konkrét felhasználói útvonalak nyomkövetését anélkül, hogy személyes adatokat tárolna.';
 $_['help_gcm_status']                       = 'Engedélyezi a Google Hozzájárulás Módot (GCM), lehetővé téve az Ön weboldala számára, hogy alkalmazkodjon a felhasználói hozzájárulási beállításokhoz a Google címkék viselkedésének megváltoztatásával. Ez a mód adatvédelmi szempontból barátságos nyomkövetést tesz lehetővé, biztosítva az analitikai és hirdetési funkciók összhangját a hozzájárulási preferenciákkal.';
 $_['help_working_lead']                     = 'Kapcsolja be, hogy a „Working Lead” esemény elküldésre kerüljön a Google Analytics számára, amikor kapcsolatba lép az ügyféllel.';
+$_['help_google_adwords_id_locate']         = 'A Google Ads ID megtalálásához jelentkezzen be a <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads fiókjába</a>, kattintson a jobb felső sarokban található eszköztár ikonra, válassza az "Fiókbeállítások" lehetőséget a "Beállítások" alatt, majd keresse meg a 10 számjegyű ID-t az "Fiók információk" alatt. Az ID formátuma AW-XXXXXXXXX.';
 
 // Error
-$_['error_permission']                      = 'Figyelem: Nincs jogosultsága a (GA4) Enhanced Measurement beállításainak módosításához!';
-$_['error_refund_send']                     = 'Figyelem: Nem sikerült elküldeni a visszatérítési adatokat a Google Analytics (GA4) számára. Kérjük, ellenőrizze a beállításokat, és próbálja újra.';
+$_['error_permission']                      = 'Figyelem: Nincs jogosultsága a Enhanced Measurement beállításainak módosításához!';
+$_['error_refund_send']                     = 'Figyelem: Nem sikerült elküldeni a visszatérítési adatokat a Google Analytics számára. Kérjük, ellenőrizze a beállításokat, és próbálja újra.';
 $_['error_no_refundable_selected']          = 'Figyelem: Nem lett kiválasztva egyetlen visszatérítendő termék sem. Kérjük, válasszon legalább egy terméket a visszatérítés feldolgozásához.';
 $_['error_google_tag_id']                   = 'A Google Tag ID mező kitöltése kötelező. Kérjük, adja meg Google Analytics azonosítóját.';
 $_['error_google_tag_id_invalid']           = 'A Google Tag ID formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: G-XXXXXXXXXX.';
+$_['error_google_adwords_id']               = 'A Google AdWords ID mező kitöltése kötelező. Kérjük, adja meg a Google AdWords ID-ját.';
+$_['error_google_adwords_id_invalid']       = 'A Google AdWords ID formátuma helytelen. Győződjön meg róla, hogy az AW-XXXXXXXXX formátumnak megfelelő.';
 $_['error_gtm_id']                          = 'A GTM ID mező kitöltése kötelező. Kérjük, adja meg Measurement ID-ját.';
 $_['error_gtm_id_invalid']                  = 'A GTM ID formátuma helytelen. Győződjön meg róla, hogy a formátum megfelel: GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'A Measurement Protocol API secret mező kitöltése kötelező. Kérjük, adja meg Measurement Protocol API titkát.';
@@ -183,3 +200,4 @@ $_['error_working_lead']                    = 'Hiba történt a „Folyamatban l
 $_['error_close_convert_lead']              = 'Hiba történt a „Sikeresen lezárt érdeklődő” esemény elküldése során.';
 $_['error_close_unconvert_lead']            = 'Hiba történt a „Sikeresen lezárt nem konvertált érdeklődő” esemény elküldése során.';
 $_['error_disqualify_lead']                 = 'Hiba történt a „Kizárt érdeklődő” esemény elküldése során.';
+$_['error_file_download_ext']               = 'Érvénytelen fájlkiterjesztések. Biztosítsa, hogy ponttal kezdődnek és csak kisbetűket tartalmaznak (pl. .pdf, .xml.gz).';

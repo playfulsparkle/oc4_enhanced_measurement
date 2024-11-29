@@ -26,8 +26,9 @@
 
 					<ul class="nav nav-tabs">
 						<li class="nav-item"><a href="#tab-general" data-bs-toggle="tab" class="nav-link active">{{ tab_general }}</a></li>
-						<li class="nav-item"><a href="#tab-track-events" data-bs-toggle="tab" class="nav-link">{{ tab_track_events }}</a></li>
-						<li class="nav-item" id="tab-item-gcm"{% if analytics_ps_enhanced_measurement_implementation != 'gtm' %} style="display: none;"{% endif %}><a href="#tab-gcm" data-bs-toggle="tab" class="nav-link">{{ tab_gcm }}</a></li>
+						<li class="nav-item"><a href="#tab-enhanced-ecommerce-tracking" data-bs-toggle="tab" class="nav-link">{{ tab_enhanced_ecommerce_tracking }}</a></li>
+						<li class="nav-item"><a href="#tab-ads-conversion-tracking" data-bs-toggle="tab" class="nav-link">{{ tab_ads_conversion_tracking }}</a></li>
+						<li class="nav-item"><a href="#tab-gcm" data-bs-toggle="tab" class="nav-link">{{ tab_gcm }}</a></li>
 						<li class="nav-item"><a href="#tab-support" data-bs-toggle="tab" class="nav-link">{{ tab_help_and_support }}</a></li>
 					</ul>
 
@@ -44,86 +45,13 @@
 								</div>
 							</div>
 
-							<div class="row mb-3">
-								<label for="input-debug-mode" class="col-sm-2 col-form-label">{{ entry_debug_mode }}</label>
-								<div class="col-sm-10">
-									<div class="form-check form-switch form-switch-lg">
-										<input type="hidden" name="analytics_ps_enhanced_measurement_debug_mode" value="0" />
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_debug_mode" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_debug_mode %} checked{% endif %} id="input-debug-mode" />
-									</div>
-								</div>
-							</div>
-
-							<div class="row mb-3 required">
-								<label for="input-measurement-implementation" class="col-sm-2 col-form-label">{{ entry_measurement_implementation }}</label>
-								<div class="col-sm-10">
-									<select name="analytics_ps_enhanced_measurement_implementation" id="input-measurement-implementation" class="form-select">
-										{% for key, name in measurement_implementations %}
-											<option value="{{ key }}"{% if key == analytics_ps_enhanced_measurement_implementation %} selected{% endif %}>{{ name }}</option>
-										{% endfor %}
-									</select>
-									<div id="error-input-measurement-implementation" class="invalid-feedback"></div>
-								</div>
-							</div>
-
-							<ul class="nav nav-tabs">
-								<li class="nav-item"><a href="#tab-gtag" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">{{ tab_gtag }}</a></li>
-								<li class="nav-item"><a href="#tab-gtm" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtm' %} active{% endif %}">{{ tab_gtm }}</a></li>
-							</ul>
-
-							<div class="tab-content">
-								<div id="tab-gtag" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">
-
-									<div class="row mb-3 required">
-										<label for="input-google-tag-id" class="col-sm-2 col-form-label">{{ entry_google_tag_id }}</label>
-										<div class="col-sm-10">
-											<input type="text" name="analytics_ps_enhanced_measurement_google_tag_id" value="{{ analytics_ps_enhanced_measurement_google_tag_id | default('') }}" placeholder="{{ entry_google_tag_id }}" id="input-google-tag-id" class="form-control" />
-											<div id="error-input-google-tag-id" class="invalid-feedback"></div>
-											<div class="form-text">{{ help_google_tag_id_locate }}</div>
-										</div>
-									</div>
-
-									<div class="row mb-3 required">
-										<label for="input-mp-api-secret" class="col-sm-2 col-form-label">{{ entry_measurement_protocol_api_secret }}</label>
-										<div class="col-sm-10">
-											<input type="text" name="analytics_ps_enhanced_measurement_mp_api_secret" value="{{ analytics_ps_enhanced_measurement_mp_api_secret | default('') }}" placeholder="{{ entry_measurement_protocol_api_secret }}" id="input-mp-api-secret" class="form-control" />
-											<div id="error-input-mp-api-secret" class="invalid-feedback"></div>
-											<div class="form-text">{{ help_mp_api_secret_locate }}</div>
-										</div>
-									</div>
-
-									<div class="row mb-3">
-										<label for="input-debug-mode" class="col-sm-2 col-form-label">{{ entry_gtag_debug_mode }}</label>
-										<div class="col-sm-10">
-											<div class="form-check form-switch form-switch-lg">
-												<input type="hidden" name="analytics_ps_enhanced_measurement_gtag_debug_mode" value="0" />
-												<input type="checkbox" name="analytics_ps_enhanced_measurement_gtag_debug_mode" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_gtag_debug_mode %} checked{% endif %} id="input-debug-mode" />
-											</div>
-										</div>
-									</div>
-
-								</div>
-								<div id="tab-gtm" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtm' %} active{% endif %}">
-
-									<div id="group-gtm" class="row mb-3 required">
-										<label for="input-gtm-id" class="col-sm-2 col-form-label">{{ entry_gtm_id }}</label>
-										<div class="col-sm-10">
-											<input type="text" name="analytics_ps_enhanced_measurement_gtm_id" value="{{ analytics_ps_enhanced_measurement_gtm_id | default('') }}" placeholder="{{ entry_gtm_id }}" id="input-gtm-id" class="form-control" />
-											<div id="error-input-gtm-id" class="invalid-feedback"></div>
-											<div class="form-text">{{ help_gtm_id_locate }}</div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-
 							<fieldset class="border p-3 mb-3">
 								<legend>{{ text_store_options_group }}</legend>
 
 								<div class="row mb-3">
 									<label for="input-affiliation" class="col-sm-2 col-form-label">{{ entry_affiliation }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_affiliation" value="{{ analytics_ps_enhanced_measurement_affiliation | default('') }}" placeholder="{{ entry_affiliation }}" id="input-affiliation" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_affiliation" value="{{ analytics_ps_enhanced_measurement_affiliation }}" placeholder="{{ entry_affiliation }}" id="input-affiliation" class="form-control" />
 										<div class="form-text">{{ help_affiliation }}</div>
 									</div>
 								</div>
@@ -131,7 +59,7 @@
 								<div class="row mb-3">
 									<label for="input-location-id" class="col-sm-2 col-form-label">{{ entry_location_id }}</label>
 									<div class="col-sm-10">
-										<input type="text" name="analytics_ps_enhanced_measurement_location_id" value="{{ analytics_ps_enhanced_measurement_location_id | default('') }}" placeholder="{{ entry_location_id }}" id="input-location-id" class="form-control" />
+										<input type="text" name="analytics_ps_enhanced_measurement_location_id" value="{{ analytics_ps_enhanced_measurement_location_id }}" placeholder="{{ entry_location_id }}" id="input-location-id" class="form-control" />
 										<div class="form-text">{{ help_location_id }}</div>
 									</div>
 								</div>
@@ -187,162 +115,74 @@
 							</fieldset>
 
 						</div>
-						<div id="tab-gcm" class="tab-pane">
+						<div id="tab-enhanced-ecommerce-tracking" class="tab-pane">
 
-							<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ text_gcm_info }}</div>
-
-							<div class="row mb-3">
-								<label for="input-gcm-status" class="col-sm-2 col-form-label">{{ entry_gcm_status }}</label>
+							<div class="row mb-3 required">
+								<label for="input-measurement-implementation" class="col-sm-2 col-form-label">{{ entry_measurement_implementation }}</label>
 								<div class="col-sm-10">
-									<div class="form-check form-switch form-switch-lg">
-										<input type="hidden" name="analytics_ps_enhanced_measurement_gcm_status" value="0">
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_gcm_status" value="1" id="input-gcm-status" class="form-check-input" {% if analytics_ps_enhanced_measurement_gcm_status %} checked{% endif %}>
-									</div>
-									<div class="form-text">{{ help_gcm_status }}</div>
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<label for="input-gcm-profiles" class="col-sm-2 col-form-label">{{ entry_gcm_profiles }}</label>
-								<div class="col-sm-10">
-									<select name="analytics_ps_enhanced_measurement_gcm_profiles" id="input-gcm-profiles" class="form-select">
-										{% for key, name in gcm_profiles %}
-										<option value="{{ key }}"{% if key == analytics_ps_enhanced_measurement_gcm_profiles %} selected{% endif %}>{{ name }}</option>
+									<select name="analytics_ps_enhanced_measurement_implementation" id="input-measurement-implementation" class="form-select">
+										{% for key, name in measurement_implementations %}
+											<option value="{{ key }}"{% if key == analytics_ps_enhanced_measurement_implementation %} selected{% endif %}>{{ name }}</option>
 										{% endfor %}
 									</select>
+									<div id="error-input-measurement-implementation" class="invalid-feedback"></div>
 								</div>
 							</div>
 
-							<fieldset id="ad-settings-group" class="border p-3 mb-3">
-								<legend>{{ text_group_ad_settings }}</legend>
+							<ul class="nav nav-tabs">
+								<li class="nav-item"><a href="#tab-gtag" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">{{ tab_gtag }}</a></li>
+								<li class="nav-item"><a href="#tab-gtm" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtm' %} active{% endif %}">{{ tab_gtm }}</a></li>
+							</ul>
 
-								<div class="row mb-3">
-									<label for="input-ad-storage" class="col-sm-2 col-form-label">{{ entry_ad_storage }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_storage" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_storage" value="1" id="input-ad-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_storage %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_ad_storage }}</div>
-									</div>
-								</div>
+							<div class="tab-content">
+								<div id="tab-gtag" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">
 
-								<div class="row mb-3">
-									<label for="input-ad-user-data" class="col-sm-2 col-form-label">{{ entry_ad_user_data }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_user_data" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_user_data" value="1" id="input-ad-user-data" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_user_data %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_ad_user_data }}</div>
-									</div>
-								</div>
-
-								<div class="row mb-3">
-									<label for="input-ad-personalization" class="col-sm-2 col-form-label">{{ entry_ad_personalization }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_personalization" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_personalization" value="1" id="input-ad-personalization" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_personalization %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_ad_personalization }}</div>
-									</div>
-								</div>
-
-							</fieldset>
-
-							<fieldset id="analytics-settings-group" class="border p-3 mb-3">
-								<legend>{{ text_group_analytics_settings }}</legend>
-
-								<div class="row mb-3">
-									<label for="input-analytics-storage" class="col-sm-2 col-form-label">{{ entry_analytics_storage }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_analytics_storage" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_analytics_storage" value="1" id="input-analytics-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_analytics_storage %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_analytics_storage }}</div>
-									</div>
-								</div>
-
-								<div class="row mb-3">
-									<label for="input-functionality-storage" class="col-sm-2 col-form-label">{{ entry_functionality_storage }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_functionality_storage" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_functionality_storage" value="1" id="input-functionality-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_functionality_storage %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_functionality_storage }}</div>
-									</div>
-								</div>
-
-								<div class="row mb-3">
-									<label for="input-personalization-storage" class="col-sm-2 col-form-label">{{ entry_personalization_storage }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_personalization_storage" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_personalization_storage" value="1" id="input-personalization-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_personalization_storage %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_personalization_storage }}</div>
-									</div>
-								</div>
-
-							</fieldset>
-
-							<fieldset id="security-settings-group" class="border p-3 mb-3">
-								<legend>{{ text_group_security_settings }}</legend>
-
-								<div class="row mb-3">
-									<label for="input-security-storage" class="col-sm-2 col-form-label">{{ entry_security_storage }}</label>
-									<div class="col-sm-10">
-										<div class="form-check form-switch form-switch-lg">
-											<input type="hidden" name="analytics_ps_enhanced_measurement_security_storage" value="0">
-											<input type="checkbox" name="analytics_ps_enhanced_measurement_security_storage" value="1" id="input-security-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_security_storage %} checked{% endif %}>
-										</div>
-										<div class="form-text">{{ help_security_storage }}</div>
-									</div>
-								</div>
-
-							</fieldset>
-
-							<fieldset class="border p-3 mb-3">
-								<legend>{{ text_group_advanced_settings }}</legend>
-
-								<div class="row mb-3">
-									<label for="input-wait-for-update" class="col-sm-2 col-form-label">{{ entry_wait_for_update }}</label>
-									<div class="col-sm-10">
-										<input type="number" min="0" max="10000" name="analytics_ps_enhanced_measurement_wait_for_update" value="{{ analytics_ps_enhanced_measurement_wait_for_update | default('0') }}" placeholder="{{ entry_wait_for_update }}" id="input-wait-for-update" class="form-control">
-										<div id="error-input-wait-for-update" class="invalid-feedback"></div>
-										<div class="form-text">{{ help_wait_for_update }}</div>
-									</div>
-								</div>
-
-								<div class="row mb-3">
-										<label for="input-ads-data-redaction" class="col-sm-2 col-form-label">{{ entry_ads_data_redaction }}</label>
+									<div class="row mb-3 required">
+										<label for="input-google-tag-id" class="col-sm-2 col-form-label">{{ entry_google_tag_id }}</label>
 										<div class="col-sm-10">
-												<div class="form-check form-switch form-switch-lg">
-														<input type="hidden" name="analytics_ps_enhanced_measurement_ads_data_redaction" value="0">
-														<input type="checkbox" name="analytics_ps_enhanced_measurement_ads_data_redaction" value="1" id="input-ads-data-redaction" class="form-check-input" {% if analytics_ps_enhanced_measurement_ads_data_redaction %} checked{% endif %}>
-												</div>
-												<div class="form-text">{{ help_ads_data_redaction }}</div>
+											<input type="text" name="analytics_ps_enhanced_measurement_google_tag_id" value="{{ analytics_ps_enhanced_measurement_google_tag_id }}" placeholder="{{ entry_google_tag_id }}" id="input-google-tag-id" class="form-control" />
+											<div id="error-input-google-tag-id" class="invalid-feedback"></div>
+											<div class="form-text">{{ help_google_tag_id_locate }}</div>
 										</div>
-								</div>
+									</div>
 
-								<div class="row mb-3">
-										<label for="input-url-passthrough" class="col-sm-2 col-form-label">{{ entry_url_passthrough }}</label>
+									<div class="row mb-3 required">
+										<label for="input-mp-api-secret" class="col-sm-2 col-form-label">{{ entry_measurement_protocol_api_secret }}</label>
 										<div class="col-sm-10">
-												<div class="form-check form-switch form-switch-lg">
-														<input type="hidden" name="analytics_ps_enhanced_measurement_url_passthrough" value="0">
-														<input type="checkbox" name="analytics_ps_enhanced_measurement_url_passthrough" value="1" id="input-url-passthrough" class="form-check-input" {% if analytics_ps_enhanced_measurement_url_passthrough %} checked{% endif %}>
-												</div>
-												<div class="form-text">{{ help_url_passthrough }}</div>
+											<input type="text" name="analytics_ps_enhanced_measurement_mp_api_secret" value="{{ analytics_ps_enhanced_measurement_mp_api_secret }}" placeholder="{{ entry_measurement_protocol_api_secret }}" id="input-mp-api-secret" class="form-control" />
+											<div id="error-input-mp-api-secret" class="invalid-feedback"></div>
+											<div class="form-text">{{ help_mp_api_secret_locate }}</div>
 										</div>
+									</div>
+
+									<div class="row mb-3">
+										<label for="input-ga4-gtag-debug-mode" class="col-sm-2 col-form-label">{{ entry_ga4_gtag_debug_mode }}</label>
+										<div class="col-sm-10">
+											<div class="form-check form-switch form-switch-lg">
+												<input type="hidden" name="analytics_ps_enhanced_measurement_ga4_gtag_debug_mode" value="0" />
+												<input type="checkbox" name="analytics_ps_enhanced_measurement_ga4_gtag_debug_mode" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_ga4_gtag_debug_mode %} checked{% endif %} id="input-ga4-gtag-debug-mode" />
+											</div>
+										</div>
+									</div>
+
 								</div>
+								<div id="tab-gtm" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtm' %} active{% endif %}">
 
-							</fieldset>
+									<div id="group-gtm" class="row mb-3 required">
+										<label for="input-gtm-id" class="col-sm-2 col-form-label">{{ entry_gtm_id }}</label>
+										<div class="col-sm-10">
+											<input type="text" name="analytics_ps_enhanced_measurement_gtm_id" value="{{ analytics_ps_enhanced_measurement_gtm_id }}" placeholder="{{ entry_gtm_id }}" id="input-gtm-id" class="form-control" />
+											<div id="error-input-gtm-id" class="invalid-feedback"></div>
+											<div class="form-text">{{ help_gtm_id_locate }}</div>
+										</div>
+									</div>
 
-						</div>
-						<div id="tab-track-events" class="tab-pane">
+								</div>
+							</div>
+
+							<br>
+							<hr>
+							<br>
 
 							<div id="group-gtm" class="row mb-3">
 								<label for="input-tracking-delay" class="col-sm-2 col-form-label">{{ entry_tracking_delay }}</label>
@@ -354,6 +194,16 @@
 							</div>
 
 							<div class="row mb-3">
+								<label for="input-debug-mode" class="col-sm-2 col-form-label">{{ entry_console_log_events }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_debug_mode" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_debug_mode" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_debug_mode %} checked{% endif %} id="input-debug-mode" />
+									</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
 								<label for="input-user-id" class="col-sm-2 col-form-label">{{ entry_user_id }}</label>
 								<div class="col-sm-10">
 									<div class="form-check form-switch form-switch-lg">
@@ -361,6 +211,28 @@
 										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_user_id" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_user_id %} checked{% endif %} id="input-user-id" />
 									</div>
 									<div class="form-text">{{ help_user_id }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-generate-lead" class="col-sm-2 col-form-label">{{ entry_generate_lead }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_track_generate_lead" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_generate_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_generate_lead %} checked{% endif %} id="input-generate-lead" />
+									</div>
+									<div class="form-text">{{ help_generate_lead }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-qualify-lead" class="col-sm-2 col-form-label">{{ entry_qualify_lead }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_qualify_lead %} checked{% endif %} id="input-qualify-lead" />
+									</div>
+									<div class="form-text">{{ help_qualify_lead }}</div>
 								</div>
 							</div>
 
@@ -426,28 +298,6 @@
 										</table>
 									</div>
 
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<label for="input-generate-lead" class="col-sm-2 col-form-label">{{ entry_generate_lead }}</label>
-								<div class="col-sm-10">
-									<div class="form-check form-switch form-switch-lg">
-										<input type="hidden" name="analytics_ps_enhanced_measurement_track_generate_lead" value="0" />
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_generate_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_generate_lead %} checked{% endif %} id="input-generate-lead" />
-									</div>
-									<div class="form-text">{{ help_generate_lead }}</div>
-								</div>
-							</div>
-
-							<div class="row mb-3">
-								<label for="input-qualify-lead" class="col-sm-2 col-form-label">{{ entry_qualify_lead }}</label>
-								<div class="col-sm-10">
-									<div class="form-check form-switch form-switch-lg">
-										<input type="hidden" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="0" />
-										<input type="checkbox" name="analytics_ps_enhanced_measurement_track_qualify_lead" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_track_qualify_lead %} checked{% endif %} id="input-qualify-lead" />
-									</div>
-									<div class="form-text">{{ help_qualify_lead }}</div>
 								</div>
 							</div>
 
@@ -638,6 +488,255 @@
 								</div>
 							</div>
 
+							<div class="row mb-3 required">
+								<label for="input-file-download-ext" class="col-sm-2 col-form-label">{{ entry_file_download_ext }}</label>
+								<div class="col-sm-10">
+									<input type="text" name="analytics_ps_enhanced_measurement_track_file_download_ext" value="{{ analytics_ps_enhanced_measurement_track_file_download_ext }}" placeholder="{{ entry_file_download_ext }}" id="input-file-download-ext" class="form-control" />
+									<div id="error-input-file-download-ext" class="invalid-feedback"></div>
+									<div class="form-text">{{ help_file_download_ext }}</div>
+								</div>
+							</div>
+
+						</div>
+						<div id="tab-ads-conversion-tracking" class="tab-pane">
+
+							<div class="row mb-3">
+								<label for="input-google_adwords_status" class="col-sm-2 col-form-label">{{ entry_google_adwords_status }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_google_adwords_status" value="0" />
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_google_adwords_status" value="1" class="form-check-input" {% if analytics_ps_enhanced_measurement_status %} checked{% endif %} id="input-google_adwords_status" />
+									</div>
+								</div>
+							</div>
+
+							<div class="row mb-3 required">
+								<label for="input-google-adwords-id" class="col-sm-2 col-form-label">{{ entry_google_adwords_id }}</label>
+								<div class="col-sm-10">
+									<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_id" value="{{ analytics_ps_enhanced_measurement_google_adwords_id }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-id" class="form-control" />
+									<div id="error-input-google-adwords-id" class="invalid-feedback"></div>
+									<div class="form-text">{{ help_google_adwords_id_locate }}</div>
+								</div>
+							</div>
+
+							<br>
+
+							<fieldset id="ad-settings-group" class="border p-3 mb-3">
+								<legend>{{ text_google_adwords_label_group }}</legend>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-purchase" class="col-sm-2 col-form-label">{{ entry_google_adwords_purchase }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_purchase" value="{{ analytics_ps_enhanced_measurement_google_adwords_purchase }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-purchase" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-add-to-cart" class="col-sm-2 col-form-label">{{ entry_google_adwords_add_to_cart }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_add_to_cart" value="{{ analytics_ps_enhanced_measurement_google_adwords_add_to_cart }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-add-to-cart" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-begin-checkout" class="col-sm-2 col-form-label">{{ entry_google_adwords_begin_checkout }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_begin_checkout" value="{{ analytics_ps_enhanced_measurement_google_adwords_begin_checkout }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-begin-checkout" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-subscribe" class="col-sm-2 col-form-label">{{ entry_google_adwords_subscribe }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_subscribe" value="{{ analytics_ps_enhanced_measurement_google_adwords_subscribe }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-subscribe" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-contact" class="col-sm-2 col-form-label">{{ entry_google_adwords_contact }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_contact" value="{{ analytics_ps_enhanced_measurement_google_adwords_contact }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-contact" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-lead" class="col-sm-2 col-form-label">{{ entry_google_adwords_lead }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_lead" value="{{ analytics_ps_enhanced_measurement_google_adwords_lead }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-lead" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-sign-up" class="col-sm-2 col-form-label">{{ entry_google_adwords_sign_up }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_sign_up" value="{{ analytics_ps_enhanced_measurement_google_adwords_sign_up }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-sign-up" class="form-control" />
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-google-adwords-page-view" class="col-sm-2 col-form-label">{{ entry_google_adwords_page_view }}</label>
+									<div class="col-sm-10">
+										<input type="text" name="analytics_ps_enhanced_measurement_google_adwords_page_view" value="{{ analytics_ps_enhanced_measurement_google_adwords_page_view }}" placeholder="{{ entry_google_adwords_id }}" id="input-google-adwords-page-view" class="form-control" />
+									</div>
+								</div>
+
+							</fieldset>
+
+						</div>
+						<div id="tab-gcm" class="tab-pane">
+
+							<div class="alert alert-info"><i class="fa-solid fa-circle-exclamation"></i> {{ text_gcm_info }}</div>
+
+							<div class="row mb-3">
+								<label for="input-gcm-status" class="col-sm-2 col-form-label">{{ entry_gcm_status }}</label>
+								<div class="col-sm-10">
+									<div class="form-check form-switch form-switch-lg">
+										<input type="hidden" name="analytics_ps_enhanced_measurement_gcm_status" value="0">
+										<input type="checkbox" name="analytics_ps_enhanced_measurement_gcm_status" value="1" id="input-gcm-status" class="form-check-input" {% if analytics_ps_enhanced_measurement_gcm_status %} checked{% endif %}>
+									</div>
+									<div class="form-text">{{ help_gcm_status }}</div>
+								</div>
+							</div>
+
+							<div class="row mb-3">
+								<label for="input-gcm-profiles" class="col-sm-2 col-form-label">{{ entry_gcm_profiles }}</label>
+								<div class="col-sm-10">
+									<select name="analytics_ps_enhanced_measurement_gcm_profiles" id="input-gcm-profiles" class="form-select">
+										{% for key, name in gcm_profiles %}
+										<option value="{{ key }}"{% if key == analytics_ps_enhanced_measurement_gcm_profiles %} selected{% endif %}>{{ name }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+
+							<fieldset id="ad-settings-group" class="border p-3 mb-3">
+								<legend>{{ text_group_ad_settings }}</legend>
+
+								<div class="row mb-3">
+									<label for="input-ad-storage" class="col-sm-2 col-form-label">{{ entry_ad_storage }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_storage" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_storage" value="1" id="input-ad-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_storage %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_ad_storage }}</div>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-ad-user-data" class="col-sm-2 col-form-label">{{ entry_ad_user_data }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_user_data" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_user_data" value="1" id="input-ad-user-data" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_user_data %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_ad_user_data }}</div>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-ad-personalization" class="col-sm-2 col-form-label">{{ entry_ad_personalization }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_ad_personalization" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_ad_personalization" value="1" id="input-ad-personalization" class="form-check-input" {% if analytics_ps_enhanced_measurement_ad_personalization %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_ad_personalization }}</div>
+									</div>
+								</div>
+
+							</fieldset>
+
+							<fieldset id="analytics-settings-group" class="border p-3 mb-3">
+								<legend>{{ text_group_analytics_settings }}</legend>
+
+								<div class="row mb-3">
+									<label for="input-analytics-storage" class="col-sm-2 col-form-label">{{ entry_analytics_storage }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_analytics_storage" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_analytics_storage" value="1" id="input-analytics-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_analytics_storage %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_analytics_storage }}</div>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-functionality-storage" class="col-sm-2 col-form-label">{{ entry_functionality_storage }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_functionality_storage" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_functionality_storage" value="1" id="input-functionality-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_functionality_storage %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_functionality_storage }}</div>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<label for="input-personalization-storage" class="col-sm-2 col-form-label">{{ entry_personalization_storage }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_personalization_storage" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_personalization_storage" value="1" id="input-personalization-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_personalization_storage %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_personalization_storage }}</div>
+									</div>
+								</div>
+
+							</fieldset>
+
+							<fieldset id="security-settings-group" class="border p-3 mb-3">
+								<legend>{{ text_group_security_settings }}</legend>
+
+								<div class="row mb-3">
+									<label for="input-security-storage" class="col-sm-2 col-form-label">{{ entry_security_storage }}</label>
+									<div class="col-sm-10">
+										<div class="form-check form-switch form-switch-lg">
+											<input type="hidden" name="analytics_ps_enhanced_measurement_security_storage" value="0">
+											<input type="checkbox" name="analytics_ps_enhanced_measurement_security_storage" value="1" id="input-security-storage" class="form-check-input" {% if analytics_ps_enhanced_measurement_security_storage %} checked{% endif %}>
+										</div>
+										<div class="form-text">{{ help_security_storage }}</div>
+									</div>
+								</div>
+
+							</fieldset>
+
+							<fieldset class="border p-3 mb-3">
+								<legend>{{ text_group_advanced_settings }}</legend>
+
+								<div class="row mb-3">
+									<label for="input-wait-for-update" class="col-sm-2 col-form-label">{{ entry_wait_for_update }}</label>
+									<div class="col-sm-10">
+										<input type="number" min="0" max="10000" name="analytics_ps_enhanced_measurement_wait_for_update" value="{{ analytics_ps_enhanced_measurement_wait_for_update | default('0') }}" placeholder="{{ entry_wait_for_update }}" id="input-wait-for-update" class="form-control">
+										<div id="error-input-wait-for-update" class="invalid-feedback"></div>
+										<div class="form-text">{{ help_wait_for_update }}</div>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+										<label for="input-ads-data-redaction" class="col-sm-2 col-form-label">{{ entry_ads_data_redaction }}</label>
+										<div class="col-sm-10">
+												<div class="form-check form-switch form-switch-lg">
+														<input type="hidden" name="analytics_ps_enhanced_measurement_ads_data_redaction" value="0">
+														<input type="checkbox" name="analytics_ps_enhanced_measurement_ads_data_redaction" value="1" id="input-ads-data-redaction" class="form-check-input" {% if analytics_ps_enhanced_measurement_ads_data_redaction %} checked{% endif %}>
+												</div>
+												<div class="form-text">{{ help_ads_data_redaction }}</div>
+										</div>
+								</div>
+
+								<div class="row mb-3">
+										<label for="input-url-passthrough" class="col-sm-2 col-form-label">{{ entry_url_passthrough }}</label>
+										<div class="col-sm-10">
+												<div class="form-check form-switch form-switch-lg">
+														<input type="hidden" name="analytics_ps_enhanced_measurement_url_passthrough" value="0">
+														<input type="checkbox" name="analytics_ps_enhanced_measurement_url_passthrough" value="1" id="input-url-passthrough" class="form-check-input" {% if analytics_ps_enhanced_measurement_url_passthrough %} checked{% endif %}>
+												</div>
+												<div class="form-text">{{ help_url_passthrough }}</div>
+										</div>
+								</div>
+
+							</fieldset>
+
 						</div>
 						<div id="tab-support" class="tab-pane">
 							<h3>{{ heading_getting_started }}</h3>
@@ -676,10 +775,8 @@
     var selectedValue = $(this).val();
 
     if (selectedValue === 'gtm') {
-				$('#tab-item-gcm').show();
         $('a[href="#tab-gtm"]').tab('show');
     } else {
-				$('#tab-item-gcm').hide();
         $('a[href="#tab-gtag"]').tab('show');
     }
 	});

@@ -1,17 +1,17 @@
 <?php
 // Heading
-$_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
+$_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
 $_['heading_fix']                           = 'Oprava běžných chyb';
 $_['heading_getting_started']               = 'Začínáme';
-$_['heading_setup']                         = 'Nastavení (GA4) Enhanced Measurement';
+$_['heading_setup']                         = 'Nastavení Enhanced Measurement';
 $_['heading_troubleshot']                   = 'Běžné řešení problémů';
 $_['heading_faq']                           = 'Často kladené otázky';
 $_['heading_contact']                       = 'Kontaktujte podporu';
 
 // Text
 $_['text_extension']                        = 'Rozšíření';
-$_['text_edit']                             = 'Upravit (GA4) Enhanced Measurement';
-$_['text_success']                          = 'Úspěch: Úspěšně jste upravili (GA4) Enhanced Measurement!';
+$_['text_edit']                             = 'Upravit Enhanced Measurement';
+$_['text_success']                          = 'Úspěch: Úspěšně jste upravili Enhanced Measurement!';
 $_['text_getting_started']                  = '<p><strong>Přehled:</strong> Rozšíření Playful Sparkle - GA4 Enhanced Measurement pro OpenCart 4 nabízí pokročilé možnosti sledování pro váš eCommerce obchod. Umožňuje sledování událostí, včetně interakcí uživatelů, aktivit v košíku a nákupních událostí. Dále podporuje integraci s Google Tag Managerem nebo Global Site Tag a nabízí tak flexibilní řešení pro implementaci měření.</p><p><strong>Požadavky:</strong> OpenCart 4.x, aktivní účet Google Analytics GA4 a potřebné přihlašovací údaje. Pokud zvolíte Global Site Tag (gtag.js), budete potřebovat Google Tag ID a tajný klíč API Measurement Protocol. Pro použití Google Tag Manageru (GTM) je nutné mít Measurement ID. Ujistěte se, že nejsou aktivní jiná analytická rozšíření, která by mohla způsobovat konflikty kódů.</p>';
 $_['text_setup']                            = '<ul><li>Vyberte preferované měřící řešení (Global Site Tag nebo Google Tag Manager).</li><li>Pro Global Site Tag zadejte Google Tag ID a tajný klíč API Measurement Protocol. Pro Google Tag Manager zadejte Measurement ID.</li><li>Konfigurujte sledování událostí, jako jsou přihlášení, nákup nebo přidání do košíku.</li><li>Ujistěte se, že jiná rozšíření nepřidávají sledovací kódy, aby nedocházelo ke konfliktům.</li><li>Uložte nastavení a otestujte implementaci pomocí nástrojů pro ladění Google Analytics.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Problém:</strong> Události nejsou viditelné na panelu Google Analytics. <strong>Řešení:</strong> Ujistěte se, že Measurement ID nebo Tag ID je správně zadáno a odpovídá vašemu GA4 účtu. Pokud používáte Global Site Tag (gtag.js), zkontrolujte konfiguraci Google Tag ID a tajného klíče API Measurement Protocol.</li><li><strong>Problém:</strong> Duplikované události. <strong>Řešení:</strong> Zkontrolujte, zda nejsou aktivní jiná analytická rozšíření, a deaktivujte je, pokud je to nutné. Ověřte, že událost není sledována prostřednictvím více implementací (např. GTM a gtag.js).</li><li><strong>Problém:</strong> Sledování nefunguje napříč více obchody. <strong>Řešení:</strong> Zajistěte správnou konfiguraci Tag ID nebo Measurement ID pro každý obchod. U GTM ověřte, že každý obchod má odpovídající kontejner.</li><li><strong>Problém:</strong> Data o refundacích nejsou viditelná. <strong>Řešení:</strong> Počkejte, až se data v Google Analytics zobrazí, a ověřte správnou konfiguraci refundace.</li></ul>';
@@ -21,6 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Možnosti položek';
 $_['text_store_options_group']              = 'Možnosti obchodu';
+$_['text_google_adwords_label_group']       = 'Google Adwords Label';
 $_['text_product_id']                       = 'ID produktu';
 $_['text_model']                            = 'Model';
 $_['text_sku']                              = 'SKU';
@@ -57,7 +58,8 @@ $_['column_refund_quantity']                = 'Množství refundace';
 // Tab
 $_['tab_general']                           = 'Obecné';
 $_['tab_gcm']                               = 'Google Consent Mode (GCM)';
-$_['tab_track_events']                      = 'Sledování událostí';
+$_['tab_enhanced_ecommerce_tracking']       = '(GA4) Rozšířené sledování elektronického obchodování';
+$_['tab_ads_conversion_tracking']           = 'Sledování konverzí reklam';
 $_['tab_help_and_support']                  = 'Nápověda a podpora';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
@@ -75,8 +77,8 @@ $_['entry_affiliation']                     = 'Afiliace';
 $_['entry_location_id']                     = 'ID místa';
 $_['entry_item_price_tax']                  = 'Zobrazit ceny s DPH';
 $_['entry_currency']                        = 'Měna';
-$_['entry_debug_mode']                      = 'Režim ladění';
-$_['entry_gtag_debug_mode']                 = 'Ladění Global Site Tag';
+$_['entry_console_log_events']              = 'Konzolové protokolování událostí';
+$_['entry_ga4_gtag_debug_mode']             = 'Ladění Global Site Tag';
 $_['entry_generate_lead']                   = 'Sledovat událost Generování leadu';
 $_['entry_qualify_lead']                    = 'Sledovat událost „Kvalifikovaný lead“';
 $_['entry_sign_up']                         = 'Sledovat událost Registrace';
@@ -96,6 +98,7 @@ $_['entry_add_payment_info']                = 'Sledovat událost Přidání info
 $_['entry_add_shipping_info']               = 'Sledovat událost Přidání informací o doručení';
 $_['entry_purchase']                        = 'Sledovat událost Nákup';
 $_['entry_file_download']                   = 'Sledovat událost stažení souboru';
+$_['entry_file_download_ext']               = 'Sledované přípony souborů';
 $_['entry_user_id']                         = 'Odeslat ID uživatele';
 $_['entry_gcm_status']                      = 'Povolit GCM';
 $_['entry_ad_storage']                      = 'Úložiště reklam';
@@ -115,7 +118,17 @@ $_['entry_gcm_profiles']                    = 'Profily GCM';
 $_['entry_lead_associations']               = 'Asociace potenciálních zákazníků';
 $_['entry_lead_type']                       = 'Typ potenciálního zákazníka';
 $_['entry_order_status']                    = 'Stav objednávky';
-$_['entry_working_lead']                    = '(GA4) Odeslat událost „Working Lead“';
+$_['entry_working_lead']                    = 'Odeslat událost „Working Lead“';
+$_['entry_google_adwords_status']           = 'Povolit Google Adwords';
+$_['entry_google_adwords_id']               = 'Google Adwords ID';
+$_['entry_google_adwords_purchase']         = 'Pro nákup';
+$_['entry_google_adwords_add_to_cart']      = 'Pro přidání do košíku';
+$_['entry_google_adwords_begin_checkout']   = 'Pro zahájení pokladny';
+$_['entry_google_adwords_subscribe']        = 'Pro přihlášení k odběru';
+$_['entry_google_adwords_contact']          = 'Pro kontakt';
+$_['entry_google_adwords_lead']             = 'Pro odeslání formuláře lead';
+$_['entry_google_adwords_sign_up']          = 'Pro registraci';
+$_['entry_google_adwords_page_view']        = 'Pro zobrazení stránky';
 
 // Button
 $_['button_fix_event_handler']              = 'Opravit obslužnou rutinu událostí';
@@ -149,6 +162,7 @@ $_['help_add_payment_info']                 = 'Tato událost označuje přidán�
 $_['help_add_shipping_info']                = 'Tato událost označuje přidání doručovacích údajů uživatelem.';
 $_['help_purchase']                         = 'Tato událost označuje dokončení nákupu.';
 $_['help_file_download']                    = 'Tato událost označuje, že uživatel klikl na stažení souboru.';
+$_['help_file_download_ext']                = 'Zadejte přípony souborů (např. .pdf, .xls, .xlsx, .doc, .docx), které mají být sledovány jako události file_download v GA4. Pouze zadané přípony spustí tuto událost.';
 $_['help_user_id']                          = 'Tato funkce umožňuje sledování ID přihlášených uživatelů, což vám poskytne lepší přehled o jejich chování napříč relacemi a zařízeními.';
 $_['help_ad_storage']                       = 'Určuje, zda mohou být ukládána data pro účely související s reklamami, například sledování kliknutí nebo konverzí.';
 $_['help_ad_user_data']                     = 'Povoluje ukládání dat o uživatelích interagujících s reklamami pro zlepšení cílení reklam.';
@@ -162,13 +176,16 @@ $_['help_ads_data_redaction']               = 'Anonymizuje uživatelská data so
 $_['help_url_passthrough']                  = 'Povoluje, aby URL prošly kontrolami souhlasu, aniž by byly ukládány osobní údaje.';
 $_['help_gcm_status']                       = 'Povoluje Google režim souhlasu, přizpůsobující chování značek podle uživatelských preferencí.';
 $_['help_working_lead']                     = 'Tato událost sleduje interakci se zákazníkem a označuje pokrok v procesu.';
+$_['help_google_adwords_id_locate']         = 'Chcete-li najít své Google Ads ID, přihlaste se do svého <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">účtu Google Ads</a>, klikněte na ikonu nástrojů v pravém horním rohu, vyberte "Nastavení účtu" v sekci "Nastavení" a najděte 10místné ID v sekci "Informace o účtu". Bude mít formát AW-XXXXXXXXX.';
 
 // Error
-$_['error_permission']                      = 'Varování: Nemáte oprávnění upravovat nastavení (GA4) vylepšeného měření!';
+$_['error_permission']                      = 'Varování: Nemáte oprávnění upravovat nastavení vylepšeného měření!';
 $_['error_refund_send']                     = 'Varování: Nepodařilo se odeslat údaje o vrácení peněz do Google Analytics (GA4). Zkontrolujte nastavení a zkuste to znovu.';
 $_['error_no_refundable_selected']          = 'Upozornění: Nebyly vybrány žádné produkty k vrácení. Vyberte alespoň jeden produkt pro zpracování vrácení.';
 $_['error_google_tag_id']                   = 'Pole Google Tag ID je povinné. Zadejte své Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'Formát Google Tag ID je neplatný. Ujistěte se, že odpovídá formátu G-XXXXXXXXXX.';
+$_['error_google_adwords_id']               = 'Pole pro Google AdWords ID je povinné. Zadejte své Google AdWords ID.';
+$_['error_google_adwords_id_invalid']       = 'Formát Google AdWords ID je neplatný. Ujistěte se, že následuje formát AW-XXXXXXXXX.';
 $_['error_gtm_id']                          = 'Pole GTM ID je povinné. Zadejte své měřicí ID.';
 $_['error_gtm_id_invalid']                  = 'Formát GTM ID je neplatný. Ujistěte se, že odpovídá formátu GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'Pole API tajný klíč protokolu Measurement Protocol je povinné. Zadejte svůj API tajný klíč protokolu Measurement Protocol.';
@@ -183,3 +200,4 @@ $_['error_working_lead']                    = 'Při odesílání události „Pr
 $_['error_close_convert_lead']              = 'Při odesílání události „Uzavřený konvertovaný potenciální zákazník“ došlo k chybě.';
 $_['error_close_unconvert_lead']            = 'Při odesílání události „Uzavřený nekonvertovaný potenciální zákazník“ došlo k chybě.';
 $_['error_disqualify_lead']                 = 'Při odesílání události „Diskvalifikovaný potenciální zákazník“ došlo k chybě.';
+$_['error_file_download_ext']               = 'Neplatné přípony souborů. Ujistěte se, že začínají tečkou a obsahují pouze malá písmena (např. .pdf, .xml.gz).';

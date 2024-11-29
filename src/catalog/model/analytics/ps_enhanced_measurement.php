@@ -36,8 +36,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_enhanced_measurement_status %}
             <script>
                 var ps_dataLayer = {
+                    track_file_download_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
                     data: {},
+                    init: function () {
+                        document.querySelectorAll('a[href]').forEach(function(link, index) {
+                            var urlObj = new URL(link.getAttribute('href'), window.location.origin);
+                            var fileName = urlObj.pathname.split('/').pop();
+                            var fileExtension = '.' + fileName.split('.').pop().toLowerCase();
+
+                            if (this.track_file_download_ext.includes(fileExtension)) {
+                                link.setAttribute('data-ps-track-event', 'file_download');
+                                link.setAttribute('data-ps-track-id', 'custom_' + index);
+
+                                this.data['file_download_custom_' + index] = {
+                                    event: 'file_download',
+                                    file_extension: fileExtension,
+                                    file_name: fileName,
+                                    link_text: link.textContent.trim() || "Unknown",
+                                    link_url: urlObj.href,
+                                };
+                            }
+                        }, this);
+                    },
                     getData: function(eventName, productId) {
                         var dataId = eventName + '_' + productId;
 
@@ -87,6 +108,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     {% endif %}
                     }
                 };
+
+                window.onload = function() { ps_dataLayer.init(); };
             </script>
             {% endif %}
             </head>

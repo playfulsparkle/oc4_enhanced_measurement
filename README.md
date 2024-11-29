@@ -1,6 +1,6 @@
-# Playful Sparkle - (GA4) Enhanced Measurement for OpenCart 4
+# Playful Sparkle - Enhanced Measurement for OpenCart 4
 
-The **Playful Sparkle - (GA4) Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. It is designed to cater to both experienced marketers and beginners, providing valuable insights into your store's performance. Additionally, it supports **Google Consent Mode (GCM)** with predefined profiles, ensuring compliance with privacy regulations when Google Tag Manager is used.
+The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. It is designed to cater to both experienced marketers and beginners, providing valuable insights into your store's performance. Additionally, it supports **Google Consent Mode (GCM)** with predefined profiles, ensuring compliance with privacy regulations when Google Tag Manager is used.
 
 ## Features
 

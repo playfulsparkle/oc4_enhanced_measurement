@@ -1,17 +1,17 @@
 <?php
 // Heading
-$_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
+$_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
 $_['heading_fix']                           = 'Fix Common Bugs';
 $_['heading_getting_started']               = 'Getting Started';
-$_['heading_setup']                         = 'Setting Up (GA4) Enhanced Measurement';
+$_['heading_setup']                         = 'Setting Up Enhanced Measurement';
 $_['heading_troubleshoot']                  = 'Common Troubleshooting';
 $_['heading_faq']                           = 'FAQ';
 $_['heading_contact']                       = 'Contact Support';
 
 // Text
 $_['text_extension']                        = 'Extensions';
-$_['text_edit']                             = 'Edit (GA4) Enhanced Measurement';
-$_['text_success']                          = 'Success: You have modified (GA4) Enhanced Measurement!';
+$_['text_edit']                             = 'Edit Enhanced Measurement';
+$_['text_success']                          = 'Success: You have modified Enhanced Measurement!';
 $_['text_getting_started']                  = '<p><strong>Overview:</strong> The Playful Sparkle - GA4 Enhanced Measurement for OpenCart 4 extension provides advanced tracking capabilities for your eCommerce store. It supports multiple event tracking options, including user interactions, cart activities, and purchase events. Additionally, it enables integration with Google Tag Manager or Global Site Tag, offering flexibility in implementing measurement solutions.</p><p><strong>Requirements:</strong> OpenCart 4.x, a valid Google Analytics GA4 account, and the appropriate credentials based on your selected Measurement Implementation: Google Tag ID and Measurement Protocol API secret are required when using Global Site Tag (gtag.js), and Measurement ID is required if you select Google Tag Manager (GTM). Ensure no other analytics extensions are enabled to prevent code conflicts.</p>';
 $_['text_setup']                            = '<ul><li>Select your preferred Measurement Implementation (Global Site Tag or Google Tag Manager).</li><li>If using Global Site Tag, enter your Google Tag ID and Measurement Protocol API secret. For Google Tag Manager, enter your Measurement ID.</li><li>Configure the tracking events you want to enable, such as login, purchase, or add-to-cart tracking.</li><li>Verify that no other extensions injecting tracking codes (e.g., Tag Manager or Global Site Tag) are active to avoid conflicts.</li><li>Save the settings and test the implementation using the Google Analytics debug tools.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Issue:</strong> Events are not visible in the Google Analytics dashboard. <strong>Solution:</strong> Confirm that the Measurement ID or Tag ID is correctly entered and matches your GA4 property. If using Global Site Tag (gtag.js), ensure the Google Tag ID and Measurement Protocol API secret are correctly configured.</li><li><strong>Issue:</strong> Duplicate events are being tracked. <strong>Solution:</strong> Check if other analytics extensions are injecting tracking code and disable them if necessary. Also, verify that the same event is not being tracked through multiple implementations (e.g., both GTM and gtag.js).</li><li><strong>Issue:</strong> Tracking does not work across multiple stores. <strong>Solution:</strong> Ensure the correct Tag ID or Measurement ID is configured for each store. For GTM, ensure each store has the appropriate container set up in Google Tag Manager.</li><li><strong>Issue:</strong> Refund data is not visible in Google Analytics. <strong>Solution:</strong> Allow time for refund data to appear in Google Analytics and ensure the refund is correctly configured as either partial or full, as only one submission per order is accepted.</li></ul>';
@@ -21,6 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Item Options';
 $_['text_store_options_group']              = 'Store Options';
+$_['text_google_adwords_label_group']       = 'Google Adwords Label';
 $_['text_product_id']                       = 'Product ID';
 $_['text_model']                            = 'Model';
 $_['text_sku']                              = 'SKU';
@@ -57,7 +58,8 @@ $_['column_refund_quantity']                = 'Refund Quantity';
 // Tab
 $_['tab_general']                           = 'General';
 $_['tab_gcm']                               = 'Google Consent Mode (GCM)';
-$_['tab_track_events']                      = 'Tracking Events';
+$_['tab_enhanced_ecommerce_tracking']       = '(GA4) Enhanced Ecommerce Tracking';
+$_['tab_ads_conversion_tracking']           = 'Ads Conversion Tracking';
 $_['tab_help_and_support']                  = 'Help & Support';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
@@ -75,8 +77,8 @@ $_['entry_affiliation']                     = 'Affiliation';
 $_['entry_location_id']                     = 'Location ID';
 $_['entry_item_price_tax']                  = 'Show Prices with Tax';
 $_['entry_currency']                        = 'Currency';
-$_['entry_debug_mode']                      = 'Debug Mode';
-$_['entry_gtag_debug_mode']                 = 'Debug Global Site Tag';
+$_['entry_console_log_events']              = 'Console Log Events';
+$_['entry_ga4_gtag_debug_mode']             = 'Debug Global Site Tag';
 $_['entry_generate_lead']                   = 'Track Generate Lead Event';
 $_['entry_qualify_lead']                    = 'Track Qualify Lead Event';
 $_['entry_sign_up']                         = 'Track Sign Up Event';
@@ -96,6 +98,7 @@ $_['entry_add_payment_info']                = 'Track Add Payment Info Event';
 $_['entry_add_shipping_info']               = 'Track Add Shipping Info Event';
 $_['entry_purchase']                        = 'Track Purchase Event';
 $_['entry_file_download']                   = 'Track File Download Event';
+$_['entry_file_download_ext']               = 'File Extensions to Track';
 $_['entry_user_id']                         = 'Send User ID';
 $_['entry_gcm_status']                      = 'Enable GCM';
 $_['entry_ad_storage']                      = 'Ad Storage';
@@ -115,7 +118,17 @@ $_['entry_gcm_profiles']                    = 'GCM Profiles';
 $_['entry_lead_associations']               = 'Lead Associations';
 $_['entry_lead_type']                       = 'Lead type';
 $_['entry_order_status']                    = 'Order Status';
-$_['entry_working_lead']                    = '(GA4) Send Working Lead Event';
+$_['entry_working_lead']                    = 'Send Working Lead Event';
+$_['entry_google_adwords_status']           = 'Enable Google Adwords';
+$_['entry_google_adwords_id']               = 'Google Adwords ID';
+$_['entry_google_adwords_purchase']         = 'for Purchase';
+$_['entry_google_adwords_add_to_cart']      = 'for Add to cart';
+$_['entry_google_adwords_begin_checkout']   = 'for Begin checkout';
+$_['entry_google_adwords_subscribe']        = 'for Subscribe';
+$_['entry_google_adwords_contact']          = 'for Contact';
+$_['entry_google_adwords_lead']             = 'for Submit lead form';
+$_['entry_google_adwords_sign_up']          = 'for Sign-Up';
+$_['entry_google_adwords_page_view']        = 'for Page view';
 
 // Button
 $_['button_fix_event_handler']              = 'Fix Event Handler';
@@ -149,6 +162,7 @@ $_['help_add_payment_info']                 = 'This event signifies a user has s
 $_['help_add_shipping_info']                = 'This event signifies a user has submitted their shipping information in an eCommerce checkout process.';
 $_['help_purchase']                         = 'This event signifies when one or more items are purchased by a user.';
 $_['help_file_download']                    = 'This event signifies that a user clicked to download a file.';
+$_['help_file_download_ext']                = 'Enter the file name extensions (e.g., .pdf, .xls, .xlsx, .doc, .docx) to track as file_download events in GA4. Only the specified extensions will trigger this event.';
 $_['help_user_id']                          = 'This option enables tracking of logged-in user IDs, allowing you to better understand user behavior across sessions and devices, providing more accurate and detailed analytics.';
 $_['help_ad_storage']                       = 'Controls whether data storage is allowed for ad-related purposes, such as tracking ad clicks or conversions.';
 $_['help_ad_user_data']                     = 'Determines if data about users interacting with ads is stored, enhancing ad targeting capabilities.';
@@ -162,13 +176,16 @@ $_['help_ads_data_redaction']               = 'Redacts user data related to ads,
 $_['help_url_passthrough']                  = 'Allows the URL to pass through consent checks, useful for tracking specific user paths without storing personal data.';
 $_['help_gcm_status']                       = 'Enables Google Consent Mode, allowing your site to adjust Google tags behavior based on user consent settings. This mode provides privacy-friendly tracking, allowing for analytics and ads to function in compliance with consent preferences.';
 $_['help_working_lead']                     = 'Toggle to send the "Working Lead" event to Google Analytics when you contact the customer.';
+$_['help_google_adwords_id_locate']         = 'To find your Google Ads ID, sign in to your <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">Google Ads account</a>, click on the tools icon in the top right corner, select "Account Settings" under "Setup", and find the 10-digit ID under "Account Information". It will be formatted as AW-XXXXXXXXX.';
 
 // Error
-$_['error_permission']                      = 'Warning: You do not have permission to modify (GA4) Enhanced Measurement settings!';
+$_['error_permission']                      = 'Warning: You do not have permission to modify Enhanced Measurement settings!';
 $_['error_refund_send']                     = 'Warning: Failed to send refund data to Google Analytics (GA4). Please check your settings and try again.';
 $_['error_no_refundable_selected']          = 'Warning: No products were selected for refund. Please select at least one product to process the refund.';
 $_['error_google_tag_id']                   = 'The Google Tag ID field is required. Please enter your Google Analytics ID.';
 $_['error_google_tag_id_invalid']           = 'The Google Tag ID format is incorrect. Ensure it follows the format G-XXXXXXXXXX.';
+$_['error_google_adwords_id']               = 'The Google AdWords ID field is required. Please enter your Google AdWords ID.';
+$_['error_google_adwords_id_invalid']       = 'The Google AdWords ID format is incorrect. Ensure it follows the format AW-XXXXXXXXX.';
 $_['error_gtm_id']                          = 'The GTM ID field is required. Please enter your Measurement ID.';
 $_['error_gtm_id_invalid']                  = 'The GTM ID format is incorrect. Ensure it follows the format GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'The Measurement Protocol API secret field is required. Please enter your Measurement Protocol API secret.';
@@ -183,3 +200,4 @@ $_['error_working_lead']                    = 'An error occurred while sending t
 $_['error_close_convert_lead']              = 'An error occurred while sending the "Close Convert Lead" event.';
 $_['error_close_unconvert_lead']            = 'An error occurred while sending the "Close Unconvert Lead" event.';
 $_['error_disqualify_lead']                 = 'An error occurred while sending the "Disqualify Lead" event.';
+$_['error_file_download_ext']               = 'Invalid file extensions. Ensure they start with a dot and contain only lowercase letters (e.g., .pdf, .xml.gz).';

@@ -1,7 +1,7 @@
 {
   "name": "oc4_ga4_enhanced_measurement",
   "version": "1.0.0",
-  "description": "layful Sparkle - (GA4) Enhanced Measurement for OpenCart 4",
+  "description": "layful Sparkle - Enhanced Measurement for OpenCart 4",
   "main": "index.js",
   "scripts": {
     "compress": "node compress.js"

@@ -1,17 +1,17 @@
 <?php
 // Heading
-$_['heading_title']                         = 'Playful Sparkle - (GA4) Enhanced Measurement';
+$_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
 $_['heading_fix']                           = 'Corriger les erreurs courantes';
 $_['heading_getting_started']               = 'Démarrage';
-$_['heading_setup']                         = 'Configuration de (GA4) Enhanced Measurement';
+$_['heading_setup']                         = 'Configuration de Enhanced Measurement';
 $_['heading_troubleshot']                   = 'Dépannage courant';
 $_['heading_faq']                           = 'FAQ';
 $_['heading_contact']                       = 'Contacter le support';
 
 // Text
 $_['text_extension']                        = 'Extensions';
-$_['text_edit']                             = 'Modifier (GA4) Enhanced Measurement';
-$_['text_success']                          = 'Succès : Vous avez modifié (GA4) Enhanced Measurement !';
+$_['text_edit']                             = 'Modifier Enhanced Measurement';
+$_['text_success']                          = 'Succès : Vous avez modifié Enhanced Measurement !';
 $_['text_getting_started']                  = '<p><strong>Aperçu :</strong> L\'extension Playful Sparkle - GA4 Enhanced Measurement pour OpenCart 4 offre des capacités de suivi avancées pour votre boutique en ligne. Elle prend en charge plusieurs options de suivi des événements, y compris les interactions des utilisateurs, les activités du panier et les événements d\'achat. De plus, elle permet l\'intégration avec Google Tag Manager ou Global Site Tag, offrant ainsi de la flexibilité pour la mise en œuvre de solutions de mesure.</p><p><strong>Exigences :</strong> OpenCart 4.x, un compte Google Analytics GA4 valide, et les identifiants appropriés selon l\'implémentation choisie : Google Tag ID et le secret API du Measurement Protocol sont requis si vous utilisez Global Site Tag (gtag.js), et l\'ID de mesure est requis si vous sélectionnez Google Tag Manager (GTM). Assurez-vous qu\'aucune autre extension d\'analyse n\'est activée afin d\'éviter les conflits de code.</p>';
 $_['text_setup']                            = '<ul><li>Sélectionnez votre implémentation de mesure préférée (Global Site Tag ou Google Tag Manager).</li><li>Si vous utilisez Global Site Tag, entrez votre Google Tag ID et le secret API du Measurement Protocol. Pour Google Tag Manager, entrez votre Measurement ID.</li><li>Configurez les événements de suivi que vous souhaitez activer, tels que la connexion, l\'achat ou l\'ajout au panier.</li><li>Vérifiez qu\'aucune autre extension n\'injecte des codes de suivi (par exemple, Tag Manager ou Global Site Tag) pour éviter les conflits.</li><li>Enregistrez les paramètres et testez l\'implémentation à l\'aide des outils de débogage de Google Analytics.</li></ul>';
 $_['text_troubleshoot']                     = '<ul><li><strong>Problème :</strong> Les événements ne sont pas visibles dans le tableau de bord Google Analytics. <strong>Solution :</strong> Vérifiez que l\'ID de mesure ou l\'ID de balise est correctement saisi et correspond à votre propriété GA4. Si vous utilisez Global Site Tag (gtag.js), assurez-vous que le Google Tag ID et le secret API du Measurement Protocol sont correctement configurés.</li><li><strong>Problème :</strong> Des événements en double sont suivis. <strong>Solution :</strong> Vérifiez si d\'autres extensions d\'analyse injectent du code de suivi et désactivez-les si nécessaire. Vérifiez également que le même événement n\'est pas suivi via plusieurs implémentations (par exemple, à la fois GTM et gtag.js).</li><li><strong>Problème :</strong> Le suivi ne fonctionne pas sur plusieurs magasins. <strong>Solution :</strong> Assurez-vous que le bon Tag ID ou Measurement ID est configuré pour chaque magasin. Pour GTM, assurez-vous que chaque magasin dispose du conteneur approprié configuré dans Google Tag Manager.</li><li><strong>Problème :</strong> Les données de remboursement ne sont pas visibles dans Google Analytics. <strong>Solution :</strong> Accordez un délai pour que les données de remboursement apparaissent dans Google Analytics et assurez-vous que le remboursement est correctement configuré comme partiel ou total, car une seule soumission par commande est acceptée.</li></ul>';
@@ -21,6 +21,7 @@ $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Options de l\'article';
 $_['text_store_options_group']              = 'Options de la boutique';
+$_['text_google_adwords_label_group']       = 'Google Adwords Label';
 $_['text_product_id']                       = 'ID du produit';
 $_['text_model']                            = 'Modèle';
 $_['text_sku']                              = 'SKU';
@@ -58,7 +59,8 @@ $_['column_refund_quantity']                = 'Quantité de remboursement';
 // Tab
 $_['tab_general']                           = 'Général';
 $_['tab_gcm']                               = 'Mode de consentement Google (GCM)';
-$_['tab_track_events']                      = 'Suivi des événements';
+$_['tab_enhanced_ecommerce_tracking']       = '(GA4) Suivi amélioré du commerce électronique';
+$_['tab_ads_conversion_tracking']           = 'Suivi des conversions publicitaires';
 $_['tab_help_and_support']                  = 'Aide et support';
 $_['tab_gtag']                              = 'Global Site Tag - gtag.js';
 $_['tab_gtm']                               = 'Google Tag Manager (GTM)';
@@ -76,8 +78,8 @@ $_['entry_affiliation']                     = 'Affiliation';
 $_['entry_location_id']                     = 'ID de localisation';
 $_['entry_item_price_tax']                  = 'Afficher les prix avec la taxe';
 $_['entry_currency']                        = 'Devise';
-$_['entry_debug_mode']                      = 'Mode débogage';
-$_['entry_gtag_debug_mode']                 = 'Déboguer Global Site Tag';
+$_['entry_console_log_events']              = 'Journaliser les événements dans la console';
+$_['entry_ga4_gtag_debug_mode']             = 'Déboguer Global Site Tag';
 $_['entry_generate_lead']                   = 'Suivre l\'événement « Générer un prospect »';
 $_['entry_qualify_lead']                    = 'Suivre l\'événement « Qualification du prospect »';
 $_['entry_sign_up']                         = 'Suivre l\'événement « Inscription »';
@@ -97,6 +99,7 @@ $_['entry_add_payment_info']                = 'Suivre l\'événement « Ajouter 
 $_['entry_add_shipping_info']               = 'Suivre l\'événement « Ajouter des informations de livraison »';
 $_['entry_purchase']                        = 'Suivre l\'événement « Achat »';
 $_['entry_file_download']                   = 'Suivre l\'événement de téléchargement de fichier';
+$_['entry_file_download_ext']               = 'Extensions de fichiers à suivre';
 $_['entry_user_id']                         = 'Envoyer l\'ID utilisateur';
 $_['entry_gcm_status']                      = 'Activer le mode de consentement Google (GCM)';
 $_['entry_ad_storage']                      = 'Stockage des annonces';
@@ -116,7 +119,17 @@ $_['entry_gcm_profiles']                    = 'Profils GCM';
 $_['entry_lead_associations']               = 'Associations de prospects';
 $_['entry_lead_type']                       = 'Type de prospect';
 $_['entry_order_status']                    = 'Statut de la commande';
-$_['entry_working_lead']                    = '(GA4) Envoyer l\'événement « Prospect en cours »';
+$_['entry_working_lead']                    = 'Envoyer l\'événement « Prospect en cours »';
+$_['entry_google_adwords_status']           = 'Activer Google Adwords';
+$_['entry_google_adwords_id']               = 'Google Adwords ID';
+$_['entry_google_adwords_purchase']         = 'Pour l\'achat';
+$_['entry_google_adwords_add_to_cart']      = 'Pour ajouter au panier';
+$_['entry_google_adwords_begin_checkout']   = 'Pour commencer le paiement';
+$_['entry_google_adwords_subscribe']        = 'Pour s\'abonner';
+$_['entry_google_adwords_contact']          = 'Pour contacter';
+$_['entry_google_adwords_lead']             = 'Pour soumettre le formulaire de contact';
+$_['entry_google_adwords_sign_up']          = 'Pour l\'inscription';
+$_['entry_google_adwords_page_view']        = 'Pour la vue de la page';
 
 // Button
 $_['button_fix_event_handler']              = 'Corriger le gestionnaire d\'événements';
@@ -150,6 +163,7 @@ $_['help_add_payment_info']                 = 'Cet événement signifie qu\'un u
 $_['help_add_shipping_info']                = 'Cet événement signifie qu\'un utilisateur a soumis ses informations de livraison lors d\'un achat en ligne.';
 $_['help_purchase']                         = 'Cet événement signifie qu\'un ou plusieurs articles ont été achetés par un utilisateur.';
 $_['help_file_download']                    = 'Cet événement indique qu\'un utilisateur a cliqué pour télécharger un fichier.';
+$_['help_file_download_ext']                = 'Saisissez les extensions de fichiers (par ex. .pdf, .xls, .xlsx, .doc, .docx) à suivre en tant qu’événements file_download dans GA4. Seules les extensions spécifiées déclencheront cet événement.';
 $_['help_user_id']                          = 'Cette option permet de suivre les identifiants des utilisateurs connectés, vous permettant d\'analyser leur comportement à travers les sessions et les appareils, offrant ainsi des informations plus détaillées et précises.';
 $_['help_ad_storage']                       = 'Contrôle si le stockage des données est autorisé à des fins publicitaires, telles que le suivi des clics sur les publicités ou des conversions.';
 $_['help_ad_user_data']                     = 'Détermine si les données des utilisateurs interagissant avec les publicités sont stockées, améliorant ainsi les capacités de ciblage des publicités.';
@@ -163,13 +177,16 @@ $_['help_ads_data_redaction']               = 'Rédige les données utilisateur 
 $_['help_url_passthrough']                  = 'Permet au URL de passer à travers les vérifications de consentement, utile pour suivre des chemins d\'utilisateurs spécifiques sans stocker de données personnelles.';
 $_['help_gcm_status']                       = 'Active le Mode de Consentement Google, permettant à votre site d\'ajuster le comportement des balises Google en fonction des paramètres de consentement de l\'utilisateur. Ce mode offre un suivi respectueux de la vie privée, permettant à la fois les analyses et les publicités de fonctionner conformément aux préférences de consentement.';
 $_['help_working_lead']                     = 'Activez cet événement pour envoyer « Working Lead » à Google Analytics lorsque vous contactez un client.';
+$_['help_google_adwords_id_locate']         = 'Pour trouver votre ID Google Ads, connectez-vous à votre <a href="https://ads.google.com" target="_blank" rel="external noopener noreferrer">compte Google Ads</a>, cliquez sur l’icône des outils dans le coin supérieur droit, sélectionnez "Paramètres du compte" sous "Paramètres", puis trouvez l’ID à 10 chiffres sous "Informations sur le compte". Il sera formaté sous la forme AW-XXXXXXXXX.';
 
 // Error
-$_['error_permission']                      = 'Avertissement : Vous n\'avez pas l\'autorisation de modifier les paramètres de Playful Sparkle - (GA4) Enhanced Measurement.';
-$_['error_refund_send']                     = 'Avertissement : L\'envoi des données de remboursement vers Google Analytics (GA4) a échoué. Veuillez vérifier vos paramètres et réessayer.';
+$_['error_permission']                      = 'Avertissement : Vous n\'avez pas l\'autorisation de modifier les paramètres de Playful Sparkle - Enhanced Measurement.';
+$_['error_refund_send']                     = 'Avertissement : L\'envoi des données de remboursement vers Google Analytics a échoué. Veuillez vérifier vos paramètres et réessayer.';
 $_['error_no_refundable_selected']          = 'Avertissement : Aucun produit n\'a été sélectionné pour le remboursement. Veuillez en sélectionner au moins un pour pouvoir traiter le remboursement.';
 $_['error_google_tag_id']                   = 'Le champ Google Tag ID est requis. Veuillez entrer votre ID Google Analytics.';
 $_['error_google_tag_id_invalid']           = 'Le format du Google Tag ID est incorrect. Assurez-vous qu\'il suit le format G-XXXXXXXXXX.';
+$_['error_google_adwords_id']               = 'Le champ Google AdWords ID est requis. Veuillez entrer votre Google AdWords ID.';
+$_['error_google_adwords_id_invalid']       = 'Le format de l\'ID Google AdWords est incorrect. Assurez-vous qu\'il suit le format AW-XXXXXXXXX.';
 $_['error_gtm_id']                          = 'Le champ GTM ID est requis. Veuillez entrer votre Measurement ID.';
 $_['error_gtm_id_invalid']                  = 'Le format du GTM ID est incorrect. Assurez-vous qu\'il suit le format GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'Le champ Measurement Protocol API secret est requis. Veuillez entrer votre secret Measurement Protocol API.';
@@ -184,3 +201,4 @@ $_['error_working_lead']                    = 'Une erreur est survenue lors de l
 $_['error_close_convert_lead']              = 'Une erreur est survenue lors de l\'envoi de l\'événement "Prospect converti clôturé".';
 $_['error_close_unconvert_lead']            = 'Une erreur est survenue lors de l\'envoi de l\'événement "Prospect non converti clôturé".';
 $_['error_disqualify_lead']                 = 'Une erreur est survenue lors de l\'envoi de l\'événement "Prospect disqualifié".';
+$_['error_file_download_ext']               = 'Extensions de fichier invalides. Assurez-vous qu\'elles commencent par un point et ne contiennent que des lettres minuscules (par exemple, .pdf, .xml.gz).';
