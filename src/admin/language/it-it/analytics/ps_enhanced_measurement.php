@@ -128,7 +128,6 @@ $_['entry_adwords_subscribe_label']         = 'Per iscriversi';
 $_['entry_adwords_contact_label']           = 'Per contattare';
 $_['entry_adwords_lead_label']              = 'Per inviare il modulo di contatto';
 $_['entry_adwords_sign_up_label']           = 'Per la registrazione';
-$_['entry_adwords_page_view_label']         = 'Per la visualizzazione della pagina';
 $_['entry_adwords_enhanced_conversion']     = 'Abilita conversioni avanzate';
 
 // Button

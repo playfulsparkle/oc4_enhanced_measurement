@@ -128,7 +128,6 @@ $_['entry_adwords_subscribe_label']         = 'for Subscribe';
 $_['entry_adwords_contact_label']           = 'for Contact';
 $_['entry_adwords_lead_label']              = 'for Submit lead form';
 $_['entry_adwords_sign_up_label']           = 'for Sign-Up';
-$_['entry_adwords_page_view_label']         = 'for Page view';
 $_['entry_adwords_enhanced_conversion']     = 'Enable Enhanced Conversions';
 
 // Button

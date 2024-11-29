@@ -128,7 +128,6 @@ $_['entry_adwords_subscribe_label']         = 'Feliratkozás esetén';
 $_['entry_adwords_contact_label']           = 'Kapcsolatfelvétel esetén';
 $_['entry_adwords_lead_label']              = 'Lead űrlap beküldése esetén';
 $_['entry_adwords_sign_up_label']           = 'Regisztráció esetén';
-$_['entry_adwords_page_view_label']         = 'Oldalmegtekintés esetén';
 $_['entry_adwords_enhanced_conversion']     = 'Fejlett konverziók engedélyezése';
 
 // Button

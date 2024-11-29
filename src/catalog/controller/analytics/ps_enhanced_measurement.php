@@ -13,32 +13,30 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return '';
         }
 
-        $measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
-        $adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
-        $adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
-        $adwords_page_view_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_page_view_label');
-        $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
-        $google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
-        $gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
+        $config_measurement_implementation = $this->config->get('analytics_ps_enhanced_measurement_implementation');
+        $config_adwords_status = (bool) $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $config_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
+        $config_google_tag_id = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
+        $config_gtm_id = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
 
         $html = '';
 
-        if ($adwords_status || $measurement_implementation === 'gtag') {
+        if ($config_adwords_status || $config_measurement_implementation === 'gtag') {
             $html .= '<!-- Google tag (gtag.js) -->' . PHP_EOL;
 
-            if ($adwords_status) {
-                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $adwords_id . '"></script>' . PHP_EOL;
+            if ($config_adwords_status) {
+                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $config_adwords_id . '"></script>' . PHP_EOL;
             }
 
-            if ($measurement_implementation === 'gtag') {
-                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $google_tag_id . '"></script>' . PHP_EOL;
+            if ($config_measurement_implementation === 'gtag') {
+                $html .= '<script async src="https://www.googletagmanager.com/gtag/js?id=' . $config_google_tag_id . '"></script>' . PHP_EOL;
             }
         }
 
@@ -59,8 +57,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $adwords_config['cookie_flags'] = 'SameSite=None;Secure';
         }
 
-        $ga4_config_json = $ga4_config ? json_encode($ga4_config) : null;
-        $adwords_config_json = $adwords_config ? json_encode($adwords_config) : null;
+        $json_gtag_config = $ga4_config ? json_encode($ga4_config) : null;
+        $json_adwords_config = $adwords_config ? json_encode($adwords_config) : null;
 
 
         $html .= "<script>" . PHP_EOL;
@@ -69,16 +67,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $html .= "gtag('js', new Date());" . PHP_EOL;
 
 
-        if ($adwords_status) {
-            $html .= "gtag('config', '" . $adwords_id . "'" . ($adwords_config_json ? ", " . $adwords_config_json : "") . ");" . PHP_EOL;
+        if ($config_adwords_status) {
+            if ($json_adwords_config) {
+                $html .= "gtag('config', '" . $config_adwords_id . "');" . PHP_EOL;
+            } else {
+                $html .= "gtag('config', '" . $config_adwords_id . "', " . $json_adwords_config . ");" . PHP_EOL;
+            }
         }
 
-        if ($measurement_implementation === 'gtag') {
-            $html .= "gtag('config', '" . $google_tag_id . "'" . ($ga4_config_json ? ", " . $ga4_config_json : "") . ");" . PHP_EOL;
+        if ($config_measurement_implementation === 'gtag') {
+            if ($json_gtag_config) {
+                $html .= "gtag('config', '" . $config_google_tag_id . "');" . PHP_EOL;
+            } else {
+                $html .= "gtag('config', '" . $config_google_tag_id . "', " . $json_gtag_config . ");" . PHP_EOL;
+            }
         }
 
 
-        if ($adwords_status || $measurement_implementation === 'gtm') {
+        if ($config_adwords_status || $config_measurement_implementation === 'gtm') {
             $ads_data_redaction = (bool) $this->config->get('analytics_ps_enhanced_measurement_ads_data_redaction');
             $url_passthrough = (bool) $this->config->get('analytics_ps_enhanced_measurement_url_passthrough');
 
@@ -86,69 +92,51 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $html .= "gtag('set', 'url_passthrough', '" . ($url_passthrough ? 'granted' : 'denied') . "');" . PHP_EOL;
         }
 
-        if ($adwords_status && $adwords_enhanced_conversion && $user_data_json = $this->getAdwordsEnhancedConversion()) {
-            $html .= "gtag('set', 'user_data', " . json_encode($user_data_json) . ");" . PHP_EOL;
-        }
-
-        if ($adwords_status && $adwords_page_view_label && $cart_total = $this->cart->getTotal()) {
-            $ps_adwords_page_view_label = [
-                'send_to' => $adwords_id . '/' . $adwords_page_view_label,
-                'value' => $this->currency->format($cart_total, $currency, 0, false),
-                'currency' => $currency,
-            ];
-
-            $html .= "gtag('event', 'conversion', " . json_encode($ps_adwords_page_view_label) . ");" . PHP_EOL;
-        }
-
-
         if ($this->config->get('analytics_ps_enhanced_measurement_gcm_status')) {
-            $ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
-            $ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
-            $ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
-            $analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
-            $functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
-            $personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
-            $security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
-            $wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
+            $config_ad_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_storage');
+            $config_ad_user_data = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_user_data');
+            $config_ad_personalization = (bool) $this->config->get('analytics_ps_enhanced_measurement_ad_personalization');
+            $config_analytics_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_analytics_storage');
+            $config_functionality_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_functionality_storage');
+            $config_personalization_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_personalization_storage');
+            $config_security_storage = (bool) $this->config->get('analytics_ps_enhanced_measurement_security_storage');
+            $config_wait_for_update = (int) $this->config->get('analytics_ps_enhanced_measurement_wait_for_update');
 
             $default_consent = [
-                'ad_storage' => $ad_storage ? 'granted' : 'denied',
-                'ad_user_data' => $ad_user_data ? 'granted' : 'denied',
-                'ad_personalization' => $ad_personalization ? 'granted' : 'denied',
-                'analytics_storage' => $analytics_storage ? 'granted' : 'denied',
-                'functionality_storage' => $functionality_storage ? 'granted' : 'denied',
-                'personalization_storage' => $personalization_storage ? 'granted' : 'denied',
-                'security_storage' => $security_storage ? 'granted' : 'denied',
+                'ad_storage' => $config_ad_storage ? 'granted' : 'denied',
+                'ad_user_data' => $config_ad_user_data ? 'granted' : 'denied',
+                'ad_personalization' => $config_ad_personalization ? 'granted' : 'denied',
+                'analytics_storage' => $config_analytics_storage ? 'granted' : 'denied',
+                'functionality_storage' => $config_functionality_storage ? 'granted' : 'denied',
+                'personalization_storage' => $config_personalization_storage ? 'granted' : 'denied',
+                'security_storage' => $config_security_storage ? 'granted' : 'denied',
             ];
 
-
-            if ($wait_for_update > 0) {
-                $default_consent['wait_for_update'] = $wait_for_update;
+            if ($config_wait_for_update > 0) {
+                $default_consent['wait_for_update'] = $config_wait_for_update;
             }
 
-            $default_consent_json = json_encode($default_consent);
-
-            $html .= PHP_EOL . "gtag('consent', 'default', " . $default_consent_json . ");" . PHP_EOL;
+            $html .= PHP_EOL . "gtag('consent', 'default', " . json_encode($default_consent) . ");" . PHP_EOL;
         }
 
 
         if ($this->config->get('analytics_ps_enhanced_measurement_track_user_id') && $this->customer->isLogged()) {
-            if ($measurement_implementation === 'gtag') {
+            if ($config_measurement_implementation === 'gtag') {
                 $html .= "gtag('set', 'user_id', " . $this->customer->getId() . ");" . PHP_EOL;
-            } else if ($measurement_implementation === 'gtm') {
+            } else if ($config_measurement_implementation === 'gtm') {
                 $html .= PHP_EOL . "dataLayer.push(" . json_encode(['user_id' => $this->customer->getId()], JSON_NUMERIC_CHECK) . ");" . PHP_EOL;
             }
         }
 
         $html .= "</script>" . PHP_EOL;
 
-        if ($measurement_implementation === 'gtm') {
+        if ($config_measurement_implementation === 'gtm') {
             $html .= "<!-- Google Tag Manager -->" . PHP_EOL;
             $html .= "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" . PHP_EOL;
             $html .= "new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," . PHP_EOL;
             $html .= "j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" . PHP_EOL;
             $html .= "'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" . PHP_EOL;
-            $html .= "})(window,document,'script','dataLayer','" . $gtm_id . "');</script>" . PHP_EOL;
+            $html .= "})(window,document,'script','dataLayer','" . $config_gtm_id . "');</script>" . PHP_EOL;
             $html .= "<!-- End Google Tag Manager -->" . PHP_EOL;
         }
 
@@ -369,10 +357,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['filter'])) {
@@ -460,7 +448,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -504,7 +492,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -568,7 +556,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -582,7 +570,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -648,10 +636,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['search'])) {
@@ -772,7 +760,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -816,7 +804,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -903,7 +891,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -917,7 +905,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -983,10 +971,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['sort'])) {
@@ -1056,7 +1044,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $product_info['special']) {
                 $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -1100,7 +1088,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -1164,7 +1152,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_add_to_wishlist) {
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'],
                         'items' => [$item],
                     ],
@@ -1178,7 +1166,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'] * $minimums[$product_id],
                         'items' => [$item],
                     ],
@@ -1238,10 +1226,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -1280,7 +1268,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $product_info['special']) {
                 $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -1324,7 +1312,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -1388,7 +1376,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_add_to_wishlist) {
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'],
                         'items' => [$item],
                     ],
@@ -1402,7 +1390,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'] * $minimums[$product_id],
                         'items' => [$item],
                     ],
@@ -1473,10 +1461,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['manufacturer_id'])) {
@@ -1553,7 +1541,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $product_info['special']) {
                 $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -1597,7 +1585,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -1661,7 +1649,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_add_to_wishlist) {
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'],
                         'items' => [$item],
                     ],
@@ -1675,7 +1663,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'] * $minimums[$product_id],
                         'items' => [$item],
                     ],
@@ -1734,10 +1722,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['order_id'])) {
@@ -1791,7 +1779,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -1835,7 +1823,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -1909,7 +1897,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'] * $minimums[$product_id],
                         'items' => [$item],
                     ],
@@ -1972,10 +1960,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -2017,7 +2005,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -2061,7 +2049,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -2126,7 +2114,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_add_to_wishlist) {
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'],
                         'items' => [$item],
                     ],
@@ -2140,7 +2128,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'] * $minimums[$product_id],
                         'items' => [$item],
                     ],
@@ -2243,10 +2231,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->request->get['product_id'])) {
@@ -2312,7 +2300,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $product_info['special']) {
                 $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = 0;
@@ -2370,7 +2358,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -2379,7 +2367,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_view_item = [
                 'ecommerce' => [
-                    'currency' => $currency,
+                    'currency' => $config_currency,
                     'value' => $item['price'],
                     'items' => array_values($items),
                 ],
@@ -2400,7 +2388,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -2410,7 +2398,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_cart) {
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -2449,7 +2437,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -2493,7 +2481,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -2540,7 +2528,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -2554,7 +2542,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -2662,15 +2650,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->session->data['ps_generate_lead_contact_form_event'])) {
             unset($this->session->data['ps_generate_lead_contact_form_event']);
 
-            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+            $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-            if (empty($currency)) {
-                $currency = $this->session->data['currency'];
+            if (empty($config_currency)) {
+                $config_currency = $this->session->data['currency'];
             }
 
             $ps_generate_lead_contact_form = [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'lead_source' => 'contact_form',
             ];
 
@@ -2732,15 +2720,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->session->data['ps_generate_lead_newsletter_event'])) {
             unset($this->session->data['ps_generate_lead_newsletter_event']);
 
-            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+            $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-            if (empty($currency)) {
-                $currency = $this->session->data['currency'];
+            if (empty($config_currency)) {
+                $config_currency = $this->session->data['currency'];
             }
 
             $ps_generate_lead_newsletter = [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'lead_source' => 'newsletter',
             ];
 
@@ -2808,10 +2796,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
             $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+            $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-            if (empty($currency)) {
-                $currency = $this->session->data['currency'];
+            if (empty($config_currency)) {
+                $config_currency = $this->session->data['currency'];
             }
 
             $options = isset($this->request->post['option']) ? array_filter((array) $this->request->post['option']) : [];
@@ -2842,7 +2830,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $product_info['special']) {
                 $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = 0;
@@ -2922,7 +2910,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $base_price = $product_subscription_info['trial_price'];
                     }
 
-                    if ($subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $currency, $item_price_tax)) {
+                    if ($subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                         $variants[] = $subscription_description;
                     }
                 }
@@ -2942,14 +2930,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $quantity;
 
             $json_response['ps_add_to_cart'] = [
                 'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $this->currency->format($price * $quantity, $currency, 0, false),
+                    'currency' => $config_currency,
+                    'value' => $this->currency->format($price * $quantity, $config_currency, 0, false),
                     'items' => [$item],
                 ],
             ];
@@ -3021,10 +3009,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -3063,7 +3051,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3103,7 +3091,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -3117,7 +3105,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -3151,8 +3139,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response['ps_add_payment_info'] = [
             'ecommerce' => [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'payment_type' => $payment_type,
                 'items' => array_values($items),
@@ -3224,10 +3212,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -3266,7 +3254,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3306,7 +3294,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -3320,7 +3308,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -3354,8 +3342,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $json_response['ps_add_shipping_info'] = [
             'ecommerce' => [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'shipping_tier' => $shipping_tier,
                 'items' => array_values($items),
@@ -3447,10 +3435,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -3490,7 +3478,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3530,7 +3518,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -3544,7 +3532,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -3560,8 +3548,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($config_track_begin_checkout) {
             $ps_begin_checkout = [
                 'ecommerce' => [
-                    'currency' => $currency,
-                    'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                    'currency' => $config_currency,
+                    'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                     'coupon' => $product_coupon ? $product_coupon : '',
                     'items' => array_values($items),
                 ],
@@ -3575,8 +3563,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($config_track_qualify_lead) {
             $ps_qualify_lead = [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
             ];
 
             $args['ps_qualify_lead'] = $ps_qualify_lead ? json_encode($ps_qualify_lead, JSON_NUMERIC_CHECK) : null;
@@ -3731,15 +3719,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if ($config_track_generate_lead && isset($this->request->post['newsletter']) && $this->request->post['newsletter'] === '1') {
-            $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+            $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-            if (empty($currency)) {
-                $currency = $this->session->data['currency'];
+            if (empty($config_currency)) {
+                $config_currency = $this->session->data['currency'];
             }
 
             $json_response['ps_generate_lead_newsletter'] = [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'lead_source' => 'newsletter',
             ];
         }
@@ -3819,14 +3807,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
-        $adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
+        $config_adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $config_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
         $adwords_purchase_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
+        $config_adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -3867,7 +3856,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -3907,7 +3896,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -3923,7 +3912,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -3962,10 +3951,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_purchase = [
             'ecommerce' => [
                 'transaction_id' => $this->session->data['order_id'],
-                'value' => $this->currency->format($purchase_data['total'] - $purchase_data['shipping'] - $purchase_data['tax'], $currency, 0, false),
-                'tax' => $this->currency->format(($item_price_tax ? $purchase_data['tax'] : 0), $currency, 0, false),
-                'shipping' => $this->currency->format($purchase_data['shipping'], $currency, 0, false),
-                'currency' => $currency,
+                'value' => $this->currency->format($purchase_data['total'] - $purchase_data['shipping'] - $purchase_data['tax'], $config_currency, 0, false),
+                'tax' => $this->currency->format(($item_price_tax ? $purchase_data['tax'] : 0), $config_currency, 0, false),
+                'shipping' => $this->currency->format($purchase_data['shipping'], $config_currency, 0, false),
+                'currency' => $config_currency,
                 'coupon' => $product_coupon ? $product_coupon : '',
                 'items' => array_values($items),
             ],
@@ -3973,15 +3962,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_NUMERIC_CHECK) : null;
 
-        if ($adwords_status) {
-            $ps_adwords_conversion = [
-                'send_to' => $adwords_id . '/' . $adwords_purchase_label,
-                'value' => $this->currency->format($purchase_data['total'], $currency, 0, false),
-                'currency' => $currency,
+        if ($config_adwords_status) {
+            $ps_adwords_purchase_conversion = [
+                'send_to' => $config_adwords_id . '/' . $adwords_purchase_label,
+                'value' => $this->currency->format($purchase_data['total'], $config_currency, 0, false),
+                'currency' => $config_currency,
                 'transaction_id' => $this->session->data['order_id'],
             ];
 
-            $this->session->data['ps_adwords_conversion'] = $items ? json_encode($ps_adwords_conversion, JSON_NUMERIC_CHECK) : null;
+            $this->session->data['ps_adwords_purchase_conversion'] = $items ? json_encode($ps_adwords_purchase_conversion, JSON_NUMERIC_CHECK) : null;
+
+            if ($config_adwords_enhanced_conversion && $user_data_json = $this->getAdwordsEnhancedConversion()) {
+                $this->session->data['ps_adwords_user_data'] = json_encode($user_data_json);
+            }
         }
 
 
@@ -4024,13 +4017,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $args['ps_purchase'] = isset($this->session->data['ps_purchase']) ? $this->session->data['ps_purchase'] : null;
-        $args['ps_adwords_conversion'] = isset($this->session->data['ps_adwords_conversion']) ? $this->session->data['ps_adwords_conversion'] : null;
-        $args['ps_enhanced_conversion'] = isset($this->session->data['ps_enhanced_conversion']) ? $this->session->data['ps_enhanced_conversion'] : null;
+        $args['ps_adwords_purchase_conversion'] = isset($this->session->data['ps_adwords_purchase_conversion']) ? $this->session->data['ps_adwords_purchase_conversion'] : null;
+        $args['ps_adwords_user_data'] = isset($this->session->data['ps_adwords_user_data']) ? $this->session->data['ps_adwords_user_data'] : null;
 
         unset(
             $this->session->data['ps_purchase'],
-            $this->session->data['ps_adwords_conversion'],
-            $this->session->data['ps_enhanced_conversion']
+            $this->session->data['ps_adwords_purchase_conversion'],
+            $this->session->data['ps_adwords_user_data']
         );
 
 
@@ -4078,10 +4071,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -4120,7 +4113,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -4160,7 +4153,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -4174,7 +4167,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -4189,8 +4182,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_view_cart = [
             'ecommerce' => [
-                'currency' => $currency,
-                'value' => $this->currency->format($this->cart->getTotal(), $currency, 0, false),
+                'currency' => $config_currency,
+                'value' => $this->currency->format($this->cart->getTotal(), $config_currency, 0, false),
                 'items' => array_values($items),
             ],
         ];
@@ -4245,10 +4238,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -4290,7 +4283,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -4330,7 +4323,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -4345,9 +4338,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
-            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $currency, 0, false);
+            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -4395,7 +4388,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_remove_from_cart) {
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $total_prices[$cart_id],
                         'items' => [$item],
                     ],
@@ -4409,7 +4402,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 $ps_merge_items['add_to_cart_' . $cart_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $item['price'],
                         'items' => [$item],
                     ],
@@ -4469,10 +4462,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -4513,7 +4506,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((float) $real_product_info['special']) {
                 $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
             }
 
             $item['index'] = $index;
@@ -4553,7 +4546,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $currency, $item_price_tax)) {
+            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $config_currency, $item_price_tax)) {
                 $variants[] = $subscription_description;
             }
 
@@ -4568,9 +4561,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
             $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $currency, 0, false);
+            $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
-            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $currency, 0, false);
+            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $config_currency, 0, false);
 
             $item['quantity'] = $product_info['quantity'];
 
@@ -4612,7 +4605,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_track_remove_from_cart) {
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
-                        'currency' => $currency,
+                        'currency' => $config_currency,
                         'value' => $total_prices[$cart_id],
                         'items' => [$item],
                     ],
@@ -4669,10 +4662,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -4716,7 +4709,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -4760,7 +4753,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -4811,7 +4804,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -4825,7 +4818,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -4874,10 +4867,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -4929,7 +4922,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -4973,7 +4966,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -5024,7 +5017,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -5038,7 +5031,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -5092,10 +5085,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -5143,7 +5136,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -5187,7 +5180,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -5238,7 +5231,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -5252,7 +5245,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -5301,10 +5294,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
-        $currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
+        $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
-        if (empty($currency)) {
-            $currency = $this->session->data['currency'];
+        if (empty($config_currency)) {
+            $config_currency = $this->session->data['currency'];
         }
 
         if (isset($this->session->data['coupon'])) {
@@ -5355,7 +5348,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ((float) $product_info['special']) {
                     $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $currency, 0, false);
+                    $item['discount'] = $this->currency->format($discount, $config_currency, 0, false);
                 }
 
                 $item['index'] = $index;
@@ -5399,7 +5392,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $currency, 0, false);
+                $item['price'] = $this->currency->format($price, $config_currency, 0, false);
 
                 $item['quantity'] = $product_info['quantity'];
 
@@ -5450,7 +5443,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'],
                             'items' => [$item],
                         ],
@@ -5464,7 +5457,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
-                            'currency' => $currency,
+                            'currency' => $config_currency,
                             'value' => $item['price'] * $minimums[$product_id],
                             'items' => [$item],
                         ],
@@ -5478,12 +5471,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    protected function getProductSubscriptionDescription(array $product_subscription_info, int $taxClassId, string $currency, bool $item_price_tax)
+    protected function getProductSubscriptionDescription(array $product_subscription_info, int $taxClassId, string $config_currency, bool $item_price_tax)
     {
         $subscription_description = '';
 
         if ($product_subscription_info['trial_status']) {
-            $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $taxClassId, $item_price_tax), $currency);
+            $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $taxClassId, $item_price_tax), $config_currency);
             $trial_cycle = $product_subscription_info['trial_cycle'];
             $trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
             $trial_duration = $product_subscription_info['trial_duration'];
@@ -5491,7 +5484,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
         }
 
-        $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $taxClassId, $item_price_tax), $currency);
+        $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $taxClassId, $item_price_tax), $config_currency);
 
         $subscription_cycle = $product_subscription_info['cycle'];
         $subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);

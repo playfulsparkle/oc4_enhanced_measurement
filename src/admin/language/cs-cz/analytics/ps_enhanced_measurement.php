@@ -128,7 +128,6 @@ $_['entry_adwords_subscribe_label']         = 'Pro přihlášení k odběru';
 $_['entry_adwords_contact_label']           = 'Pro kontakt';
 $_['entry_adwords_lead_label']              = 'Pro odeslání formuláře lead';
 $_['entry_adwords_sign_up_label']           = 'Pro registraci';
-$_['entry_adwords_page_view_label']         = 'Pro zobrazení stránky';
 $_['entry_adwords_enhanced_conversion']     = 'Povolit vylepšené konverze';
 
 // Button

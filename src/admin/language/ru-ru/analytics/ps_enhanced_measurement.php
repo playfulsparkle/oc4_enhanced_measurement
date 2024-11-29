@@ -128,7 +128,6 @@ $_['entry_adwords_subscribe_label']         = 'Для подписки';
 $_['entry_adwords_contact_label']           = 'Для контакта';
 $_['entry_adwords_lead_label']              = 'Для отправки формы лидов';
 $_['entry_adwords_sign_up_label']           = 'Для регистрации';
-$_['entry_adwords_page_view_label']         = 'Для просмотра страницы';
 $_['entry_adwords_enhanced_conversion']     = 'Включить улучшенные конверсии';
 
 // Button

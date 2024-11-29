@@ -441,7 +441,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{{ text_message }}',
             'replace' => <<<HTML
             {{ text_message }}
-            {% if ps_adwords_status and ps_adwords_conversion %}<script>gtag('event', 'conversion', {{ ps_adwords_conversion }});</script>{% endif %}
+            {% if ps_adwords_status and ps_adwords_user_data %}<script>gtag('set', 'user_data', {{ ps_adwords_user_data }});</script>{% endif %}
+            {% if ps_adwords_status and ps_adwords_purchase_conversion %}<script>gtag('event', 'conversion', {{ ps_adwords_purchase_conversion }});</script>{% endif %}
             {% if ps_track_purchase and ps_purchase %}<script>ps_dataLayer.pushEventData('purchase', {{ ps_purchase }});</script>{% endif %}
             HTML
         ];
