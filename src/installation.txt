@@ -23,6 +23,9 @@ Features
   - Global Site Tag (gtag.js): A straightforward option for quick integration
     with Google Analytics. Requires Google Tag ID
     and Measurement Protocol API Secret.
+- Adwords Conversion Tracking: Supports tracking conversions using Google Ads.
+  Simply provide your Google Adwords ID and Google Adwords Label
+  for specific events.
 - Google Consent Mode Integration: Supports configuring user consent preferences
   for storage and ad data, with advanced options like Ads Data Redaction and
   Wait for Update to meet privacy requirements.
@@ -41,7 +44,7 @@ Features
   Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it),
   Русский (ru-ru), and Slovenčina (sk-sk).
 
-Supported Events
+Supported (GA4) Enhanced Ecommerce Events
 
 - Add Payment Info - When a customer enters their payment details
   during checkout.
@@ -80,6 +83,17 @@ Supported Events
 - Working Lead - When a lead is being worked on, e.g., when a customer is
   contacted or engaged.
 - File Download - When a user clicks to download a file from the website.
+
+Supported (GA4) Enhanced Ecommerce Events
+
+- Purchase - When a customer completes an order, including the total spent and
+  items purchased.
+- Add to Cart - When a product is added to the shopping cart.
+- Begin Checkout - When a customer starts the checkout process.
+- Submit Lead Form - When a customer shows interest, such as by filling out a
+  contact form.
+- Sign Up - When a customer creates an account or registers for something.
+
 
 Demo frontend: https://opencart4.playfulsparkle.com/
 Demo backend: https://opencart4.playfulsparkle.com/admin/

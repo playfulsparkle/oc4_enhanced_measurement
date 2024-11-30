@@ -33,11 +33,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         $views[] = [
             'search' => '</head>',
             'replace' => <<<HTML
-            {% if ps_enhanced_measurement_status %}
             <script>
                 var ps_dataLayer = {
                     filename_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
+                    {% if ps_adwords_status %}adwords_labels: {{ ps_adwords_purchase_labels }},{% endif %}
                     ga4_data: {},
                     init: function () {
                         document.querySelectorAll('a[href]').forEach(function(link, index) {
@@ -64,7 +64,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                         if (this.ga4_data.hasOwnProperty(dataId)) {
                             return this.ga4_data[dataId];
-                        }{% if ps_enhanced_measurement_debug_mode %} else {
+                        }{% if ps_enhanced_measuremen_console_log_ga4_events %} else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
                         }{% endif %}
 
@@ -78,7 +78,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                         if (this.ga4_data.hasOwnProperty(dataId)) {
                             this.pushEventData(eventName, this.ga4_data[dataId]);
-                        }{% if ps_enhanced_measurement_debug_mode %} else {
+                        }{% if ps_enhanced_measuremen_console_log_ga4_events %} else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
                         }{% endif %}
                     },
@@ -93,25 +93,46 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         dataLayer.push({ ecommerce: null });
                         dataLayer.push( { 'event': eventName, ...data } );
                     {% endif %}
-                    {% if ps_enhanced_measurement_debug_mode %}this.debug(eventName, data);{% endif %}
-                    },
-                    debug: function(eventName, data) {
-                    {% if ps_enhanced_measurement_implementation == 'gtag' %}
-                        if (data.hasOwnProperty('ecommerce')) {
-                            console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data.ecommerce, undefined, 4) +");");
-                        } else {
-                            console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data, undefined, 4) +");");
+                    {% if ps_enhanced_measuremen_console_log_ga4_events %}this.debug('{{ ps_enhanced_measurement_implementation }}', eventName, data);{% endif %}
+                    {% if ps_adwords_status %}
+                        if (this.adwords_labels.hasOwnProperty(eventName)) {
+                            var conversion_data = {'send_to': this.adwords_labels[eventName]};
+
+                            if (data.hasOwnProperty('ecommerce')) {
+                                conversion_data.currency = data.ecommerce.currency;
+
+                                if (eventName === 'purchase') {
+                                    conversion_data.value = data.ecommerce.value + data.ecommerce.tax + data.ecommerce.shipping;
+                                    conversion_data.transaction_id = data.ecommerce.transaction_id;
+                                } else {
+                                    conversion_data.value = data.ecommerce.value;
+                                }
+                            } else {
+                                conversion_data.value = data.value;
+                                conversion_data.currency = data.currency;
+                            }
+
+                            gtag('event', 'conversion', conversion_data);
+                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'conversion', conversion_data);{% endif %}
                         }
-                    {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
-                        console.log('dataLayer.push({ ecommerce: null });\\r\\n');
-                        console.log("dataLayer.push(" + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4) + ");");
                     {% endif %}
+                    },
+                    debug: function(method, eventName, data) {
+                        if (method == 'gtag') {
+                            if (data.hasOwnProperty('ecommerce')) {
+                                console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data.ecommerce, undefined, 4) +");");
+                            } else {
+                                console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data, undefined, 4) +");");
+                            }
+                        } else if (method == 'gtm') {
+                            console.log('dataLayer.push({ ecommerce: null });\\r\\n');
+                            console.log("dataLayer.push(" + JSON.stringify(Object.assign({}, {event: eventName}, data), undefined, 4) + ");");
+                        }
                     }
                 };
 
                 window.onload = function() { ps_dataLayer.init(); };
             </script>
-            {% endif %}
             </head>
             HTML
         ];

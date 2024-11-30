@@ -55,14 +55,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
         $data['analytics_ps_enhanced_measurement_google_tag_id'] = $this->config->get('analytics_ps_enhanced_measurement_google_tag_id');
         $data['analytics_ps_enhanced_measurement_mp_api_secret'] = $this->config->get('analytics_ps_enhanced_measurement_mp_api_secret');
-        $data['analytics_ps_enhanced_measurement_ga4_gtag_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_ga4_gtag_debug_mode');
+        $data['analytics_ps_enhanced_measurement_debug_global_site_tag'] = $this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag');
         $data['analytics_ps_enhanced_measurement_item_id'] = $this->config->get('analytics_ps_enhanced_measurement_item_id');
         $data['analytics_ps_enhanced_measurement_item_category_option'] = $this->config->get('analytics_ps_enhanced_measurement_item_category_option');
         $data['analytics_ps_enhanced_measurement_item_price_tax'] = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $data['analytics_ps_enhanced_measurement_affiliation'] = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
         $data['analytics_ps_enhanced_measurement_location_id'] = $this->config->get('analytics_ps_enhanced_measurement_location_id');
         $data['analytics_ps_enhanced_measurement_currency'] = $this->config->get('analytics_ps_enhanced_measurement_currency');
-        $data['analytics_ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
+        $data['analytics_ps_enhanced_measurement_console_log_ga4_events'] = $this->config->get('analytics_ps_enhanced_measurement_console_log_ga4_events');
+        $data['analytics_ps_enhanced_measurement_console_log_adwords_events'] = $this->config->get('analytics_ps_enhanced_measurement_console_log_adwords_events');
         $data['analytics_ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
         $data['analytics_ps_enhanced_measurement_track_user_id'] = $this->config->get('analytics_ps_enhanced_measurement_track_user_id');
         $data['analytics_ps_enhanced_measurement_track_generate_lead'] = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
@@ -101,8 +102,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $data['analytics_ps_enhanced_measurement_adwords_purchase_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
         $data['analytics_ps_enhanced_measurement_adwords_add_to_cart_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $data['analytics_ps_enhanced_measurement_adwords_begin_checkout_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_begin_checkout_label');
-        $data['analytics_ps_enhanced_measurement_adwords_subscribe_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_subscribe_label');
-        $data['analytics_ps_enhanced_measurement_adwords_contact_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_contact_label');
         $data['analytics_ps_enhanced_measurement_adwords_lead_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
         $data['analytics_ps_enhanced_measurement_adwords_sign_up_label'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
         $data['analytics_ps_enhanced_measurement_adwords_enhanced_conversion'] = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
@@ -318,8 +317,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
                 'analytics_ps_enhanced_measurement_item_price_tax' => (bool) $this->config->get('config_tax'),
-                'analytics_ps_enhanced_measurement_debug_mode' => 0,
-                'analytics_ps_enhanced_measurement_ga4_gtag_debug_mode' => 0,
+                'analytics_ps_enhanced_measurement_console_log_ga4_events' => 0,
+                'analytics_ps_enhanced_measurement_console_log_adwords_events' => 0,
+                'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
                 'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
                 'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
@@ -748,7 +748,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'items' => array_values($items),
         ];
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
             $params['engagement_time_msec'] = 1200;
             $params['debug_mode'] = true;
         }
@@ -884,7 +884,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 ],
             ];
 
-            if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+            if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
                 $params['engagement_time_msec'] = 1200;
                 $params['debug_mode'] = true;
             }
@@ -928,7 +928,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
                     $params['engagement_time_msec'] = 1200;
                     $params['debug_mode'] = true;
                 }
@@ -956,7 +956,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
                     $params['engagement_time_msec'] = 1200;
                     $params['debug_mode'] = true;
                 }
@@ -984,7 +984,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     ],
                 ];
 
-                if ($this->config->get('analytics_ps_enhanced_measurement_debug_mode')) {
+                if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
                     $params['engagement_time_msec'] = 1200;
                     $params['debug_mode'] = true;
                 }

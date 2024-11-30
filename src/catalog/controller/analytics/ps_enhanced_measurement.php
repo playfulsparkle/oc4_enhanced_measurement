@@ -44,7 +44,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ga4_config = [];
         $adwords_config = [];
 
-        if ($this->config->get('analytics_ps_enhanced_measurement_ga4_gtag_debug_mode')) {
+        if ($this->config->get('analytics_ps_enhanced_measurement_debug_global_site_tag')) {
             $ga4_config['debug_mode'] = true;
         }
 
@@ -173,10 +173,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
 
-        $args['ps_enhanced_measurement_status'] = $this->config->get('analytics_ps_enhanced_measurement_status');
         $args['ps_enhanced_measurement_implementation'] = $this->config->get('analytics_ps_enhanced_measurement_implementation');
         $args['ps_enhanced_measurement_gtm_id'] = $this->config->get('analytics_ps_enhanced_measurement_gtm_id');
-        $args['ps_enhanced_measurement_debug_mode'] = $this->config->get('analytics_ps_enhanced_measurement_debug_mode');
+        $args['ps_enhanced_measuremen_console_log_ga4_events'] = $this->config->get('analytics_ps_enhanced_measurement_console_log_ga4_events');
+        $args['ps_enhanced_measurement_console_log_adwords_events'] = $this->config->get('analytics_ps_enhanced_measurement_console_log_adwords_events');
         $args['ps_enhanced_measurement_tracking_delay'] = $this->config->get('analytics_ps_enhanced_measurement_tracking_delay');
 
         $config_track_file_download_ext = $this->config->get('analytics_ps_enhanced_measurement_track_file_download_ext');
@@ -199,6 +199,43 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         } else {
             $args['ps_login'] = null;
         }
+
+
+        $config_adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $config_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
+
+        $adwords_purchase_labels = [];
+
+        if ($config_adwords_status) {
+            $config_adwords_purchase_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
+            $config_adwords_add_to_cart_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
+            $config_adwords_begin_checkout_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_begin_checkout_label');
+            $config_adwords_lead_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
+            $config_adwords_sign_up_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
+
+            if ($config_adwords_purchase_label) {
+                $adwords_purchase_labels['purchase'] = $config_adwords_id . '/' . $config_adwords_purchase_label;
+            }
+
+            if ($config_adwords_add_to_cart_label) {
+                $adwords_purchase_labels['add_to_cart'] = $config_adwords_id . '/' . $config_adwords_add_to_cart_label;
+            }
+
+            if ($config_adwords_begin_checkout_label) {
+                $adwords_purchase_labels['begin_checkout'] = $config_adwords_id . '/' . $config_adwords_begin_checkout_label;
+            }
+
+            if ($config_adwords_lead_label) {
+                $adwords_purchase_labels['generate_lead'] = $config_adwords_id . '/' . $config_adwords_lead_label;
+            }
+
+            if ($config_adwords_sign_up_label) {
+                $adwords_purchase_labels['sign_up'] = $config_adwords_id . '/' . $config_adwords_sign_up_label;
+            }
+        }
+
+        $args['ps_adwords_status'] = $config_adwords_status;
+        $args['ps_adwords_purchase_labels'] = json_encode($adwords_purchase_labels);
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');

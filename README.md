@@ -11,27 +11,25 @@ The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ seaml
 - **Two Setup Options to Suit Your Needs:**
   - **Google Tag Manager (GTM):** Perfect for users who need advanced customization or manage multiple tags. Requires only the **Measurement ID**.
   - **Global Site Tag (gtag.js):** A straightforward option for quick integration with Google Analytics. Requires **Google Tag ID** and **Measurement Protocol API Secret**.
+- **Adwords Conversion Tracking:** Supports tracking conversions using Google Ads. Simply provide your **Google Adwords ID** and **Google Adwords Label** for specific events.
 - **Google Consent Mode Integration:** Supports configuring user consent preferences for storage and ad data, with advanced options like **Ads Data Redaction** and **Wait for Update** to meet privacy requirements.
 - **Automatic Event Tracking:** Captures eCommerce-specific events such as page views, product impressions, add-to-cart actions, checkout progress, and purchase confirmations—no manual configuration required.
 - **Easy Setup and Management:** No technical skills needed. Simply input your required Google IDs and API secrets, and the extension handles the rest.
 - **Supports Multi-Store Environments:** Track and manage analytics for multiple stores from a single setup.
 - **Enhanced Insights for Better Decisions:** Use Google Analytics GA4's robust features to optimize your store's performance, improve customer experience, and maximize your revenue.
-- **Multilingual Support**: Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), and Slovenčina (sk-sk).
+- **Multilingual Support:** Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), and Slovenčina (sk-sk).
 
 ---
 
 This extension makes tracking your store’s performance easier than ever, ensuring you have all the tools needed to grow your business while staying compliant with privacy regulations. Whether you’re new to analytics or a seasoned marketer, this tool simplifies complex tracking tasks and helps you focus on what matters most—your customers.
 
 ---
-## Tracking eCommerce Events
+
+## Tracking (GA4) Enhanced Ecommerce Events
 
 This extension helps you understand how users interact with your online store by automatically tracking key actions (called "events"). These events provide insights into the customer journey, from browsing products to completing purchases, so you can make better decisions to improve your store's performance.
 
-### What Are Events?
-
-Events are specific actions your customers take on your website. For example, adding a product to their cart, completing a purchase, or even searching for items. By tracking these actions, you can see what’s working well and what might need improvement.
-
-### Events Tracked by This Extension
+### (GA4) Enhanced Ecommerce Tracked by This Extension
 
 | **Event**                  | **What It Tracks**                                                                                     |
 |----------------------------|--------------------------------------------------------------------------------------------------------|
@@ -66,7 +64,19 @@ Events are specific actions your customers take on your website. For example, ad
 - **Refund:** This tracks when you process a refund for an order. It can be partial (e.g., for one item) or full (for the entire order).
 - **Search:** When a customer uses the search bar on your website, this event records what they are looking for, helping you understand popular keywords.
 
-This feature allows you to get a full picture of how customers use your store, from their first visit to completing their purchase, making it easier to refine your offerings and improve their shopping experience.
+## Ads Conversion Tracking Supported Events
+
+This extension enables tracking of key conversion actions in your online store to measure the effectiveness of your advertising campaigns. These events help you understand how users respond to your ads, providing valuable insights for optimizing your campaigns.
+
+### Ads Conversion Tracking Events Supported by This Extension
+
+| **Event**                  | **What It Tracks**                                                                                      |
+|----------------------------|---------------------------------------------------------------------------------------------------------|
+| `Purchase`                 | When a customer completes an order, including the total spent and items purchased.                      |
+| `Add to Cart`              | When a product is added to the shopping cart.                                                           |
+| `Begin Checkout`           | When a customer starts the checkout process.                                                            |
+| `Submit Lead Form`         | When a customer shows interest, such as by filling out a contact form.                                  |
+| `Sign-Up`                  | When a customer creates an account or registers for something.                                          |
 
 ---
 
