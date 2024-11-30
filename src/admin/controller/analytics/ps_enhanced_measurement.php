@@ -314,14 +314,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $this->load->model('setting/setting');
 
             $data = [
+                'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
                 'analytics_ps_enhanced_measurement_item_id' => 'product_id',
                 'analytics_ps_enhanced_measurement_item_category_option' => 0,
-                'analytics_ps_enhanced_measurement_item_price_tax' => (bool) $this->config->get('config_tax'),
+                'analytics_ps_enhanced_measurement_item_price_tax' => $this->config->get('config_tax'),
+                'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
+                'analytics_ps_enhanced_measurement_location_id' => '',
+                'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_console_log_ga4_events' => 0,
                 'analytics_ps_enhanced_measurement_console_log_adwords_events' => 0,
-                'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
-                'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
-                'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
                 'analytics_ps_enhanced_measurement_tracking_delay' => 800,
                 'analytics_ps_enhanced_measurement_track_user_id' => 1,
                 'analytics_ps_enhanced_measurement_track_generate_lead' => 1,
@@ -342,10 +343,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
                 'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
                 'analytics_ps_enhanced_measurement_track_purchase' => 1,
-                'analytics_ps_enhanced_measurement_track_file_download' => 1,
-                'analytics_ps_enhanced_measurement_adwords_enhanced_conversion' => 0,
+                'analytics_ps_enhanced_measurement_track_file_download' => 0,
                 'analytics_ps_enhanced_measurement_track_file_download_ext' => '.pdf, .xls, .xlsx, .doc, .docx',
+                'analytics_ps_enhanced_measurement_gcm_status' => 0,
+                'analytics_ps_enhanced_measurement_ad_storage' => 0,
+                'analytics_ps_enhanced_measurement_ad_user_data' => 0,
+                'analytics_ps_enhanced_measurement_ad_personalization' => 0,
+                'analytics_ps_enhanced_measurement_analytics_storage' => 0,
+                'analytics_ps_enhanced_measurement_functionality_storage' => 0,
+                'analytics_ps_enhanced_measurement_personalization_storage' => 0,
+                'analytics_ps_enhanced_measurement_security_storage' => 0,
                 'analytics_ps_enhanced_measurement_wait_for_update' => 500,
+                'analytics_ps_enhanced_measurement_ads_data_redaction' => 0,
+                'analytics_ps_enhanced_measurement_url_passthrough' => 0,
+                'analytics_ps_enhanced_measurement_adwords_status' => 0,
+                'analytics_ps_enhanced_measurement_adwords_enhanced_conversion' => 0,
             ];
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
