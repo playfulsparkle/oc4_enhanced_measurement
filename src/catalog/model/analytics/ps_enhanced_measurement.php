@@ -36,20 +36,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             {% if ps_enhanced_measurement_status %}
             <script>
                 var ps_dataLayer = {
-                    track_file_download_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
+                    filename_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
-                    data: {},
+                    ga4_data: {},
                     init: function () {
                         document.querySelectorAll('a[href]').forEach(function(link, index) {
                             var urlObj = new URL(link.getAttribute('href'), window.location.origin);
                             var fileName = urlObj.pathname.split('/').pop();
                             var fileExtension = '.' + fileName.split('.').pop().toLowerCase();
 
-                            if (this.track_file_download_ext.includes(fileExtension)) {
+                            if (this.filename_ext.includes(fileExtension)) {
                                 link.setAttribute('data-ps-track-event', 'file_download');
                                 link.setAttribute('data-ps-track-id', 'custom_' + index);
 
-                                this.data['file_download_custom_' + index] = {
+                                this.ga4_data['file_download_custom_' + index] = {
                                     event: 'file_download',
                                     file_extension: fileExtension,
                                     file_name: fileName,
@@ -62,8 +62,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     getData: function(eventName, productId) {
                         var dataId = eventName + '_' + productId;
 
-                        if (this.data.hasOwnProperty(dataId)) {
-                            return this.data[dataId];
+                        if (this.ga4_data.hasOwnProperty(dataId)) {
+                            return this.ga4_data[dataId];
                         }{% if ps_enhanced_measurement_debug_mode %} else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
                         }{% endif %}
@@ -71,13 +71,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         return null;
                     },
                     setData: function(data) {
-                        this.data = Object.assign({}, this.data, data);
+                        this.ga4_data = Object.assign({}, this.ga4_data, data);
                     },
                     onClick: function(eventName, productId) {
                         var dataId = eventName + '_' + productId;
 
-                        if (this.data.hasOwnProperty(dataId)) {
-                            this.pushEventData(eventName, this.data[dataId]);
+                        if (this.ga4_data.hasOwnProperty(dataId)) {
+                            this.pushEventData(eventName, this.ga4_data[dataId]);
                         }{% if ps_enhanced_measurement_debug_mode %} else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
                         }{% endif %}
@@ -441,8 +441,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '{{ text_message }}',
             'replace' => <<<HTML
             {{ text_message }}
-            {% if ps_adwords_status and ps_adwords_user_data %}<script>gtag('set', 'user_data', {{ ps_adwords_user_data }});</script>{% endif %}
-            {% if ps_adwords_status and ps_adwords_purchase_conversion %}<script>gtag('event', 'conversion', {{ ps_adwords_purchase_conversion }});</script>{% endif %}
             {% if ps_track_purchase and ps_purchase %}<script>ps_dataLayer.pushEventData('purchase', {{ ps_purchase }});</script>{% endif %}
             HTML
         ];
