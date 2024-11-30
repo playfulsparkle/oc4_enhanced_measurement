@@ -1,22 +1,19 @@
 # Playful Sparkle - Enhanced Measurement for OpenCart 4
 
-The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ seamlessly integrates and enhances Google Analytics GA4 tracking for your eCommerce store. This extension simplifies the implementation of Google Analytics by enabling detailed tracking of user behavior, cart activities, and purchase events. It is designed to cater to both experienced marketers and beginners, providing valuable insights into your store's performance. Additionally, it supports **Google Consent Mode (GCM)** with predefined profiles, ensuring compliance with privacy regulations when Google Tag Manager is used.
+The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ makes it easy to integrate **Google Analytics GA4** and **Google Ads Conversion** Tracking into your eCommerce store. It enables detailed tracking of user behavior, cart activities, and purchase events, providing valuable insights into how customers interact with your store. Whether you're an experienced marketer or a beginner, this extension simplifies tracking, helping you optimize your marketing strategies and improve performance. It also supports **Google Consent Mode (GCM)** with predefined profiles, ensuring your store remains compliant with privacy regulations when using **Google Tag Manager**.
 
 ## Features
 
-- **Advanced Tracking Made Simple:** Automatically tracks important user interactions such as:
-  - Product views, category browsing, and search activity.
-  - Cart interactions like adding or removing items.
-  - Checkout steps and completed purchases.
-- **Two Setup Options to Suit Your Needs:**
-  - **Google Tag Manager (GTM):** Perfect for users who need advanced customization or manage multiple tags. Requires only the **Measurement ID**.
-  - **Global Site Tag (gtag.js):** A straightforward option for quick integration with Google Analytics. Requires **Google Tag ID** and **Measurement Protocol API Secret**.
-- **Adwords Conversion Tracking:** Supports tracking conversions using Google Ads. Simply provide your **Google Adwords ID** and **Google Adwords Label** for specific events.
-- **Google Consent Mode Integration:** Supports configuring user consent preferences for storage and ad data, with advanced options like **Ads Data Redaction** and **Wait for Update** to meet privacy requirements.
-- **Automatic Event Tracking:** Captures eCommerce-specific events such as page views, product impressions, add-to-cart actions, checkout progress, and purchase confirmations—no manual configuration required.
-- **Easy Setup and Management:** No technical skills needed. Simply input your required Google IDs and API secrets, and the extension handles the rest.
-- **Supports Multi-Store Environments:** Track and manage analytics for multiple stores from a single setup.
-- **Enhanced Insights for Better Decisions:** Use Google Analytics GA4's robust features to optimize your store's performance, improve customer experience, and maximize your revenue.
+- **Advanced Tracking, Simplified:** Automatically tracks key user interactions such as product views, category browsing, search activity, cart actions (add/remove items), checkout steps, and completed purchases.
+- **Flexible Setup Options:**
+  - **Google Tag Manager (GTM):** Ideal for users needing customization or managing multiple tags. Just enter the **Measurement ID** for easy integration.
+  - **Global Site Tag (gtag.js):** A simple integration option for quick setup with Google Analytics. Requires the **Google Tag ID** and **Measurement Protocol API Secret**.
+- **Adwords Conversion Tracking:** Easily track Google Ads conversions. Simply enter your **Google Adwords ID** and **Google Adwords Label** to track specific events.
+- **Google Consent Mode (GCM) Integration:** Ensures compliance with privacy regulations by enabling user consent configuration for storage and ad data, including options like **Ads Data Redaction** and **Wait for Update**.
+- **Automatic Event Tracking:** Automatically captures key eCommerce events like page views, product impressions, add-to-cart actions, checkout progress, and purchase confirmations—no manual setup required.
+- **Hassle-Free Setup:** No technical expertise needed. Just provide your Google IDs and API secrets, and the extension does the rest.
+- **Multi-Store Support:** Easily manage and track analytics across multiple stores with a single setup.
+- **Enhanced Insights for Smarter Decisions:** Leverage Google Analytics GA4's powerful features to improve performance, enhance user experience, and increase revenue.
 - **Multilingual Support:** Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), and Slovenčina (sk-sk).
 
 ---
