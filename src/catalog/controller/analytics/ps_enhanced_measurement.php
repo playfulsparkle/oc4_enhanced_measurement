@@ -202,9 +202,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
         $config_adwords_status = $this->config->get('analytics_ps_enhanced_measurement_adwords_status');
+        $config_adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
         $config_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
 
         $adwords_purchase_labels = [];
+        $adwords_user_data = [];
 
         if ($config_adwords_status) {
             $config_adwords_purchase_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
@@ -232,10 +234,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($config_adwords_sign_up_label) {
                 $adwords_purchase_labels['sign_up'] = $config_adwords_id . '/' . $config_adwords_sign_up_label;
             }
+
+            if ($config_adwords_enhanced_conversion) {
+                $adwords_user_data = $this->getAdwordsUserData();
+            }
         }
 
         $args['ps_adwords_status'] = $config_adwords_status;
+        $args['ps_adwords_enhanced_conversion'] = $config_adwords_enhanced_conversion;
         $args['ps_adwords_purchase_labels'] = json_encode($adwords_purchase_labels);
+        $args['ps_adwords_user_data'] = json_encode($adwords_user_data);
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');

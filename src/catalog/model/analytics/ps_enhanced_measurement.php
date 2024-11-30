@@ -37,7 +37,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 var ps_dataLayer = {
                     filename_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
-                    {% if ps_adwords_status %}adwords_labels: {{ ps_adwords_purchase_labels }},{% endif %}
+                    {% if ps_adwords_status %}
+                    adwords_user_data: {{ ps_adwords_user_data }},
+                    adwords_labels: {{ ps_adwords_purchase_labels }},
+                    {% endif %}
                     ga4_data: {},
                     init: function () {
                         document.querySelectorAll('a[href]').forEach(function(link, index) {
@@ -93,9 +96,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         dataLayer.push({ ecommerce: null });
                         dataLayer.push( { 'event': eventName, ...data } );
                     {% endif %}
-                    {% if ps_enhanced_measuremen_console_log_ga4_events %}this.debug('{{ ps_enhanced_measurement_implementation }}', eventName, data);{% endif %}
+                    {% if ps_enhanced_measuremen_console_log_ga4_events %}this.debug('{{ ps_enhanced_measurement_implementation }}', 'event', eventName, data);{% endif %}
                     {% if ps_adwords_status %}
                         if (this.adwords_labels.hasOwnProperty(eventName)) {
+                        {% if ps_adwords_enhanced_conversion %}
+                            gtag('set', 'user_data', this.adwords_user_data);
+                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'set', 'user_data', this.adwords_user_data);{% endif %}
+                        {% endif %}
+
                             var conversion_data = {'send_to': this.adwords_labels[eventName]};
 
                             if (data.hasOwnProperty('ecommerce')) {
@@ -112,17 +120,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                                 conversion_data.currency = data.currency;
                             }
 
+
                             gtag('event', 'conversion', conversion_data);
-                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'conversion', conversion_data);{% endif %}
+                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'event', 'conversion', conversion_data);{% endif %}
                         }
                     {% endif %}
                     },
-                    debug: function(method, eventName, data) {
+                    debug: function(method, command, eventName, data) {
                         if (method == 'gtag') {
                             if (data.hasOwnProperty('ecommerce')) {
-                                console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data.ecommerce, undefined, 4) +");");
+                                console.log("gtag('" + command + "', '" + eventName + "', " + JSON.stringify(data.ecommerce, undefined, 4) +");");
                             } else {
-                                console.log("gtag('event', '" + eventName + "', " + JSON.stringify(data, undefined, 4) +");");
+                                console.log("gtag('" + command + "', '" + eventName + "', " + JSON.stringify(data, undefined, 4) +");");
                             }
                         } else if (method == 'gtm') {
                             console.log('dataLayer.push({ ecommerce: null });\\r\\n');
