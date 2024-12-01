@@ -69,17 +69,17 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if ($config_adwords_status) {
             if ($json_adwords_config) {
-                $html .= "gtag('config', '" . $config_adwords_id . "');" . PHP_EOL;
-            } else {
                 $html .= "gtag('config', '" . $config_adwords_id . "', " . $json_adwords_config . ");" . PHP_EOL;
+            } else {
+                $html .= "gtag('config', '" . $config_adwords_id . "');" . PHP_EOL;
             }
         }
 
         if ($config_measurement_implementation === 'gtag') {
             if ($json_gtag_config) {
-                $html .= "gtag('config', '" . $config_google_tag_id . "');" . PHP_EOL;
-            } else {
                 $html .= "gtag('config', '" . $config_google_tag_id . "', " . $json_gtag_config . ");" . PHP_EOL;
+            } else {
+                $html .= "gtag('config', '" . $config_google_tag_id . "');" . PHP_EOL;
             }
         }
 
