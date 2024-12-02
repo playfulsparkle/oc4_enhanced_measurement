@@ -37,9 +37,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                 var ps_dataLayer = {
                     filename_ext: {{ ps_enhanced_measurement_track_file_download_ext | default('[]') }},
                     tracking_delay: {{ ps_enhanced_measurement_tracking_delay | default(800) }},
-                    adwords_user_data: {{ ps_adwords_user_data | default('{}') }},
-                    adwords_tracking: {{ ps_adwords_tracking | default('{}') }},
-                    ga4_tracking: {{ ps_ga4_tracking | default('{}') }},
+                    adwords_user_data: {{ ps_enhanced_measurement_adwords_user_data | default('{}') }},
+                    adwords_tracking: {{ ps_enhanced_measurement_adwords_tracking | default('{}') }},
+                    ga4_tracking: {{ ps_enhanced_measurement_ga4_tracking | default('{}') }},
                     ga4_data: {},
                     init: function () {
                         document.querySelectorAll('a[href]').forEach(function(link, index) {
@@ -66,9 +66,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                         if (this.ga4_data.hasOwnProperty(dataId)) {
                             return this.ga4_data[dataId];
-                        }{% if ps_enhanced_measuremen_console_log_ga4_events %} else {
+                        } else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
-                        }{% endif %}
+                        }
 
                         return null;
                     },
@@ -80,11 +80,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
                         if (this.ga4_data.hasOwnProperty(dataId)) {
                             this.pushEventData(eventName, this.ga4_data[dataId]);
-                        }{% if ps_enhanced_measuremen_console_log_ga4_events %} else {
+                        } else {
                             console.error('Enhanced Measurement (Error): `' + dataId + '` dataset does not exists!');
-                        }{% endif %}
+                        }
                     },
                     pushEventData: function(eventName, data) {
+                        console.log('eventName ', eventName, ', allowed ', this.ga4_tracking[eventName]);
                         if (this.ga4_tracking[eventName]) {
                             {% if ps_enhanced_measurement_implementation == 'gtag' %}
                             if (data.hasOwnProperty('ecommerce')) {
@@ -96,14 +97,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                             dataLayer.push({ ecommerce: null });
                             dataLayer.push( { 'event': eventName, ...data } );
                             {% endif %}
-                            {% if ps_enhanced_measuremen_console_log_ga4_events %}
+                            {% if ps_enhanced_measurement_console_log_ga4_events %}
                             this.debug('{{ ps_enhanced_measurement_implementation }}', 'event', eventName, data);
                             {% endif %}
                         }
 
-                    {% if ps_adwords_status %}
+                    {% if ps_enhanced_measurement_adwords_status %}
                         if (this.adwords_tracking.hasOwnProperty(eventName)) {
-                        {% if ps_adwords_enhanced_conversion %}
+                        {% if ps_enhanced_measurement_adwords_enhanced_conversion %}
                             gtag('set', 'user_data', this.adwords_user_data);
                             {% if ps_enhanced_measurement_console_log_adwords_events %}
                             this.debug('gtag', 'set', 'user_data', this.adwords_user_data);

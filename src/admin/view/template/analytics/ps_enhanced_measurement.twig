@@ -479,7 +479,7 @@
 							<div class="row mb-3 required">
 								<label for="input-file-download-ext" class="col-sm-2 col-form-label">{{ entry_file_download_ext }}</label>
 								<div class="col-sm-10">
-									<input type="text" name="analytics_ps_enhanced_measurement_track_file_download_ext" value="{{ analytics_ps_enhanced_measurement_track_file_download_ext }}" placeholder="{{ entry_file_download_ext }}" id="input-file-download-ext" class="form-control" />
+									<input type="text" name="analytics_ps_enhanced_measurement_track_file_download_ext" value="{{ analytics_ps_enhanced_measurement_track_file_download_ext }}" placeholder="{{ entry_file_download_ext }}" id="input-file-download-ext" class="form-control"{% if not analytics_ps_enhanced_measurement_track_file_download %} disabled{% endif %} />
 									<div id="error-input-file-download-ext" class="invalid-feedback"></div>
 									<div class="form-text">{{ help_file_download_ext }}</div>
 								</div>
@@ -768,6 +768,10 @@
 	</div>
 </div>
 <script>
+
+	$('#input-file-download').on('change', function () {
+		$('#input-file-download-ext').prop('disabled', !$(this).is(':checked'));
+	});
 
 	$('#input-measurement-implementation').on('change', function () {
     var selectedValue = $(this).val();
