@@ -154,10 +154,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      */
     public function eventCatalogViewCommonHeaderBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -205,7 +202,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $config_adwords_enhanced_conversion = $this->config->get('analytics_ps_enhanced_measurement_adwords_enhanced_conversion');
         $config_adwords_id = $this->config->get('analytics_ps_enhanced_measurement_adwords_id');
 
-        $adwords_purchase_labels = [];
+        $ps_adwords_tracking = [];
         $adwords_user_data = [];
 
         if ($config_adwords_status) {
@@ -216,23 +213,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $config_adwords_sign_up_label = $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
 
             if ($config_adwords_purchase_label) {
-                $adwords_purchase_labels['purchase'] = $config_adwords_id . '/' . $config_adwords_purchase_label;
+                $ps_adwords_tracking['purchase'] = $config_adwords_id . '/' . $config_adwords_purchase_label;
             }
 
             if ($config_adwords_add_to_cart_label) {
-                $adwords_purchase_labels['add_to_cart'] = $config_adwords_id . '/' . $config_adwords_add_to_cart_label;
+                $ps_adwords_tracking['add_to_cart'] = $config_adwords_id . '/' . $config_adwords_add_to_cart_label;
             }
 
             if ($config_adwords_begin_checkout_label) {
-                $adwords_purchase_labels['begin_checkout'] = $config_adwords_id . '/' . $config_adwords_begin_checkout_label;
+                $ps_adwords_tracking['begin_checkout'] = $config_adwords_id . '/' . $config_adwords_begin_checkout_label;
             }
 
             if ($config_adwords_lead_label) {
-                $adwords_purchase_labels['generate_lead'] = $config_adwords_id . '/' . $config_adwords_lead_label;
+                $ps_adwords_tracking['generate_lead'] = $config_adwords_id . '/' . $config_adwords_lead_label;
             }
 
             if ($config_adwords_sign_up_label) {
-                $adwords_purchase_labels['sign_up'] = $config_adwords_id . '/' . $config_adwords_sign_up_label;
+                $ps_adwords_tracking['sign_up'] = $config_adwords_id . '/' . $config_adwords_sign_up_label;
             }
 
             if ($config_adwords_enhanced_conversion) {
@@ -240,10 +237,33 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             }
         }
 
+        $ps_ga4_tracking = [
+            'generate_lead' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead'),
+            'qualify_lead' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_qualify_lead'),
+            'sign_up' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_sign_up'),
+            'login' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_login'),
+            'add_to_wishlist' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist'),
+            'add_to_cart' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart'),
+            'remove_from_cart' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_remove_from_cart'),
+            'search' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_search'),
+            'view_item_list' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list'),
+            'select_item' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_select_item'),
+            'view_item' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_view_item'),
+            'select_promotion' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion'),
+            'view_promotion' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_view_promotion'),
+            'view_cart' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_view_cart'),
+            'begin_checkout' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout'),
+            'add_payment_info' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_add_payment_info'),
+            'add_shipping_info' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_add_shipping_info'),
+            'purchase' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_purchase'),
+            'file_download' => (bool) $this->config->get('analytics_ps_enhanced_measurement_track_file_download'),
+        ];
+
         $args['ps_adwords_status'] = $config_adwords_status;
         $args['ps_adwords_enhanced_conversion'] = $config_adwords_enhanced_conversion;
-        $args['ps_adwords_purchase_labels'] = json_encode($adwords_purchase_labels);
+        $args['ps_adwords_tracking'] = json_encode($ps_adwords_tracking);
         $args['ps_adwords_user_data'] = json_encode($adwords_user_data);
+        $args['ps_ga4_tracking'] = json_encode($ps_ga4_tracking);
 
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
@@ -255,10 +275,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountDownloadBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -320,15 +337,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductThumbBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
@@ -363,16 +377,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductCategoryBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -640,16 +651,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductSearchBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -977,16 +985,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductSpecialBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -1232,16 +1237,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductCompareBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -1466,16 +1468,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductManufacturerInfoBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -1729,15 +1728,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountOrderInfoBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -1966,16 +1962,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountWishlistBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_item_list = $this->config->get('analytics_ps_enhanced_measurement_track_view_item_list');
@@ -2194,15 +2187,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountWishlistListBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
@@ -2236,16 +2226,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewProductProductBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
         $config_track_view_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_view_promotion');
@@ -2625,14 +2612,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      */
     public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
+
+        if (!$config_track_generate_lead) {
             return;
         }
 
@@ -2649,14 +2635,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_generate_lead')) {
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
+
+        if (!$config_track_generate_lead) {
             return;
         }
 
@@ -2671,14 +2656,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewInformationContactSuccessBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (!$config_track_generate_lead) {
             return;
@@ -2724,10 +2706,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerAccountLoginLoginAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -2748,15 +2727,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountAccountBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (!$config_track_generate_lead) {
             return;
@@ -2794,14 +2769,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart')) {
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
+
+        if (!$config_track_add_to_cart) {
             return;
         }
 
@@ -2993,10 +2967,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutPaymentMethodBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3021,10 +2992,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutPaymentMethodSaveAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3197,10 +3165,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutShippingMethodBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3224,10 +3189,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutShippingMethodSaveAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3400,10 +3362,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutConfirmBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3446,15 +3405,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutCheckoutBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
-        $config_track_begin_checkout = $this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout');
+        $config_track_begin_checkout = $this->config->get('analytics_ps_enhanced_measurement_track_begin_checkout') || $this->config->get('analytics_ps_enhanced_measurement_adwords_begin_checkout_label');
         $config_track_qualify_lead = $this->config->get('analytics_ps_enhanced_measurement_track_qualify_lead');
 
         if (
@@ -3629,10 +3585,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewAccountSuccessBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -3642,8 +3595,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             return;
         }
 
-        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up') || $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (
             !$config_track_sign_up &&
@@ -3700,15 +3653,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutRegisterBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up') || $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (
             !$config_track_sign_up &&
@@ -3732,15 +3682,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerCheckoutRegisterSaveAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up') || $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (
             !$config_track_sign_up &&
@@ -3783,15 +3730,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string &$output = null)
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up');
-        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead');
+        $config_track_sign_up = $this->config->get('analytics_ps_enhanced_measurement_track_sign_up') || $this->config->get('analytics_ps_enhanced_measurement_adwords_sign_up_label');
+        $config_track_generate_lead = $this->config->get('analytics_ps_enhanced_measurement_track_generate_lead') || $this->config->get('analytics_ps_enhanced_measurement_adwords_lead_label');
 
         if (
             !$config_track_sign_up &&
@@ -3821,14 +3765,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogControllerCheckoutSuccessBefore(string &$route, array &$args): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
-        if (!$this->config->get('analytics_ps_enhanced_measurement_track_purchase')) {
+        $config_track_purchase = $this->config->get('analytics_ps_enhanced_measurement_track_purchase') || $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
+
+        if (!$config_track_purchase) {
             return;
         }
 
@@ -4016,15 +3959,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
-        $config_track_purchase = $this->config->get('analytics_ps_enhanced_measurement_track_purchase');
+        $config_track_purchase = $this->config->get('analytics_ps_enhanced_measurement_track_purchase') || $this->config->get('analytics_ps_enhanced_measurement_adwords_purchase_label');
 
         if (!$config_track_purchase) {
             return;
@@ -4053,10 +3993,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutCartBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -4213,15 +4150,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutCartListBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_remove_from_cart = $this->config->get('analytics_ps_enhanced_measurement_track_remove_from_cart');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
@@ -4438,10 +4372,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewCheckoutCartInfoBefore(string &$route, array &$args, string &$template): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
@@ -4640,16 +4571,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewExtensionOpencartModuleBestsellerAfter(string &$route, array &$args, string &$output): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
@@ -4846,15 +4774,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewExtensionOpencartModuleFeaturedAfter(string &$route, array &$args, string &$output): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
@@ -5059,15 +4984,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewExtensionOpencartModuleLatestAfter(string &$route, array &$args, string &$output): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 
@@ -5273,15 +5195,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function eventCatalogViewExtensionOpencartModuleSpecialAfter(string &$route, array &$args, string &$output): void
     {
-        if (
-            !$this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
         $config_track_add_to_wishlist = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_wishlist');
-        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart');
+        $config_track_add_to_cart = $this->config->get('analytics_ps_enhanced_measurement_track_add_to_cart') || $this->config->get('analytics_ps_enhanced_measurement_adwords_add_to_cart_label');
         $config_track_select_item = $this->config->get('analytics_ps_enhanced_measurement_track_select_item');
         $config_track_select_promotion = $this->config->get('analytics_ps_enhanced_measurement_track_select_promotion');
 

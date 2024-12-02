@@ -20,7 +20,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'search' => '<body>',
             'replace' => <<<HTML
             <body>
-            {% if ps_enhanced_measurement_status and (ps_enhanced_measurement_implementation == 'gtm') %}
+            {% if ps_enhanced_measurement_implementation == 'gtm' %}
             <!-- Google Tag Manager (noscript) -->
             <noscript>
                 <iframe src="https://www.googletagmanager.com/ns.html?id={{ ps_enhanced_measurement_gtm_id }}" height="0" width="0" style="display:none; visibility:hidden;"></iframe>
@@ -35,12 +35,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => <<<HTML
             <script>
                 var ps_dataLayer = {
-                    filename_ext: {{ ps_enhanced_measurement_track_file_download_ext }},
-                    tracking_delay: {{ ps_enhanced_measurement_tracking_delay }},
-                    {% if ps_adwords_status %}
-                    adwords_user_data: {{ ps_adwords_user_data }},
-                    adwords_labels: {{ ps_adwords_purchase_labels }},
-                    {% endif %}
+                    filename_ext: {{ ps_enhanced_measurement_track_file_download_ext | default('[]') }},
+                    tracking_delay: {{ ps_enhanced_measurement_tracking_delay | default(800) }},
+                    adwords_user_data: {{ ps_adwords_user_data | default('{}') }},
+                    adwords_tracking: {{ ps_adwords_tracking | default('{}') }},
+                    ga4_tracking: {{ ps_ga4_tracking | default('{}') }},
                     ga4_data: {},
                     init: function () {
                         document.querySelectorAll('a[href]').forEach(function(link, index) {
@@ -86,43 +85,51 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         }{% endif %}
                     },
                     pushEventData: function(eventName, data) {
-                    {% if ps_enhanced_measurement_implementation == 'gtag' %}
-                        if (data.hasOwnProperty('ecommerce')) {
-                            gtag('event', eventName, data.ecommerce);
-                        } else {
-                            gtag('event', eventName, data);
+                        if (this.ga4_tracking[eventName]) {
+                            {% if ps_enhanced_measurement_implementation == 'gtag' %}
+                            if (data.hasOwnProperty('ecommerce')) {
+                                gtag('event', eventName, data.ecommerce);
+                            } else {
+                                gtag('event', eventName, data);
+                            }
+                            {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
+                            dataLayer.push({ ecommerce: null });
+                            dataLayer.push( { 'event': eventName, ...data } );
+                            {% endif %}
+                            {% if ps_enhanced_measuremen_console_log_ga4_events %}
+                            this.debug('{{ ps_enhanced_measurement_implementation }}', 'event', eventName, data);
+                            {% endif %}
                         }
-                    {% elseif ps_enhanced_measurement_implementation == 'gtm' %}
-                        dataLayer.push({ ecommerce: null });
-                        dataLayer.push( { 'event': eventName, ...data } );
-                    {% endif %}
-                    {% if ps_enhanced_measuremen_console_log_ga4_events %}this.debug('{{ ps_enhanced_measurement_implementation }}', 'event', eventName, data);{% endif %}
+
                     {% if ps_adwords_status %}
-                        if (this.adwords_labels.hasOwnProperty(eventName)) {
+                        if (this.adwords_tracking.hasOwnProperty(eventName)) {
                         {% if ps_adwords_enhanced_conversion %}
                             gtag('set', 'user_data', this.adwords_user_data);
-                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'set', 'user_data', this.adwords_user_data);{% endif %}
+                            {% if ps_enhanced_measurement_console_log_adwords_events %}
+                            this.debug('gtag', 'set', 'user_data', this.adwords_user_data);
+                            {% endif %}
                         {% endif %}
 
-                            var conversion_data = {'send_to': this.adwords_labels[eventName]};
+                        var conversion_data = {'send_to': this.adwords_tracking[eventName]};
 
-                            if (data.hasOwnProperty('ecommerce')) {
-                                conversion_data.currency = data.ecommerce.currency;
+                        if (data.hasOwnProperty('ecommerce')) {
+                            conversion_data.currency = data.ecommerce.currency;
 
-                                if (eventName === 'purchase') {
-                                    conversion_data.value = data.ecommerce.value + data.ecommerce.tax + data.ecommerce.shipping;
-                                    conversion_data.transaction_id = data.ecommerce.transaction_id;
-                                } else {
-                                    conversion_data.value = data.ecommerce.value;
-                                }
+                            if (eventName === 'purchase') {
+                                conversion_data.value = data.ecommerce.value + data.ecommerce.tax + data.ecommerce.shipping;
+                                conversion_data.transaction_id = data.ecommerce.transaction_id;
                             } else {
-                                conversion_data.value = data.value;
-                                conversion_data.currency = data.currency;
+                                conversion_data.value = data.ecommerce.value;
                             }
+                        } else {
+                            conversion_data.value = data.value;
+                            conversion_data.currency = data.currency;
+                        }
 
-
-                            gtag('event', 'conversion', conversion_data);
-                            {% if ps_enhanced_measurement_console_log_adwords_events %}this.debug('gtag', 'event', 'conversion', conversion_data);{% endif %}
+                        gtag('event', 'conversion', conversion_data);
+                        {% if ps_enhanced_measurement_console_log_adwords_events %}
+                        this.debug('gtag', 'event', 'conversion', conversion_data);
+                        {% endif %}
                         }
                     {% endif %}
                     },
