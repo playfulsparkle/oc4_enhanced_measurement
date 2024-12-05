@@ -85,7 +85,6 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         }
                     },
                     pushEventData: function(eventName, data) {
-                        console.log('eventName ', eventName, ', allowed ', this.ga4_tracking[eventName]);
                         if (this.ga4_tracking[eventName]) {
                             {% if ps_enhanced_measurement_implementation == 'gtag' %}
                             if (data.hasOwnProperty('ecommerce')) {
