@@ -452,29 +452,29 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->request->get['path'])) {
-            $parts = explode('_', (string) $this->request->get['path']);
-            $category_id = (int) array_pop($parts);
-            $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
+            $ps_parts = explode('_', (string) $this->request->get['path']);
+            $ps_category_id = (int) array_pop($ps_parts);
+            $ps_category_info = $ps_category_id > 0 ? $this->model_catalog_category->getCategory($ps_category_id) : null;
         } else {
-            $category_id = 0;
-            $category_info = null;
+            $ps_category_id = 0;
+            $ps_category_info = null;
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        if ($category_info) {
-            $item_list_name = sprintf($this->language->get('text_x_products'), html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8'));
-            $item_list_id = $this->formatListId($item_list_name);
+        if ($ps_category_info) {
+            $ps_item_list_name = sprintf($this->language->get('text_x_products'), html_entity_decode($ps_category_info['name'], ENT_QUOTES, 'UTF-8'));
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
             $filter_data = [
-                'filter_category_id' => $category_id,
+                'filter_category_id' => $ps_category_id,
                 'filter_sub_category' => false,
                 'filter_filter' => $filter,
                 'sort' => $sort,
@@ -485,88 +485,88 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $products = $this->model_catalog_product->getProducts($filter_data);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 if ($ps_config_item_category_option === 0) {
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                 } else if ($ps_config_item_category_option === 1) {
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                 } else if ($ps_config_item_category_option === 2) {
-                    $categories = $this->getCategoryType3($category_id);
+                    $ps_product_categories = $this->getCategoryType3($ps_category_id);
                 } else if ($ps_config_item_category_option === 3) {
-                    $categories = $this->getCategoryType4($category_info);
+                    $ps_product_categories = $this->getCategoryType4($ps_category_info);
                 } else {
-                    $categories = [];
+                    $ps_product_categories = [];
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
                 ];
             }
 
@@ -574,13 +574,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($ps_config_track_view_item_list) {
                 $ps_view_item_list = [
                     'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => array_values($items),
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
+                        'items' => array_values($ps_items),
                     ],
                 ];
 
-                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
             } else {
                 $args['ps_view_item_list'] = null;
             }
@@ -588,14 +588,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -603,9 +603,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -615,22 +615,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -754,30 +754,30 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
         if ($search || $tag) {
             if (isset($this->request->get['search'])) {
-                $item_list_name = sprintf(
+                $ps_item_list_name = sprintf(
                     $this->language->get('text_x_search_products'),
                     html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8')
                 );
-                $item_list_id = $this->formatListId($item_list_name);
+                $ps_item_list_id = $this->formatListId($ps_item_list_name);
             } elseif (isset($this->request->get['tag'])) {
-                $item_list_name = sprintf(
+                $ps_item_list_name = sprintf(
                     $this->language->get('text_x_tag_products'),
                     html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8')
                 );
-                $item_list_id = $this->formatListId($item_list_name);
+                $ps_item_list_id = $this->formatListId($ps_item_list_name);
             } else {
-                $item_list_name = $this->language->get('text_search_products');
-                $item_list_id = $this->formatListId($item_list_name);
+                $ps_item_list_name = $this->language->get('text_search_products');
+                $ps_item_list_id = $this->formatListId($ps_item_list_name);
             }
 
             $filter_data = [
@@ -794,88 +794,88 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $products = $this->model_catalog_product->getProducts($filter_data);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
                 ];
             }
 
@@ -883,13 +883,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($ps_config_track_view_item_list) {
                 $ps_view_item_list = [
                     'ecommerce' => [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
-                        'items' => array_values($items),
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
+                        'items' => array_values($ps_items),
                     ],
                 ];
 
-                $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
             } else {
                 $args['ps_view_item_list'] = null;
             }
@@ -900,13 +900,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_search = [
                         'search_term' => html_entity_decode($this->request->get['tag'], ENT_QUOTES, 'UTF-8'),
                         'search_type' => 'site_search',
-                        'search_results' => count($items),
+                        'search_results' => count($ps_items),
                     ];
                 } elseif (isset($this->request->get['search'])) {
                     $ps_search = [
                         'search_term' => html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'),
                         'search_type' => 'site_search',
-                        'search_results' => count($items),
+                        'search_results' => count($ps_items),
                     ];
                 } else {
                     $ps_search = null;
@@ -920,14 +920,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -935,9 +935,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -947,22 +947,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1054,16 +1054,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_special_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_special_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $filter_data = [
@@ -1075,88 +1075,88 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $products = $this->model_catalog_product->getSpecials($filter_data);
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
 
         foreach ($products as $index => $product_info) {
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
             if ((float) $product_info['special']) {
-                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+            $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             } else {
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
             if ($product_info['minimum']) {
-                $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
             } else {
-                $minimums[(int) $product_info['product_id']] = 1;
+                $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
             }
 
-            $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+            $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-            $items[(int) $product_info['product_id']] = $item;
+            $ps_items[(int) $product_info['product_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
@@ -1164,13 +1164,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($ps_config_track_view_item_list) {
             $ps_view_item_list = [
                 'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1178,14 +1178,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
+        foreach ($ps_items as $product_id => $ps_item) {
+            if ($ps_specials[$product_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1193,9 +1193,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1205,22 +1205,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
+                        'value' => $ps_item['price'],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            foreach ($ps_items as $product_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
+                        'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -1282,102 +1282,102 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_compare_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_compare_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
 
         foreach ($this->session->data['compare'] as $index => $product_id) {
             $product_info = $this->model_catalog_product->getProduct($product_id);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
             if ((float) $product_info['special']) {
-                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+            $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             } else {
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
             if ($product_info['minimum']) {
-                $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
             } else {
-                $minimums[(int) $product_info['product_id']] = 1;
+                $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
             }
 
-            $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+            $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-            $items[(int) $product_info['product_id']] = $item;
+            $ps_items[(int) $product_info['product_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
@@ -1385,13 +1385,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($ps_config_track_view_item_list) {
             $ps_view_item_list = [
                 'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1399,14 +1399,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
+        foreach ($ps_items as $product_id => $ps_item) {
+            if ($ps_specials[$product_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1414,9 +1414,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1426,22 +1426,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
+                        'value' => $ps_item['price'],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            foreach ($ps_items as $product_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
+                        'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -1544,16 +1544,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_manufacturer_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_manufacturer_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $filter_data = [
@@ -1566,88 +1566,88 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $products = $this->model_catalog_product->getProducts($filter_data);
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
 
         foreach ($products as $index => $product_info) {
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
             if ((float) $product_info['special']) {
-                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+            $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             } else {
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
             if ($product_info['minimum']) {
-                $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
             } else {
-                $minimums[(int) $product_info['product_id']] = 1;
+                $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
             }
 
-            $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+            $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-            $items[(int) $product_info['product_id']] = $item;
+            $ps_items[(int) $product_info['product_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
@@ -1655,13 +1655,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($ps_config_track_view_item_list) {
             $ps_view_item_list = [
                 'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1669,14 +1669,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
+        foreach ($ps_items as $product_id => $ps_item) {
+            if ($ps_specials[$product_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1684,9 +1684,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1696,22 +1696,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
+                        'value' => $ps_item['price'],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            foreach ($ps_items as $product_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
+                        'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -1778,23 +1778,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_purchased_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_purchased_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_account_order->getProducts($order_id);
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
 
         foreach ($products as $index => $product) {
             $product_info = $this->model_catalog_product->getProduct($product['product_id']);
@@ -1806,83 +1806,83 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $args['products'][$index]['ps_has_options'] = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->hasOptions($product['product_id']);
                 }
 
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
                 ];
             } else {
                 if (isset($args['products'][$index])) {
@@ -1896,13 +1896,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($ps_config_track_view_item_list) {
             $ps_view_item_list = [
                 'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -1910,14 +1910,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
+        foreach ($ps_items as $product_id => $ps_item) {
+            if ($ps_specials[$product_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1925,9 +1925,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -1935,14 +1935,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            foreach ($ps_items as $product_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
+                        'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -2007,105 +2007,105 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_wishlist_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_wishlist_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $wishlist_items = $this->model_account_wishlist->getWishlist();
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
 
         foreach ($wishlist_items as $index => $wishlist_item) {
             $product_info = $this->model_catalog_product->getProduct($wishlist_item['product_id']);
 
             if ($product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
                 ];
             }
         }
@@ -2114,13 +2114,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if ($ps_config_track_view_item_list) {
             $ps_view_item_list = [
                 'ecommerce' => [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
-                    'items' => array_values($items),
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_view_item_list'] = $items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
+            $args['ps_view_item_list'] = $ps_items ? json_encode($ps_view_item_list, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_view_item_list'] = null;
         }
@@ -2128,14 +2128,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $ps_merge_items = [];
 
-        foreach ($items as $product_id => $item) {
-            if ($promotions[$product_id]) {
+        foreach ($ps_items as $product_id => $ps_item) {
+            if ($ps_specials[$product_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -2143,9 +2143,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $product_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -2155,22 +2155,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['add_to_wishlist_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
+                        'value' => $ps_item['price'],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $product_id => $item) {
-                $item['quantity'] = $minimums[$product_id];
+            foreach ($ps_items as $product_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                 $ps_merge_items['add_to_cart_' . $product_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'] * $minimums[$product_id],
-                        'items' => [$item],
+                        'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -2278,18 +2278,18 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
         if (isset($this->request->get['path'])) {
-            $parts = explode('_', (string) $this->request->get['path']);
+            $ps_parts = explode('_', (string) $this->request->get['path']);
 
-            $args['ps_category_id'] = (int) array_pop($parts);
+            $args['ps_category_id'] = (int) array_pop($ps_parts);
         } else if (isset($this->request->get['category_id'])) {
             $args['ps_category_id'] = (int) $this->request->get['category_id'];
         } else {
@@ -2303,107 +2303,107 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][$product_id])) {
             $ps_item_list_info = $this->session->data['ps_item_list_info'][$product_id];
 
-            $item_list_id = $ps_item_list_info['item_list_id'];
-            $item_list_name = $ps_item_list_info['item_list_name'];
+            $ps_item_list_id = $ps_item_list_info['item_list_id'];
+            $ps_item_list_name = $ps_item_list_info['item_list_name'];
 
             unset($this->session->data['ps_item_list_info']);
         } else {
-            $item_list_id = null;
-            $item_list_name = null;
+            $ps_item_list_id = null;
+            $ps_item_list_name = null;
         }
 
 
         $product_info = $this->model_catalog_product->getProduct($product_id);
 
         if ($product_info) {
-            $items = [];
+            $ps_items = [];
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
             if ((float) $product_info['special']) {
-                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = 0;
+            $ps_item['index'] = 0;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+            $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             if (isset($this->request->get['path'])) {
-                $parts = explode('_', (string) $this->request->get['path']);
-                $category_id = (int) array_pop($parts);
-                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
+                $ps_parts = explode('_', (string) $this->request->get['path']);
+                $ps_category_id = (int) array_pop($ps_parts);
+                $ps_category_info = $ps_category_id > 0 ? $this->model_catalog_category->getCategory($ps_category_id) : null;
             } else if (isset($this->request->get['category_id'])) {
-                $category_id = (int) $this->request->get['category_id'];
-                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
+                $ps_category_id = (int) $this->request->get['category_id'];
+                $ps_category_info = $ps_category_id > 0 ? $this->model_catalog_category->getCategory($ps_category_id) : null;
             } else {
-                $category_id = 0;
-                $category_info = null;
+                $ps_category_id = 0;
+                $ps_category_info = null;
             }
 
             if ($ps_config_item_category_option === 0) {
-                $categories = $this->getCategoryType1($product_info['product_id']);
+                $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
             } else if ($ps_config_item_category_option === 1) {
-                $categories = $this->getCategoryType2($product_info['product_id']);
-            } else if ($ps_config_item_category_option === 2 && $category_id) {
-                $categories = $this->getCategoryType3($category_id);
-            } else if ($ps_config_item_category_option === 3 && $category_info) {
-                $categories = $this->getCategoryType4($category_info);
+                $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
+            } else if ($ps_config_item_category_option === 2 && $ps_category_id) {
+                $ps_product_categories = $this->getCategoryType3($ps_category_id);
+            } else if ($ps_config_item_category_option === 3 && $ps_category_info) {
+                $ps_product_categories = $this->getCategoryType4($ps_category_info);
             } else {
-                $categories = [];
+                $ps_product_categories = [];
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            if ($item_list_id && $item_list_name) {
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+            if ($ps_item_list_id && $ps_item_list_name) {
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             } else {
-                $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['product_id']] = $item;
+            $ps_items[(int) $product_info['product_id']] = $ps_item;
 
 
             $ps_view_item = [
                 'ecommerce' => [
                     'currency' => $ps_config_currency,
-                    'value' => $item['price'],
-                    'items' => array_values($items),
+                    'value' => $ps_item['price'],
+                    'items' => array_values($ps_items),
                 ],
             ];
 
@@ -2412,19 +2412,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $args['ps_view_promotion'] = null;
 
             if ($ps_config_track_view_promotion && (float) $product_info['special']) {
-                $args['ps_view_promotion'] = $items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_promotion'] = $ps_items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
             } else if ($ps_config_track_view_item && !(float) $product_info['special']) {
-                $args['ps_view_item'] = $items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
+                $args['ps_view_item'] = $ps_items ? json_encode($ps_view_item, JSON_NUMERIC_CHECK) : null;
             }
 
 
-            foreach ($items as $product_id => $item) { // Add the current product to the merge stack
+            foreach ($ps_items as $product_id => $ps_item) { // Add the current product to the merge stack
                 if ($ps_config_track_add_to_wishlist) {
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -2433,117 +2433,117 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
 
-            $item_list_name = sprintf(
+            $ps_item_list_name = sprintf(
                 $this->language->get('text_x_related_products'),
                 html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8')
             );
-            $item_list_id = $this->formatListId($item_list_name);
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
             $products = $this->model_catalog_product->getRelated($product_id);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                    'item_list_id' => $item_list_id,
-                    'item_list_name' => $item_list_name,
+                    'item_list_id' => $ps_item_list_id,
+                    'item_list_name' => $ps_item_list_name,
                 ];
             }
 
 
-            foreach ($items as $product_id => $item) { // Add related prodcuts to the merge stack
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) { // Add related prodcuts to the merge stack
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -2551,9 +2551,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -2563,22 +2563,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -2827,66 +2827,66 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
 
             if (isset($this->session->data['coupon'])) {
-                $product_coupon = $this->session->data['coupon'];
+                $ps_product_coupon = $this->session->data['coupon'];
             } else if (isset($this->session->data['voucher'])) {
-                $product_coupon = $this->session->data['voucher'];
+                $ps_product_coupon = $this->session->data['voucher'];
             } else {
-                $product_coupon = null;
+                $ps_product_coupon = null;
             }
 
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
             if ((float) $product_info['special']) {
-                $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = 0;
+            $ps_item['index'] = 0;
 
-            $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+            $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             if (isset($this->request->post['category_id'])) {
-                $category_id = (int) $this->request->post['category_id'];
-                $category_info = $category_id > 0 ? $this->model_catalog_category->getCategory($category_id) : null;
+                $ps_category_id = (int) $this->request->post['category_id'];
+                $ps_category_info = $ps_category_id > 0 ? $this->model_catalog_category->getCategory($ps_category_id) : null;
             } else {
-                $category_id = 0;
-                $category_info = null;
+                $ps_category_id = 0;
+                $ps_category_info = null;
             }
 
             if ($ps_config_item_category_option === 0) {
-                $categories = $this->getCategoryType1($product_info['product_id']);
+                $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
             } else if ($ps_config_item_category_option === 1) {
-                $categories = $this->getCategoryType2($product_info['product_id']);
-            } else if ($ps_config_item_category_option === 2 && $category_id) {
-                $categories = $this->getCategoryType3($category_id);
-            } else if ($ps_config_item_category_option === 3 && $category_info) {
-                $categories = $this->getCategoryType4($category_info);
+                $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
+            } else if ($ps_config_item_category_option === 2 && $ps_category_id) {
+                $ps_product_categories = $this->getCategoryType3($ps_category_id);
+            } else if ($ps_config_item_category_option === 3 && $ps_category_info) {
+                $ps_product_categories = $this->getCategoryType4($ps_category_info);
             } else {
-                $categories = [];
+                $ps_product_categories = [];
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
@@ -2900,7 +2900,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $product_option_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getProductOptionInfo($options, $product_info['product_id']);
 
             $option_price = $product_option_info['option_price'];
-            $variants = $product_option_info['variant'];
+            $ps_variants = $product_option_info['variant'];
 
 
             $base_price = $product_info['price'];
@@ -2931,35 +2931,35 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                         $base_price = $product_subscription_info['trial_price'];
                     }
 
-                    if ($subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                        $variants[] = $subscription_description;
+                    if ($ps_subscription_description = $this->getProductSubscriptionDescription($product_subscription_info, $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                        $ps_variants[] = $ps_subscription_description;
                     }
                 }
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
             if ((float) $product_info['special']) {
-                $price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $ps_config_item_price_tax);
             } else {
-                $price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $ps_config_item_price_tax);
+                $ps_price = $this->tax->calculate($base_price + $option_price, $product_info['tax_class_id'], $ps_config_item_price_tax);
             }
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $quantity;
+            $ps_item['quantity'] = $quantity;
 
             $json_response['ps_add_to_cart'] = [
                 'ecommerce' => [
                     'currency' => $ps_config_currency,
-                    'value' => $this->currency->format($price * $quantity, $ps_config_currency, 0, false),
-                    'items' => [$item],
+                    'value' => $this->currency->format($ps_price * $quantity, $ps_config_currency, 0, false),
+                    'items' => [$ps_item],
                 ],
             ];
 
@@ -3031,100 +3031,100 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_checkout_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_checkout_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
+        $ps_items = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
         }
 
 
@@ -3156,9 +3156,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $ps_config_currency,
                 'value' => $this->currency->format($this->cart->getTotal(), $ps_config_currency, 0, false),
-                'coupon' => $product_coupon ? $product_coupon : '',
+                'coupon' => $ps_product_coupon ? $ps_product_coupon : '',
                 'payment_type' => $payment_type,
-                'items' => array_values($items),
+                'items' => array_values($ps_items),
             ],
         ];
 
@@ -3228,100 +3228,100 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_checkout_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_checkout_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
+        $ps_items = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
         }
 
 
@@ -3353,9 +3353,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $ps_config_currency,
                 'value' => $this->currency->format($this->cart->getTotal(), $ps_config_currency, 0, false),
-                'coupon' => $product_coupon ? $product_coupon : '',
+                'coupon' => $ps_product_coupon ? $ps_product_coupon : '',
                 'shipping_tier' => $shipping_tier,
-                'items' => array_values($items),
+                'items' => array_values($ps_items),
             ],
         ];
 
@@ -3388,10 +3388,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_checkout_cart->getProducts();
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
             if (isset($args['products'][$index])) {
-                $args['products'][$index]['special'] = $real_product_info['special'];
+                $args['products'][$index]['special'] = $ps_original_product_info['special'];
             }
         }
 
@@ -3445,105 +3445,105 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_checkout_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_checkout_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
+        $ps_items = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
@@ -3553,12 +3553,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 'ecommerce' => [
                     'currency' => $ps_config_currency,
                     'value' => $this->currency->format($this->cart->getTotal(), $ps_config_currency, 0, false),
-                    'coupon' => $product_coupon ? $product_coupon : '',
-                    'items' => array_values($items),
+                    'coupon' => $ps_product_coupon ? $ps_product_coupon : '',
+                    'items' => array_values($ps_items),
                 ],
             ];
 
-            $args['ps_begin_checkout'] = $items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
+            $args['ps_begin_checkout'] = $ps_items ? json_encode($ps_begin_checkout, JSON_NUMERIC_CHECK) : null;
         } else {
             $args['ps_begin_checkout'] = null;
         }
@@ -3804,131 +3804,131 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_purchased_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_purchased_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
-        $total_price = 0;
+        $ps_items = [];
+        $ps_total_price = 0;
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_total_price += $this->tax->calculate($product_info['total'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
 
         #region Get totals
-        $totals = [];
-        $taxes = $this->cart->getTaxes();
-        $total = 0;
-        $purchase_data = [
+        $ps_totals = [];
+        $ps_taxes = $this->cart->getTaxes();
+        $ps_total = 0;
+        $ps_purchase_data = [
             'tax' => 0,
             'shipping' => 0,
             'total' => 0,
         ];
 
-        ($this->model_checkout_cart->getTotals)($totals, $taxes, $total);
+        ($this->model_checkout_cart->getTotals)($ps_totals, $ps_taxes, $ps_total);
 
-        foreach ($totals as $total) {
-            if ($total['code'] === 'shipping') {
-                $purchase_data['shipping'] = $total['value'];
-            } else if ($total['code'] === 'tax') {
-                $purchase_data['tax'] = $total['value'];
-            } else if ($total['code'] === 'total') {
-                $purchase_data['total'] = $total['value'];
+        foreach ($ps_totals as $value) {
+            if ($value['code'] === 'shipping') {
+                $ps_purchase_data['shipping'] = $value['value'];
+            } else if ($value['code'] === 'tax') {
+                $ps_purchase_data['tax'] = $value['value'];
+            } else if ($value['code'] === 'total') {
+                $ps_purchase_data['total'] = $value['value'];
             }
         }
         #endregion
@@ -3936,25 +3936,25 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_purchase = [
             'ecommerce' => [
                 'transaction_id' => $this->session->data['order_id'],
-                'value' => $this->currency->format($purchase_data['total'] - $purchase_data['shipping'] - $purchase_data['tax'], $ps_config_currency, 0, false),
-                'tax' => $this->currency->format(($ps_config_item_price_tax ? $purchase_data['tax'] : 0), $ps_config_currency, 0, false),
-                'shipping' => $this->currency->format($purchase_data['shipping'], $ps_config_currency, 0, false),
+                'value' => $this->currency->format($ps_purchase_data['total'] - $ps_purchase_data['shipping'] - $ps_purchase_data['tax'], $ps_config_currency, 0, false),
+                'tax' => $this->currency->format(($ps_config_item_price_tax ? $ps_purchase_data['tax'] : 0), $ps_config_currency, 0, false),
+                'shipping' => $this->currency->format($ps_purchase_data['shipping'], $ps_config_currency, 0, false),
                 'currency' => $ps_config_currency,
-                'coupon' => $product_coupon ? $product_coupon : '',
-                'items' => array_values($items),
+                'coupon' => $ps_product_coupon ? $ps_product_coupon : '',
+                'items' => array_values($ps_items),
             ],
         ];
 
-        $this->session->data['ps_purchase'] = $items ? json_encode($ps_purchase, JSON_NUMERIC_CHECK) : null;
+        $this->session->data['ps_purchase'] = $ps_items ? json_encode($ps_purchase, JSON_NUMERIC_CHECK) : null;
 
 
         if (isset($this->request->cookie['_ga'])) {
-            $gaCookie = $this->request->cookie['_ga'];
+            $ps_ga_cookie = $this->request->cookie['_ga'];
 
-            $parts = explode('.', $gaCookie);
+            $ps_parts = explode('.', $ps_ga_cookie);
 
-            if (count($parts) >= 4) {
-                $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveGA4ClientId($this->session->data['order_id'], $parts[2] . '.' . $parts[3]);
+            if (count($ps_parts) >= 4) {
+                $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->saveGA4ClientId($this->session->data['order_id'], $ps_parts[2] . '.' . $ps_parts[3]);
             }
         }
     }
@@ -4029,104 +4029,104 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_cart_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_cart_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
+        $ps_items = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
 
             $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                'item_list_id' => $item_list_id,
-                'item_list_name' => $item_list_name,
+                'item_list_id' => $ps_item_list_id,
+                'item_list_name' => $ps_item_list_name,
             ];
         }
 
@@ -4135,11 +4135,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'ecommerce' => [
                 'currency' => $ps_config_currency,
                 'value' => $this->currency->format($this->cart->getTotal(), $ps_config_currency, 0, false),
-                'items' => array_values($items),
+                'items' => array_values($ps_items),
             ],
         ];
 
-        $args['ps_view_cart'] = $items ? json_encode($ps_view_cart, JSON_NUMERIC_CHECK) : null;
+        $args['ps_view_cart'] = $ps_items ? json_encode($ps_view_cart, JSON_NUMERIC_CHECK) : null;
 
 
         $args['ps_track_view_cart'] = $ps_config_track_view_cart;
@@ -4193,131 +4193,131 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_cart_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_cart_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
-        $minimums = [];
-        $promotions = [];
-        $total_prices = [];
+        $ps_items = [];
+        $ps_quantity_minimums = [];
+        $ps_specials = [];
+        $ps_total_prices = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
-            $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $ps_config_currency, 0, false);
+            $ps_total_prices[(int) $product_info['cart_id']] = $this->currency->format($ps_total_price * $product_info['quantity'], $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
             if ($product_info['minimum']) {
-                $minimums[(int) $product_info['cart_id']] = $product_info['minimum'];
+                $ps_quantity_minimums[(int) $product_info['cart_id']] = $product_info['minimum'];
             } else {
-                $minimums[(int) $product_info['cart_id']] = 1;
+                $ps_quantity_minimums[(int) $product_info['cart_id']] = 1;
             }
 
-            $promotions[(int) $product_info['cart_id']] = (float) $real_product_info['special'] > 0;
+            $ps_specials[(int) $product_info['cart_id']] = (float) $ps_original_product_info['special'] > 0;
 
             if (isset($args['products'][$index])) {
-                $args['products'][$index]['special'] = $real_product_info['special'];
+                $args['products'][$index]['special'] = $ps_original_product_info['special'];
             }
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
         }
 
 
         $ps_merge_items = [];
 
-        foreach ($items as $cart_id => $item) {
-            if ($promotions[$cart_id]) {
+        foreach ($ps_items as $cart_id => $ps_item) {
+            if ($ps_specials[$cart_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $cart_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -4325,9 +4325,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $cart_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -4337,22 +4337,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $total_prices[$cart_id],
-                        'items' => [$item],
+                        'value' => $ps_total_prices[$cart_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
         }
 
         if ($ps_config_track_add_to_cart) {
-            foreach ($items as $cart_id => $item) {
-                $item['quantity'] = $minimums[$cart_id];
+            foreach ($ps_items as $cart_id => $ps_item) {
+                $ps_item['quantity'] = $ps_quantity_minimums[$cart_id];
 
                 $ps_merge_items['add_to_cart_' . $cart_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $item['price'],
-                        'items' => [$item],
+                        'value' => $ps_item['price'],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -4414,124 +4414,124 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
-        $item_list_name = $this->language->get('text_cart_products');
-        $item_list_id = $this->formatListId($item_list_name);
+        $ps_item_list_name = $this->language->get('text_cart_products');
+        $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
         $products = $this->model_checkout_cart->getProducts();
 
-        $items = [];
-        $promotions = [];
-        $total_prices = [];
+        $ps_items = [];
+        $ps_specials = [];
+        $ps_total_prices = [];
 
         foreach ($products as $index => $product_info) {
-            $real_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
+            $ps_original_product_info = $this->model_catalog_product->getProduct((int) $product_info['product_id']);
 
-            $item = [];
+            $ps_item = [];
 
-            $item['item_id'] = isset($real_product_info[$ps_config_item_id_option]) && !empty($real_product_info[$ps_config_item_id_option]) ? $this->formatListId($real_product_info[$ps_config_item_id_option]) : $real_product_info['product_id'];
-            $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+            $ps_item['item_id'] = isset($ps_original_product_info[$ps_config_item_id_option]) && !empty($ps_original_product_info[$ps_config_item_id_option]) ? $this->formatListId($ps_original_product_info[$ps_config_item_id_option]) : $ps_original_product_info['product_id'];
+            $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
             if ($ps_config_affiliation) {
-                $item['affiliation'] = $ps_config_affiliation;
+                $ps_item['affiliation'] = $ps_config_affiliation;
             }
 
-            if ($product_coupon) {
-                $item['coupon'] = $product_coupon;
+            if ($ps_product_coupon) {
+                $ps_item['coupon'] = $ps_product_coupon;
             }
 
-            if ((float) $real_product_info['special']) {
-                $discount = $this->tax->calculate($real_product_info['price'], $real_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($real_product_info['special'], $real_product_info['tax_class_id'], $ps_config_item_price_tax);
+            if ((float) $ps_original_product_info['special']) {
+                $ps_discount = $this->tax->calculate($ps_original_product_info['price'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($ps_original_product_info['special'], $ps_original_product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
             }
 
-            $item['index'] = $index;
+            $ps_item['index'] = $index;
 
-            $manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
+            $ps_manufacturer_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getManufacturerNameByProductId($product_info['product_id']);
 
-            if ($manufacturer_info) {
-                $item['item_brand'] = $manufacturer_info['name'];
+            if ($ps_manufacturer_info) {
+                $ps_item['item_brand'] = $ps_manufacturer_info['name'];
             }
 
             switch ($ps_config_item_category_option) {
                 case 0:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
                 case 1:
-                    $categories = $this->getCategoryType2($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                     break;
                 default:
-                    $categories = $this->getCategoryType1($product_info['product_id']);
+                    $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                     break;
             }
 
-            foreach ($categories as $category_index => $category_name) {
+            foreach ($ps_product_categories as $category_index => $category_name) {
                 if ($category_index === 0) {
-                    $item['item_category'] = $category_name;
+                    $ps_item['item_category'] = $category_name;
                 } else {
-                    $item['item_category' . ($category_index + 1)] = $category_name;
+                    $ps_item['item_category' . ($category_index + 1)] = $category_name;
                 }
             }
 
-            $item['item_list_id'] = $item_list_id;
-            $item['item_list_name'] = $item_list_name;
+            $ps_item['item_list_id'] = $ps_item_list_id;
+            $ps_item['item_list_name'] = $ps_item_list_name;
 
-            $variants = [];
+            $ps_variants = [];
 
             foreach ($product_info['option'] as $option) {
-                $variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
+                $ps_variants[] = html_entity_decode($option['name'] . ': ' . $option['value'], ENT_QUOTES, 'UTF-8');
             }
 
-            if ($product_info['subscription'] && $subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
-                $variants[] = $subscription_description;
+            if ($product_info['subscription'] && $ps_subscription_description = $this->getProductSubscriptionDescription($product_info['subscription'], $product_info['tax_class_id'], $ps_config_currency, $ps_config_item_price_tax)) {
+                $ps_variants[] = $ps_subscription_description;
             }
 
-            if ($variants) {
-                $item['item_variant'] = implode(', ', $variants);
+            if ($ps_variants) {
+                $ps_item['item_variant'] = implode(', ', $ps_variants);
             }
 
             if ($ps_config_location_id) {
-                $item['location_id'] = $ps_config_location_id;
+                $ps_item['location_id'] = $ps_config_location_id;
             }
 
-            $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
-            $total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+            $ps_total_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-            $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+            $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-            $total_prices[(int) $product_info['cart_id']] = $this->currency->format($total_price * $product_info['quantity'], $ps_config_currency, 0, false);
+            $ps_total_prices[(int) $product_info['cart_id']] = $this->currency->format($ps_total_price * $product_info['quantity'], $ps_config_currency, 0, false);
 
-            $item['quantity'] = $product_info['quantity'];
+            $ps_item['quantity'] = $product_info['quantity'];
 
-            $promotions[(int) $product_info['cart_id']] = (float) $real_product_info['special'] > 0;
+            $ps_specials[(int) $product_info['cart_id']] = (float) $ps_original_product_info['special'] > 0;
 
             if (isset($args['products'][$index])) {
-                $args['products'][$index]['special'] = $real_product_info['special'];
+                $args['products'][$index]['special'] = $ps_original_product_info['special'];
             }
 
-            $items[(int) $product_info['cart_id']] = $item;
+            $ps_items[(int) $product_info['cart_id']] = $ps_item;
         }
 
 
         $ps_merge_items = [];
 
-        foreach ($items as $cart_id => $item) {
-            if ($promotions[$cart_id]) {
+        foreach ($ps_items as $cart_id => $ps_item) {
+            if ($ps_specials[$cart_id]) {
                 if ($ps_config_track_select_promotion) {
                     $ps_merge_items['select_promotion_' . $cart_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -4539,9 +4539,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 if ($ps_config_track_select_item) {
                     $ps_merge_items['select_item_' . $cart_id] = [
                         'ecommerce' => [
-                            'item_list_id' => $item_list_id,
-                            'item_list_name' => $item_list_name,
-                            'items' => [$item],
+                            'item_list_id' => $ps_item_list_id,
+                            'item_list_name' => $ps_item_list_name,
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
@@ -4551,8 +4551,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $ps_merge_items['remove_from_cart_' . $cart_id] = [
                     'ecommerce' => [
                         'currency' => $ps_config_currency,
-                        'value' => $total_prices[$cart_id],
-                        'items' => [$item],
+                        'value' => $ps_total_prices[$cart_id],
+                        'items' => [$ps_item],
                     ],
                 ];
             }
@@ -4611,11 +4611,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
@@ -4624,95 +4624,95 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_extension_opencart_module_bestseller->getBestSellers($setting['limit']);
 
         if ($products) {
-            $item_list_name = sprintf(
+            $ps_item_list_name = sprintf(
                 $this->language->get('text_x_products'),
                 html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
             );
-            $item_list_id = $this->formatListId($item_list_name);
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
                     ];
                 }
             }
@@ -4720,14 +4720,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -4735,9 +4735,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -4747,28 +4747,28 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
-            if ($items) {
+            if ($ps_items) {
                 $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</>' . PHP_EOL . $output;
             }
         }
@@ -4813,11 +4813,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
@@ -4834,95 +4834,95 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 }
             }
 
-            $item_list_name = sprintf(
+            $ps_item_list_name = sprintf(
                 $this->language->get('text_x_products'),
                 html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
             );
-            $item_list_id = $this->formatListId($item_list_name);
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
                     ];
                 }
             }
@@ -4930,14 +4930,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -4945,9 +4945,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -4957,28 +4957,28 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
-            if ($items) {
+            if ($ps_items) {
                 $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
@@ -5028,11 +5028,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
@@ -5045,95 +5045,95 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if ($products) {
-            $item_list_name = sprintf(
+            $ps_item_list_name = sprintf(
                 $this->language->get('text_x_products'),
                 html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
             );
-            $item_list_id = $this->formatListId($item_list_name);
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
                     ];
                 }
             }
@@ -5141,14 +5141,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -5156,9 +5156,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -5168,28 +5168,28 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
-            if ($items) {
+            if ($ps_items) {
                 $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
@@ -5234,11 +5234,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
 
         if (isset($this->session->data['coupon'])) {
-            $product_coupon = $this->session->data['coupon'];
+            $ps_product_coupon = $this->session->data['coupon'];
         } else if (isset($this->session->data['voucher'])) {
-            $product_coupon = $this->session->data['voucher'];
+            $ps_product_coupon = $this->session->data['voucher'];
         } else {
-            $product_coupon = null;
+            $ps_product_coupon = null;
         }
 
 
@@ -5254,95 +5254,95 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $products = $this->model_catalog_product->getSpecials($specials_filter_data);
 
         if ($products) {
-            $item_list_name = sprintf(
+            $ps_item_list_name = sprintf(
                 $this->language->get('text_x_products'),
                 html_entity_decode($setting['name'], ENT_QUOTES, 'UTF-8')
             );
-            $item_list_id = $this->formatListId($item_list_name);
+            $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
-            $items = [];
-            $minimums = [];
-            $promotions = [];
+            $ps_items = [];
+            $ps_quantity_minimums = [];
+            $ps_specials = [];
 
             foreach ($products as $index => $product_info) {
-                $item = [];
+                $ps_item = [];
 
-                $item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
-                $item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
+                $ps_item['item_id'] = isset($product_info[$ps_config_item_id_option]) && !empty($product_info[$ps_config_item_id_option]) ? $this->formatListId($product_info[$ps_config_item_id_option]) : $product_info['product_id'];
+                $ps_item['item_name'] = html_entity_decode($product_info['name'], ENT_QUOTES, 'UTF-8');
 
                 if ($ps_config_affiliation) {
-                    $item['affiliation'] = $ps_config_affiliation;
+                    $ps_item['affiliation'] = $ps_config_affiliation;
                 }
 
-                if ($product_coupon) {
-                    $item['coupon'] = $product_coupon;
+                if ($ps_product_coupon) {
+                    $ps_item['coupon'] = $ps_product_coupon;
                 }
 
                 if ((float) $product_info['special']) {
-                    $discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_discount = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax) - $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
 
-                    $item['discount'] = $this->currency->format($discount, $ps_config_currency, 0, false);
+                    $ps_item['discount'] = $this->currency->format($ps_discount, $ps_config_currency, 0, false);
                 }
 
-                $item['index'] = $index;
+                $ps_item['index'] = $index;
 
-                $manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
+                $ps_manufacturer_info = $this->model_catalog_manufacturer->getManufacturer((int) $product_info['manufacturer_id']);
 
-                if ($manufacturer_info) {
-                    $item['item_brand'] = $manufacturer_info['name'];
+                if ($ps_manufacturer_info) {
+                    $ps_item['item_brand'] = $ps_manufacturer_info['name'];
                 }
 
                 switch ($ps_config_item_category_option) {
                     case 0:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                     case 1:
-                        $categories = $this->getCategoryType2($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType2($product_info['product_id']);
                         break;
                     default:
-                        $categories = $this->getCategoryType1($product_info['product_id']);
+                        $ps_product_categories = $this->getCategoryType1($product_info['product_id']);
                         break;
                 }
 
-                foreach ($categories as $category_index => $category_name) {
+                foreach ($ps_product_categories as $category_index => $category_name) {
                     if ($category_index === 0) {
-                        $item['item_category'] = $category_name;
+                        $ps_item['item_category'] = $category_name;
                     } else {
-                        $item['item_category' . ($category_index + 1)] = $category_name;
+                        $ps_item['item_category' . ($category_index + 1)] = $category_name;
                     }
                 }
 
-                $item['item_list_id'] = $item_list_id;
-                $item['item_list_name'] = $item_list_name;
+                $ps_item['item_list_id'] = $ps_item_list_id;
+                $ps_item['item_list_name'] = $ps_item_list_name;
 
                 if ($ps_config_location_id) {
-                    $item['location_id'] = $ps_config_location_id;
+                    $ps_item['location_id'] = $ps_config_location_id;
                 }
 
                 if ((float) $product_info['special']) {
-                    $price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 } else {
-                    $price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
+                    $ps_price = $this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $ps_config_item_price_tax);
                 }
 
-                $item['price'] = $this->currency->format($price, $ps_config_currency, 0, false);
+                $ps_item['price'] = $this->currency->format($ps_price, $ps_config_currency, 0, false);
 
-                $item['quantity'] = $product_info['quantity'];
+                $ps_item['quantity'] = $product_info['quantity'];
 
                 if ($product_info['minimum']) {
-                    $minimums[(int) $product_info['product_id']] = $product_info['minimum'];
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = $product_info['minimum'];
                 } else {
-                    $minimums[(int) $product_info['product_id']] = 1;
+                    $ps_quantity_minimums[(int) $product_info['product_id']] = 1;
                 }
 
-                $promotions[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
+                $ps_specials[(int) $product_info['product_id']] = (float) $product_info['special'] > 0;
 
-                $items[(int) $product_info['product_id']] = $item;
+                $ps_items[(int) $product_info['product_id']] = $ps_item;
 
                 if (!isset($this->session->data['ps_item_list_info'], $this->session->data['ps_item_list_info'][(int) $product_info['product_id']])) {
                     $this->session->data['ps_item_list_info'][(int) $product_info['product_id']] = [
-                        'item_list_id' => $item_list_id,
-                        'item_list_name' => $item_list_name,
+                        'item_list_id' => $ps_item_list_id,
+                        'item_list_name' => $ps_item_list_name,
                     ];
                 }
             }
@@ -5350,14 +5350,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $ps_merge_items = [];
 
-            foreach ($items as $product_id => $item) {
-                if ($promotions[$product_id]) {
+            foreach ($ps_items as $product_id => $ps_item) {
+                if ($ps_specials[$product_id]) {
                     if ($ps_config_track_select_promotion) {
                         $ps_merge_items['select_promotion_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -5365,9 +5365,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     if ($ps_config_track_select_item) {
                         $ps_merge_items['select_item_' . $product_id] = [
                             'ecommerce' => [
-                                'item_list_id' => $item_list_id,
-                                'item_list_name' => $item_list_name,
-                                'items' => [$item],
+                                'item_list_id' => $ps_item_list_id,
+                                'item_list_name' => $ps_item_list_name,
+                                'items' => [$ps_item],
                             ],
                         ];
                     }
@@ -5377,228 +5377,228 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                     $ps_merge_items['add_to_wishlist_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'],
-                            'items' => [$item],
+                            'value' => $ps_item['price'],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
             if ($ps_config_track_add_to_cart) {
-                foreach ($items as $product_id => $item) {
-                    $item['quantity'] = $minimums[$product_id];
+                foreach ($ps_items as $product_id => $ps_item) {
+                    $ps_item['quantity'] = $ps_quantity_minimums[$product_id];
 
                     $ps_merge_items['add_to_cart_' . $product_id] = [
                         'ecommerce' => [
                             'currency' => $ps_config_currency,
-                            'value' => $item['price'] * $minimums[$product_id],
-                            'items' => [$item],
+                            'value' => $ps_item['price'] * $ps_quantity_minimums[$product_id],
+                            'items' => [$ps_item],
                         ],
                     ];
                 }
             }
 
-            if ($items) {
+            if ($ps_items) {
                 $output = '<script>ps_dataLayer.setData(' . PHP_EOL . json_encode($ps_merge_items, JSON_NUMERIC_CHECK) . PHP_EOL . ');</script>' . PHP_EOL . $output;
             }
         }
     }
 
-    protected function getProductSubscriptionDescription(array $product_subscription_info, int $taxClassId, string $ps_config_currency, bool $ps_config_item_price_tax)
+    protected function getProductSubscriptionDescription(array $product_subscription_info, int $tax_class_id, string $ps_config_currency, bool $ps_config_item_price_tax)
     {
-        $subscription_description = '';
+        $ps_subscription_description = '';
 
         if ($product_subscription_info['trial_status']) {
-            $trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $taxClassId, $ps_config_item_price_tax), $ps_config_currency);
-            $trial_cycle = $product_subscription_info['trial_cycle'];
-            $trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
-            $trial_duration = $product_subscription_info['trial_duration'];
+            $ps_trial_price = $this->currency->format($this->tax->calculate($product_subscription_info['trial_price'], $tax_class_id, $ps_config_item_price_tax), $ps_config_currency);
+            $ps_trial_cycle = $product_subscription_info['trial_cycle'];
+            $ps_trial_frequency = $this->language->get('text_' . $product_subscription_info['trial_frequency']);
+            $ps_trial_duration = $product_subscription_info['trial_duration'];
 
-            $subscription_description .= sprintf($this->language->get('text_subscription_trial'), $trial_price, $trial_cycle, $trial_frequency, $trial_duration);
+            $ps_subscription_description .= sprintf($this->language->get('text_subscription_trial'), $ps_trial_price, $ps_trial_cycle, $ps_trial_frequency, $ps_trial_duration);
         }
 
-        $subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $taxClassId, $ps_config_item_price_tax), $ps_config_currency);
+        $ps_subscription_price = $this->currency->format($this->tax->calculate($product_subscription_info['price'], $tax_class_id, $ps_config_item_price_tax), $ps_config_currency);
 
-        $subscription_cycle = $product_subscription_info['cycle'];
-        $subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);
-        $subscription_duration = $product_subscription_info['duration'];
+        $ps_subscription_cycle = $product_subscription_info['cycle'];
+        $ps_subscription_frequency = $this->language->get('text_' . $product_subscription_info['frequency']);
+        $ps_subscription_duration = $product_subscription_info['duration'];
 
-        if ($subscription_duration) {
-            $subscription_description .= sprintf($this->language->get('text_subscription_duration'), $subscription_price, $subscription_cycle, $subscription_frequency, $subscription_duration);
+        if ($ps_subscription_duration) {
+            $ps_subscription_description .= sprintf($this->language->get('text_subscription_duration'), $ps_subscription_price, $ps_subscription_cycle, $ps_subscription_frequency, $ps_subscription_duration);
         } else {
-            $subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $subscription_price, $subscription_cycle, $subscription_frequency);
+            $ps_subscription_description .= sprintf($this->language->get('text_subscription_cancel'), $ps_subscription_price, $ps_subscription_cycle, $ps_subscription_frequency);
         }
 
-        return $subscription_description;
+        return $ps_subscription_description;
     }
 
     public function getAdwordsUserData(): array
     {
-        $is_logged = $this->customer->isLogged();
+        $ps_is_logged = $this->customer->isLogged();
 
-        $user_info = [];
+        $ps_user_info = [];
 
         if (isset($this->session->data['customer'])) {
-            $user_info = array_merge($user_info, array_filter($this->session->data['customer']));
+            $ps_user_info = array_merge($ps_user_info, array_filter($this->session->data['customer']));
         }
 
         if (isset($this->session->data['payment_address'])) {
-            $user_info = array_merge($user_info, array_filter($this->session->data['payment_address']));
+            $ps_user_info = array_merge($ps_user_info, array_filter($this->session->data['payment_address']));
         }
 
         if (isset($this->session->data['shipping_address'])) {
-            $user_info = array_merge($user_info, array_filter($this->session->data['shipping_address']));
+            $ps_user_info = array_merge($ps_user_info, array_filter($this->session->data['shipping_address']));
         }
 
-        if ($is_logged) {
+        if ($ps_is_logged) {
             if ($value = $this->customer->getEmail()) {
-                $user_info['email'] = $value;
+                $ps_user_info['email'] = $value;
             }
 
             if ($value = $this->customer->getTelephone()) {
-                $user_info['telephone'] = $value;
+                $ps_user_info['telephone'] = $value;
             }
 
             if ($value = $this->customer->getFirstName()) {
-                $user_info['firstname'] = $value;
+                $ps_user_info['firstname'] = $value;
             }
 
             if ($value = $this->customer->getLastName()) {
-                $user_info['lastname'] = $value;
+                $ps_user_info['lastname'] = $value;
             }
 
 
-            $cached_address = (array) $this->cache->get('adwords_user_data.' . $this->customer->getId());
+            $ps_cached_address = (array) $this->cache->get('adwords_user_data.' . $this->customer->getId());
 
-            if (!$cached_address) {
+            if (!$ps_cached_address) {
                 $this->load->model('account/address');
 
-                $all_address = $this->model_account_address->getAddresses($this->customer->getId());
+                $ps_all_address = $this->model_account_address->getAddresses($this->customer->getId());
 
-                $cached_address = array_filter((array) current($all_address));
+                $ps_cached_address = array_filter((array) current($ps_all_address));
 
-                $this->cache->set('adwords_user_data.' . $this->customer->getId(), $cached_address);
+                $this->cache->set('adwords_user_data.' . $this->customer->getId(), $ps_cached_address);
             }
 
-            $user_info = array_merge($user_info, $cached_address);
+            $ps_user_info = array_merge($ps_user_info, $ps_cached_address);
         }
 
 
-        $result = [];
+        $ps_result = [];
 
-        if (isset($user_info['email']) && $user_info['email']) {
-            $result['email'] = hash('sha256', $user_info['email']);
+        if (isset($ps_user_info['email']) && $ps_user_info['email']) {
+            $ps_result['email'] = hash('sha256', $ps_user_info['email']);
         }
 
-        if (isset($user_info['telephone']) && $user_info['telephone']) {
-            $result['phone_number'] = hash('sha256', $user_info['telephone']);
+        if (isset($ps_user_info['telephone']) && $ps_user_info['telephone']) {
+            $ps_result['phone_number'] = hash('sha256', $ps_user_info['telephone']);
         }
 
-        if (isset($user_info['firstname']) && $user_info['firstname']) {
-            $result['address']['first_name'] = hash('sha256', $user_info['firstname']);
+        if (isset($ps_user_info['firstname']) && $ps_user_info['firstname']) {
+            $ps_result['address']['first_name'] = hash('sha256', $ps_user_info['firstname']);
         }
 
-        if (isset($user_info['lastname']) && $user_info['lastname']) {
-            $result['address']['last_name'] = hash('sha256', $user_info['lastname']);
+        if (isset($ps_user_info['lastname']) && $ps_user_info['lastname']) {
+            $ps_result['address']['last_name'] = hash('sha256', $ps_user_info['lastname']);
         }
 
-        if (isset($user_info['address_1']) && $user_info['address_1']) {
-            $result['address']['street'] = hash('sha256', $user_info['address_1']);
-        } else if (isset($user_info['address_2']) && $user_info['address_2']) {
-            $result['address']['street'] = hash('sha256', $user_info['address_2']);
+        if (isset($ps_user_info['address_1']) && $ps_user_info['address_1']) {
+            $ps_result['address']['street'] = hash('sha256', $ps_user_info['address_1']);
+        } else if (isset($ps_user_info['address_2']) && $ps_user_info['address_2']) {
+            $ps_result['address']['street'] = hash('sha256', $ps_user_info['address_2']);
         }
 
-        if (isset($user_info['city']) && $user_info['city']) {
-            $result['address']['city'] = hash('sha256', $user_info['city']);
+        if (isset($ps_user_info['city']) && $ps_user_info['city']) {
+            $ps_result['address']['city'] = hash('sha256', $ps_user_info['city']);
         }
 
-        if (isset($user_info['zone']) && $user_info['zone']) {
-            $result['address']['region'] = hash('sha256', $user_info['zone']);
+        if (isset($ps_user_info['zone']) && $ps_user_info['zone']) {
+            $ps_result['address']['region'] = hash('sha256', $ps_user_info['zone']);
         }
 
-        if (isset($user_info['postcode']) && $user_info['postcode']) {
-            $result['address']['postal_code'] = hash('sha256', $user_info['postcode']);
+        if (isset($ps_user_info['postcode']) && $ps_user_info['postcode']) {
+            $ps_result['address']['postal_code'] = hash('sha256', $ps_user_info['postcode']);
         }
 
-        if (isset($user_info['country']) && $user_info['country']) {
-            $result['address']['country'] = hash('sha256', $user_info['country']);
+        if (isset($ps_user_info['country']) && $ps_user_info['country']) {
+            $ps_result['address']['country'] = hash('sha256', $ps_user_info['country']);
         }
 
-        return $result;
+        return $ps_result;
     }
 
     protected function getCategoryType1(int $product_id): array
     {
-        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+        $ps_product_categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
 
-        $result = [];
+        $ps_result = [];
 
-        foreach ($categories as $category_id) {
-            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($category_id);
+        foreach ($ps_product_categories as $ps_category_id) {
+            $ps_category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType1($ps_category_id);
 
-            if ($category_info) {
-                $result[] = html_entity_decode($category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
+            if ($ps_category_info) {
+                $ps_result[] = html_entity_decode($ps_category_info['last_category_name'], ENT_QUOTES, 'UTF-8');
             }
         }
 
-        return $result;
+        return $ps_result;
     }
 
     protected function getCategoryType2(int $product_id): array
     {
-        $categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
+        $ps_product_categories = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategories($product_id);
 
-        $result = [];
+        $ps_result = [];
 
-        foreach ($categories as $category_id) {
-            $category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($category_id);
+        foreach ($ps_product_categories as $ps_category_id) {
+            $ps_category_info = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType2($ps_category_id);
 
-            if ($category_info) {
-                if ($category_info['path']) {
-                    $result[] = html_entity_decode($category_info['path'] . ' &gt; ' . $category_info['name'], ENT_QUOTES, 'UTF-8');
+            if ($ps_category_info) {
+                if ($ps_category_info['path']) {
+                    $ps_result[] = html_entity_decode($ps_category_info['path'] . ' &gt; ' . $ps_category_info['name'], ENT_QUOTES, 'UTF-8');
                 } else {
-                    $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+                    $ps_result[] = html_entity_decode($ps_category_info['name'], ENT_QUOTES, 'UTF-8');
                 }
             }
         }
 
-        return $result;
+        return $ps_result;
     }
 
-    protected function getCategoryType3(int $category_id): array
+    protected function getCategoryType3(int $ps_category_id): array
     {
-        $result = [];
+        $ps_result = [];
 
-        $category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($category_id);
+        $ps_category_infos = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->getCategoryType3($ps_category_id);
 
-        foreach ($category_infos as $category_info) {
-            $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+        foreach ($ps_category_infos as $ps_category_info) {
+            $ps_result[] = html_entity_decode($ps_category_info['name'], ENT_QUOTES, 'UTF-8');
         }
 
-        return $result;
+        return $ps_result;
     }
 
-    protected function getCategoryType4(array $category_info): array
+    protected function getCategoryType4(array $ps_category_info): array
     {
-        $result = [];
+        $ps_result = [];
 
-        $result[] = html_entity_decode($category_info['name'], ENT_QUOTES, 'UTF-8');
+        $ps_result[] = html_entity_decode($ps_category_info['name'], ENT_QUOTES, 'UTF-8');
 
-        return $result;
+        return $ps_result;
     }
 
     protected function formatListId(string $string): string
     {
         if (function_exists('iconv')) {
-            $new_string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+            $ps_new_string = iconv('UTF-8', 'ASCII//TRANSLIT', $string);
         } elseif (function_exists('mb_convert_encoding')) {
-            $new_string = mb_convert_encoding($string, 'ASCII');
+            $ps_new_string = mb_convert_encoding($string, 'ASCII');
         } else {
-            $new_string = false;
+            $ps_new_string = false;
         }
 
-        if ($new_string === false) {
-            $new_string = $string;
+        if ($ps_new_string === false) {
+            $ps_new_string = $string;
         }
 
         $string = preg_replace('/[^a-zA-Z0-9_]/', ' ', $string);
