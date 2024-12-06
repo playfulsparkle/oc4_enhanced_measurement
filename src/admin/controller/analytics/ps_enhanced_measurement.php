@@ -531,17 +531,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $config_item_price_tax = $this->config->get('analytics_ps_enhanced_measurement_item_price_tax');
         $config_location_id = $this->config->get('analytics_ps_enhanced_measurement_location_id');
         $config_item_id_option = $this->config->get('analytics_ps_enhanced_measurement_item_id');
+        $config_affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
 
         $config_currency = $this->config->get('analytics_ps_enhanced_measurement_currency');
 
         if (empty($config_currency)) {
             $config_currency = $this->session->data['currency'];
-        }
-
-        $config_affiliation = $this->config->get('analytics_ps_enhanced_measurement_affiliation');
-
-        if (empty($config_affiliation)) {
-            $config_affiliation = $this->config->get('config_name');
         }
 
         $refund = isset($this->request->post['refund']) ? (array) $this->request->post['refund'] : [];
