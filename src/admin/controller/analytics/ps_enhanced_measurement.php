@@ -255,13 +255,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
                 if (empty($this->request->post['analytics_ps_enhanced_measurement_mp_api_secret'])) {
                     $json['error']['input-mp-api-secret'] = $this->language->get('error_mp_api_secret');
-                } elseif (preg_match('/^[A-Za-z0-9]{7}-[A-Za-z0-9]{7}-[A-Za-z0-9]{6}$/', $this->request->post['analytics_ps_enhanced_measurement_mp_api_secret']) !== 1) {
+                } elseif (preg_match('/^[A-Za-z0-9-_]{22}$/', $this->request->post['analytics_ps_enhanced_measurement_mp_api_secret']) !== 1) {
                     $json['error']['input-mp-api-secret'] = $this->language->get('error_mp_api_secret_invalid');
                 }
             } else if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtm') {
                 if (empty($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
-                } elseif (preg_match('/^GTM-[A-Z0-9]{8}$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                } elseif (preg_match('/^GTM-[A-Z0-9]{7,8}$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
                 }
             }
