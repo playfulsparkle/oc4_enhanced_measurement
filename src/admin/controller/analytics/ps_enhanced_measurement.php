@@ -310,7 +310,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function install(): void
     {
-        if ($this->user->hasPermission('modify', 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement')) {
+        if ($this->user->hasPermission('modify', 'extension/analytics')) {
             $this->load->model('setting/setting');
 
             $data = [
@@ -374,7 +374,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function uninstall(): void
     {
-        if ($this->user->hasPermission('modify', 'extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement')) {
+        if ($this->user->hasPermission('modify', 'extension/analytics')) {
             $this->load->model('setting/event');
 
             $this->_unregisterEvents();
