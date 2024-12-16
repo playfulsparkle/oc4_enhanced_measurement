@@ -163,7 +163,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                         ps_refund_btns.prop('disabled', true);
 
                         $.ajax({
-                            url: 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement.send_refund&user_token={{ user_token }}',
+                            url: 'index.php?route=extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement{{ oc4_separator }}send_refund&user_token={{ user_token }}',
                             type: 'POST',
                             data: formData,
                             processData: false,

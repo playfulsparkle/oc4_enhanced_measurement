@@ -1026,6 +1026,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         if (isset($this->request->get['order_id'])) {
             $order_id = (int) $this->request->get['order_id'];
 
+            $args['oc4_separator'] = version_compare(VERSION, '4.0.2.0', '>=') ? '.' : '|';
+
             $args['ps_text_refund_quantity'] = $this->language->get('ps_text_refund_quantity');
             $args['ps_column_refund_quantity'] = $this->language->get('ps_column_refund_quantity');
             $args['ps_button_refund'] = $this->language->get('ps_button_refund');
