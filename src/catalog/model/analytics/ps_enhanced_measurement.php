@@ -177,9 +177,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             >'
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}"
+        if (version_compare(VERSION, '4.1.0.0', '>=')) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ cart_add }}" data-bs-toggle="tooltip" title="{{ button_cart }}"',
+                'replace' => '<button type="submit" formaction="{{ cart_add }}" data-bs-toggle="tooltip" title="{{ button_cart }}"
                 data-ps-track-id="{{ product_id }}"
                 {% if ps_has_options %}
                     {% if ps_track_select_promotion and special %}data-ps-track-event="select_promotion"
@@ -188,15 +189,39 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     {% if ps_track_add_to_cart %}data-ps-track-event="add_to_cart"{% endif %}
                 {% endif %}
             '
-        ];
+            ];
+        } else {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_cart }}"
+                data-ps-track-id="{{ product_id }}"
+                {% if ps_has_options %}
+                    {% if ps_track_select_promotion and special %}data-ps-track-event="select_promotion"
+                    {% elseif ps_track_select_item and not special %}data-ps-track-event="select_item"{% endif %}
+                {% else %}
+                    {% if ps_track_add_to_cart %}data-ps-track-event="add_to_cart"{% endif %}
+                {% endif %}
+            '
+            ];
+        }
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}"
+        if (version_compare(VERSION, '4.1.0.0', '>=')) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ wishlist_add }}" data-bs-toggle="tooltip" title="{{ button_wishlist }}"',
+                'replace' => '<button type="submit" formaction="{{ wishlist_add }}" data-bs-toggle="tooltip" title="{{ button_wishlist }}"
                 data-ps-track-id="{{ product_id }}"
                 {% if ps_track_add_to_wishlist %}data-ps-track-event="add_to_wishlist"{% endif %}
             '
-        ];
+            ];
+        } else {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}"
+                data-ps-track-id="{{ product_id }}"
+                {% if ps_track_add_to_wishlist %}data-ps-track-event="add_to_wishlist"{% endif %}
+            '
+            ];
+        }
 
         return $views;
     }
@@ -333,9 +358,24 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             >',
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_cart }}"
+        if (version_compare(VERSION, '4.1.0.0', '>=')) {
+            $views[] = [
+                'search' => '<button type="submit" form="form-product-{{ product_row }}" class="btn btn-primary mb-1">{{ button_cart }}</button>',
+                'replace' => '<button type="submit" form="form-product-{{ product_row }}"
+                data-ps-track-id="{{ product.product_id }}"
+                {% if product.ps_has_options %}
+                    {% if ps_track_select_promotion and product.special %}data-ps-track-event="select_promotion"
+                    {% elseif ps_track_select_item and not product.special %}data-ps-track-event="select_item"{% endif %}
+                {% else %}
+                    {% if ps_track_add_to_cart %}data-ps-track-event="add_to_cart"{% endif %}
+                {% endif %}
+                 class="btn btn-primary mb-1">{{ button_cart }}</button>
+            '
+            ];
+        } else {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_cart }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_cart }}"
                 data-ps-track-id="{{ product.product_id }}"
                 {% if product.ps_has_options %}
                     {% if ps_track_select_promotion and product.special %}data-ps-track-event="select_promotion"
@@ -344,7 +384,8 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
                     {% if ps_track_add_to_cart %}data-ps-track-event="add_to_cart"{% endif %}
                 {% endif %}
             '
-        ];
+            ];
+        }
 
         return $views;
     }
@@ -421,13 +462,23 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             <button type="submit" id="button-cart"'
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
-            'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}"
+        if (version_compare(VERSION, '4.1.0.0', '>=')) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ wishlist_add }}"',
+                'replace' => '<button type="submit" formaction="{{ wishlist_add }}"
                 data-ps-track-id="{{ product_id }}"
                 {% if ps_track_add_to_wishlist %}data-ps-track-event="add_to_wishlist"{% endif %}
             '
-        ];
+            ];
+        } else {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ add_to_wishlist }}"',
+                'replace' => '<button type="submit" formaction="{{ add_to_wishlist }}"
+                data-ps-track-id="{{ product_id }}"
+                {% if ps_track_add_to_wishlist %}data-ps-track-event="add_to_wishlist"{% endif %}
+            '
+            ];
+        }
 
         $views[] = [
             'search' => 'if (json[\'success\']) {',
@@ -442,12 +493,12 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
         ];
 
         $views[] = [
-            'search' => '{% if products %}',
+            'search' => '{{ footer }}',
             'replace' => <<<HTML
             {% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
             {% if ps_track_view_promotion and ps_view_promotion %}<script>ps_dataLayer.pushEventData('view_promotion', {{ ps_view_promotion }});</script>{% endif %}
             {% if ps_track_view_item and ps_view_item %}<script>ps_dataLayer.pushEventData('view_item', {{ ps_view_item }});</script>{% endif %}
-            {% if products %}
+            {{ footer }}
             HTML
         ];
 
@@ -788,7 +839,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
 
     public function getProductSpecial($productId)
     {
-        $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int) $productId . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
+        if (version_compare(VERSION, '4.1.0.0', '>=')) {
+            $product_special_query = $this->db->query("SELECT (CASE WHEN `ps`.`type` = 'P' THEN (`ps`.`price` * (`p`.`price` / 100)) WHEN `ps`.`type` = 'S' THEN (`p`.`price` - `ps`.`price`) ELSE `ps`.`price` END) AS `price` FROM `" . DB_PREFIX . "product_discount` `ps` LEFT JOIN `" . DB_PREFIX . "product` `p` ON (`p`.`product_id` = `ps`.`product_id` AND `p`.`status` = '1' AND `p`.`date_available` <= NOW()) WHERE `ps`.`product_id` = '" . (int) $productId . "' AND `ps`.`customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND `ps`.`quantity` = '1' AND `ps`.`special` = '1' AND ((`ps`.`date_start` = '0000-00-00' OR `ps`.`date_start` < NOW()) AND (`ps`.`date_end` = '0000-00-00' OR `ps`.`date_end` > NOW())) ORDER BY `ps`.`priority` ASC, `ps`.`price` ASC LIMIT 1");
+        } else {
+            $product_special_query = $this->db->query("SELECT `price` FROM `" . DB_PREFIX . "product_special` WHERE `product_id` = '" . (int) $productId . "' AND `customer_group_id` = '" . (int) $this->config->get('config_customer_group_id') . "' AND ((`date_start` = '0000-00-00' OR `date_start` < NOW()) AND (`date_end` = '0000-00-00' OR `date_end` > NOW())) ORDER BY `priority` ASC, `price` ASC LIMIT 1");
+        }
 
         if ($product_special_query->num_rows) {
             return $product_special_query->row['price'];

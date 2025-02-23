@@ -2019,7 +2019,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $ps_item_list_id = $this->formatListId($ps_item_list_name);
 
 
-        $wishlist_items = $this->model_account_wishlist->getWishlist();
+        $wishlist_items = $this->model_account_wishlist->getWishlist($this->customer->getId());
 
         $ps_items = [];
         $ps_quantity_minimums = [];
