@@ -14,7 +14,7 @@ The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ makes
 - **Hassle-Free Setup:** No technical expertise needed. Just provide your Google IDs and API secrets, and the extension does the rest.
 - **Multi-Store Support:** Easily manage and track analytics across multiple stores with a single setup.
 - **Enhanced Insights for Smarter Decisions:** Leverage Google Analytics GA4's powerful features to improve performance, enhance user experience, and increase revenue.
-- **Multilingual Support:** Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), and Slovenčina (sk-sk).
+- **Multilingual Support:** Ready for international use with languages including Čeština (cs-cz), Deutsch (de-de), English (GB) (en-gb), English (US) (en-us), Español (es-es), Français (fr-fr), Magyar (hu-hu), Italiano (it-it), Русский (ru-ru), Ελληνικά (el-GR), العربية (ar), Polski (pl-pl), and Slovenčina (sk-sk).
 
 ---
 
