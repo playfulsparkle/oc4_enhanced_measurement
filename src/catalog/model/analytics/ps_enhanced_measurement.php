@@ -679,26 +679,44 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Model
             'replace' => '<input type="text" id="product-quantity-{{ product.cart_id }}" name="quantity"',
         ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ product_edit }}"',
-            'replace' => '<button type="submit" formaction="{{ product_edit }}"
+        if (version_compare(VERSION, '4.1.0.0', '<=')) {
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ product_edit }}"',
+                'replace' => '<button type="submit" formaction="{{ product_edit }}"
                 data-ps-track-id="{{ product.cart_id }}"
                 {% if ps_track_add_to_cart or ps_track_remove_from_cart %}data-ps-track-event="update_cart"{% endif %}
             ',
-        ];
+            ];
 
-        $views[] = [
-            'search' => '<button type="submit" formaction="{{ product_remove }}"',
-            'replace' => '<button type="submit" formaction="{{ product_remove }}"
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ product_remove }}"',
+                'replace' => '<button type="submit" formaction="{{ product_remove }}"
                 data-ps-track-id="{{ product.cart_id }}"
                 {% if ps_track_remove_from_cart %}data-ps-track-event="remove_from_cart"{% endif %}
             ',
-        ];
+            ];
+        } else { // OpenCart >= 4.1.0.1
+            $views[] = [
+                'search' => '<button type="submit" formaction="{{ edit }}"',
+                'replace' => '<button type="submit" formaction="{{ edit }}"
+                data-ps-track-id="{{ product.cart_id }}"
+                {% if ps_track_add_to_cart or ps_track_remove_from_cart %}data-ps-track-event="update_cart"{% endif %}
+            ',
+            ];
+
+            $views[] = [
+                'search' => '<a href="{{ product.remove }}"',
+                'replace' => '<a href="{{ product.remove }}"
+                data-ps-track-id="{{ product.cart_id }}"
+                {% if ps_track_remove_from_cart %}data-ps-track-event="remove_from_cart"{% endif %}
+            ',
+            ];
+        }
 
         $views[] = [
-            'search' => '<div class="table-responsive">',
+            'search' => '<table class="table table-bordered">',
             'replace' => '{% if ps_merge_items %}<script>ps_dataLayer.setData({{ ps_merge_items }});</script>{% endif %}
-            <div class="table-responsive">'
+            <table class="table table-bordered">'
         ];
 
         return $views;
