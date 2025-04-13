@@ -249,7 +249,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtag') {
                 if (empty($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) {
                     $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id');
-                } elseif (preg_match('/^G-[A-Z0-9]{10}$/', $this->request->post['analytics_ps_enhanced_measurement_google_tag_id']) !== 1) {
+                } elseif (preg_match('/^G-[A-Z0-9]{10}$/', strtoupper($this->request->post['analytics_ps_enhanced_measurement_google_tag_id'])) !== 1) {
                     $json['error']['input-google-tag-id'] = $this->language->get('error_google_tag_id_invalid');
                 }
 
@@ -261,7 +261,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             } else if ($this->request->post['analytics_ps_enhanced_measurement_implementation'] === 'gtm') {
                 if (empty($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id');
-                } elseif (preg_match('/^GTM-[A-Z0-9]{7,8}$/', $this->request->post['analytics_ps_enhanced_measurement_gtm_id']) !== 1) {
+                } elseif (preg_match('/^GTM-[A-Z0-9]{6,8}$/', strtoupper($this->request->post['analytics_ps_enhanced_measurement_gtm_id'])) !== 1) {
                     $json['error']['input-gtm-id'] = $this->language->get('error_gtm_id_invalid');
                 }
             }
@@ -290,7 +290,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             if ((bool) $this->request->post['analytics_ps_enhanced_measurement_adwords_status']) {
                 if (empty($this->request->post['analytics_ps_enhanced_measurement_adwords_id'])) {
                     $json['error']['input-google-adwords-id'] = $this->language->get('error_adwords_id');
-                } elseif (preg_match('/^AW-\d{9}$/', $this->request->post['analytics_ps_enhanced_measurement_adwords_id']) !== 1) {
+                } elseif (preg_match('/^AW-\d{9}$/', strtoupper($this->request->post['analytics_ps_enhanced_measurement_adwords_id'])) !== 1) {
                     $json['error']['input-google-adwords-id'] = $this->language->get('error_adwords_id_invalid');
                 }
             }
@@ -298,6 +298,11 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         if (!$json) {
             $this->load->model('setting/setting');
+
+            // Normalization
+            $this->request->post['analytics_ps_enhanced_measurement_google_tag_id'] = strtoupper($this->request->post['analytics_ps_enhanced_measurement_google_tag_id']);
+            $this->request->post['analytics_ps_enhanced_measurement_gtm_id'] = strtoupper($this->request->post['analytics_ps_enhanced_measurement_gtm_id']);
+            $this->request->post['analytics_ps_enhanced_measurement_adwords_id'] = strtoupper($this->request->post['analytics_ps_enhanced_measurement_adwords_id']);
 
             $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $this->request->post);
 
