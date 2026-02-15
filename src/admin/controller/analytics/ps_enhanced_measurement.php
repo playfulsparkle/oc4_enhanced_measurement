@@ -786,7 +786,9 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $response = curl_exec($ch);
 
-        curl_close($ch);
+        if ($ch && PHP_VERSION_ID < 80500) {
+            curl_close($ch);
+        }
 
         return (bool) $response;
     }
