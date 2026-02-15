@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Βελτιωμένη Μέτρηση';
-$_['heading_fix']                           = 'Επιδιόρθωση Κοινών Σφαλμάτων';
 $_['heading_getting_started']               = 'Έναρξη Χρήσης';
 $_['heading_setup']                         = 'Ρύθμιση Βελτιωμένης Μέτρησης';
 $_['heading_troubleshoot']                  = 'Αντιμετώπιση Προβλημάτων';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'για Εγγραφή';
 $_['entry_adwords_enhanced_conversion']     = 'Βελτιωμένες Μετατροπές';
 
 // Button
-$_['button_fix_event_handler']              = 'Επιδιόρθωση Χειριστή Συμβάντων';
 $_['button_refund']                         = 'Επιστροφή Χρημάτων';
 $_['button_refund_selected']                = 'Επιστροφή Επιλεγμένων';
 $_['button_refund_all']                     = 'Επιστροφή Όλων';

@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - القياس المعزز';
-$_['heading_fix']                           = 'إصلاح الأخطاء الشائعة';
 $_['heading_getting_started']               = 'بدء الاستخدام';
 $_['heading_setup']                         = 'إعداد القياس المعزز';
 $_['heading_troubleshoot']                  = 'استكشاف الأخطاء وإصلاحها';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'تسمية التسجيل';
 $_['entry_adwords_enhanced_conversion']     = 'تفعيل التحسينات المعززة';
 
 // Button
-$_['button_fix_event_handler']              = 'إصلاح معالج الأحداث';
 $_['button_refund']                         = 'استرداد';
 $_['button_refund_selected']                = 'استرداد المحدد';
 $_['button_refund_all']                     = 'استرداد الكل';

@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
-$_['heading_fix']                           = 'Исправление распространенных ошибок';
 $_['heading_getting_started']               = 'Начало работы';
 $_['heading_setup']                         = 'Настройка Enhanced Measurement';
 $_['heading_troubleshot']                   = 'Типичные проблемы';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'Для регистрации';
 $_['entry_adwords_enhanced_conversion']     = 'Включить улучшенные конверсии';
 
 // Button
-$_['button_fix_event_handler']              = 'Исправить обработчик событий';
 $_['button_refund']                         = 'Возврат';
 $_['button_refund_selected']                = 'Возврат выбранных';
 $_['button_refund_all']                     = 'Возврат всех';

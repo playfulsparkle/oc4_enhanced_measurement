@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
-$_['heading_fix']                           = 'Gyakori hibák javítása';
 $_['heading_getting_started']               = 'Kezdő lépések';
 $_['heading_setup']                         = 'Enhanced Measurement beállítása';
 $_['heading_troubleshot']                   = 'Gyakori hibakeresési lépések';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'Regisztráció esetén';
 $_['entry_adwords_enhanced_conversion']     = 'Fejlett konverziók engedélyezése';
 
 // Button
-$_['button_fix_event_handler']              = 'Eseménykezelő javítása';
 $_['button_refund']                         = 'Visszatérítés';
 $_['button_refund_selected']                = 'Kiválasztott visszatérítése';
 $_['button_refund_all']                     = 'Összes visszatérítése';

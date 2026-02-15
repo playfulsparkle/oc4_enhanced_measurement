@@ -1,6 +1,6 @@
 {
   "name": "oc4_ga4_enhanced_measurement",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "layful Sparkle - Enhanced Measurement for OpenCart 4",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "enhanced measurement"
   ],
   "author": "zsoltoroszlany82 <zsolt.oroszlany@playfulsparkle.com>",
-  "license": "Proprietary",
+  "license": "GPL",
   "dependencies": {
     "archiver": "^7.0.1",
     "fs": "^0.0.1-security"

@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Rozszerzone Śledzenie';
-$_['heading_fix']                           = 'Naprawa Typowych Błędów';
 $_['heading_getting_started']               = 'Wprowadzenie';
 $_['heading_setup']                         = 'Konfiguracja Rozszerzonego Śledzenia';
 $_['heading_troubleshoot']                  = 'Rozwiązywanie Problemów';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'Etykieta Rejestracji';
 $_['entry_adwords_enhanced_conversion']     = 'Włącz Rozszerzone Konwersje';
 
 // Button
-$_['button_fix_event_handler']              = 'Napraw Obsługę Zdarzeń';
 $_['button_refund']                         = 'Zwrot';
 $_['button_refund_selected']                = 'Zwróć Zaznaczone';
 $_['button_refund_all']                     = 'Zwróć Wszystko';

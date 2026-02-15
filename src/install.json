@@ -2,8 +2,8 @@
     "name": "Playful Sparkle - Enhanced Measurement",
     "description": "Easily integrate GA4 and Google Ads tracking to optimize marketing strategies, track user behavior, and ensure compliance with privacy regulations.",
     "code": "ps_enhanced_measurement",
-    "license": "Proprietary",
-    "version": "1.0.3",
+    "license": "GPL",
+    "version": "1.0.4",
     "author": "Playful Sparkle",
     "link": "https://github.com/playfulsparkle/oc4_enhanced_measurement.git"
   }

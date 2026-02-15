@@ -1,7 +1,6 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Enhanced Measurement';
-$_['heading_fix']                           = 'Oprava bežných chýb';
 $_['heading_getting_started']               = 'Začíname';
 $_['heading_setup']                         = 'Nastavenie Enhanced Measurement';
 $_['heading_troubleshot']                   = 'Bežné problémy';
@@ -132,7 +131,6 @@ $_['entry_adwords_sign_up_label']           = 'Pre registráciu';
 $_['entry_adwords_enhanced_conversion']     = 'Povoliť vylepšené konverzie';
 
 // Button
-$_['button_fix_event_handler']              = 'Opraviť obslužnú rutinu udalostí';
 $_['button_refund']                         = 'Vrátiť';
 $_['button_refund_selected']                = 'Vrátiť vybrané';
 $_['button_refund_all']                     = 'Vrátiť všetko';
