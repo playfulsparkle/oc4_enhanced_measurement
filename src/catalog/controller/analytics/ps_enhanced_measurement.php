@@ -2612,7 +2612,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      * @param string $output
      * @return void
      */
-    public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2635,7 +2635,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2706,7 +2706,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogControllerAccountLoginLoginAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerAccountLoginLoginAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2769,7 +2769,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2992,7 +2992,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
-    public function eventCatalogViewCheckoutPaymentMethodSaveAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogViewCheckoutPaymentMethodSaveAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3189,7 +3189,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
-    public function eventCatalogViewCheckoutShippingMethodSaveAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogViewCheckoutShippingMethodSaveAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3682,7 +3682,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $template = $this->replaceViews($route, $template, $views);
     }
 
-    public function eventCatalogControllerCheckoutRegisterSaveAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerCheckoutRegisterSaveAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3730,7 +3730,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string &$output = null)
+    public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string &$output): void
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;

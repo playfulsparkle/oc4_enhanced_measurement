@@ -314,79 +314,75 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function install(): void
     {
-        if ($this->user->hasPermission('modify', 'extension/analytics')) {
-            $this->load->model('setting/setting');
+        $this->load->model('setting/setting');
 
-            $data = [
-                'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
-                'analytics_ps_enhanced_measurement_item_id' => 'product_id',
-                'analytics_ps_enhanced_measurement_item_category_option' => 0,
-                'analytics_ps_enhanced_measurement_item_price_tax' => $this->config->get('config_tax'),
-                'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
-                'analytics_ps_enhanced_measurement_location_id' => '',
-                'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
-                'analytics_ps_enhanced_measurement_console_log_ga4_events' => 0,
-                'analytics_ps_enhanced_measurement_console_log_adwords_events' => 0,
-                'analytics_ps_enhanced_measurement_tracking_delay' => 800,
-                'analytics_ps_enhanced_measurement_track_user_id' => 1,
-                'analytics_ps_enhanced_measurement_track_generate_lead' => 1,
-                'analytics_ps_enhanced_measurement_track_qualify_lead' => 1,
-                'analytics_ps_enhanced_measurement_track_sign_up' => 1,
-                'analytics_ps_enhanced_measurement_track_login' => 1,
-                'analytics_ps_enhanced_measurement_track_add_to_wishlist' => 1,
-                'analytics_ps_enhanced_measurement_track_add_to_cart' => 1,
-                'analytics_ps_enhanced_measurement_track_remove_from_cart' => 1,
-                'analytics_ps_enhanced_measurement_track_search' => 1,
-                'analytics_ps_enhanced_measurement_track_view_item_list' => 1,
-                'analytics_ps_enhanced_measurement_track_select_item' => 1,
-                'analytics_ps_enhanced_measurement_track_view_item' => 1,
-                'analytics_ps_enhanced_measurement_track_select_promotion' => 1,
-                'analytics_ps_enhanced_measurement_track_view_promotion' => 1,
-                'analytics_ps_enhanced_measurement_track_view_cart' => 1,
-                'analytics_ps_enhanced_measurement_track_begin_checkout' => 1,
-                'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
-                'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
-                'analytics_ps_enhanced_measurement_track_purchase' => 1,
-                'analytics_ps_enhanced_measurement_track_file_download' => 0,
-                'analytics_ps_enhanced_measurement_track_file_download_ext' => '.pdf, .xls, .xlsx, .doc, .docx',
-                'analytics_ps_enhanced_measurement_gcm_status' => 0,
-                'analytics_ps_enhanced_measurement_ad_storage' => 0,
-                'analytics_ps_enhanced_measurement_ad_user_data' => 0,
-                'analytics_ps_enhanced_measurement_ad_personalization' => 0,
-                'analytics_ps_enhanced_measurement_analytics_storage' => 0,
-                'analytics_ps_enhanced_measurement_functionality_storage' => 0,
-                'analytics_ps_enhanced_measurement_personalization_storage' => 0,
-                'analytics_ps_enhanced_measurement_security_storage' => 0,
-                'analytics_ps_enhanced_measurement_wait_for_update' => 500,
-                'analytics_ps_enhanced_measurement_ads_data_redaction' => 0,
-                'analytics_ps_enhanced_measurement_url_passthrough' => 0,
-                'analytics_ps_enhanced_measurement_adwords_status' => 0,
-                'analytics_ps_enhanced_measurement_adwords_enhanced_conversion' => 0,
-            ];
+        $data = [
+            'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
+            'analytics_ps_enhanced_measurement_item_id' => 'product_id',
+            'analytics_ps_enhanced_measurement_item_category_option' => 0,
+            'analytics_ps_enhanced_measurement_item_price_tax' => $this->config->get('config_tax'),
+            'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
+            'analytics_ps_enhanced_measurement_location_id' => '',
+            'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
+            'analytics_ps_enhanced_measurement_console_log_ga4_events' => 0,
+            'analytics_ps_enhanced_measurement_console_log_adwords_events' => 0,
+            'analytics_ps_enhanced_measurement_tracking_delay' => 800,
+            'analytics_ps_enhanced_measurement_track_user_id' => 1,
+            'analytics_ps_enhanced_measurement_track_generate_lead' => 1,
+            'analytics_ps_enhanced_measurement_track_qualify_lead' => 1,
+            'analytics_ps_enhanced_measurement_track_sign_up' => 1,
+            'analytics_ps_enhanced_measurement_track_login' => 1,
+            'analytics_ps_enhanced_measurement_track_add_to_wishlist' => 1,
+            'analytics_ps_enhanced_measurement_track_add_to_cart' => 1,
+            'analytics_ps_enhanced_measurement_track_remove_from_cart' => 1,
+            'analytics_ps_enhanced_measurement_track_search' => 1,
+            'analytics_ps_enhanced_measurement_track_view_item_list' => 1,
+            'analytics_ps_enhanced_measurement_track_select_item' => 1,
+            'analytics_ps_enhanced_measurement_track_view_item' => 1,
+            'analytics_ps_enhanced_measurement_track_select_promotion' => 1,
+            'analytics_ps_enhanced_measurement_track_view_promotion' => 1,
+            'analytics_ps_enhanced_measurement_track_view_cart' => 1,
+            'analytics_ps_enhanced_measurement_track_begin_checkout' => 1,
+            'analytics_ps_enhanced_measurement_track_add_payment_info' => 1,
+            'analytics_ps_enhanced_measurement_track_add_shipping_info' => 1,
+            'analytics_ps_enhanced_measurement_track_purchase' => 1,
+            'analytics_ps_enhanced_measurement_track_file_download' => 0,
+            'analytics_ps_enhanced_measurement_track_file_download_ext' => '.pdf, .xls, .xlsx, .doc, .docx',
+            'analytics_ps_enhanced_measurement_gcm_status' => 0,
+            'analytics_ps_enhanced_measurement_ad_storage' => 0,
+            'analytics_ps_enhanced_measurement_ad_user_data' => 0,
+            'analytics_ps_enhanced_measurement_ad_personalization' => 0,
+            'analytics_ps_enhanced_measurement_analytics_storage' => 0,
+            'analytics_ps_enhanced_measurement_functionality_storage' => 0,
+            'analytics_ps_enhanced_measurement_personalization_storage' => 0,
+            'analytics_ps_enhanced_measurement_security_storage' => 0,
+            'analytics_ps_enhanced_measurement_wait_for_update' => 500,
+            'analytics_ps_enhanced_measurement_ads_data_redaction' => 0,
+            'analytics_ps_enhanced_measurement_url_passthrough' => 0,
+            'analytics_ps_enhanced_measurement_adwords_status' => 0,
+            'analytics_ps_enhanced_measurement_adwords_enhanced_conversion' => 0,
+        ];
 
-            $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
+        $this->model_setting_setting->editSetting('analytics_ps_enhanced_measurement', $data);
 
-            $this->load->model('setting/event');
+        $this->load->model('setting/event');
 
-            $this->_registerEvents();
+        $this->_registerEvents();
 
-            $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->install();
-        }
+        $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->install();
     }
 
     public function uninstall(): void
     {
-        if ($this->user->hasPermission('modify', 'extension/analytics')) {
-            $this->load->model('setting/event');
+        $this->load->model('setting/event');
 
-            $this->_unregisterEvents();
+        $this->_unregisterEvents();
 
-            $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
+        $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-            $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->uninstall();
-        }
+        $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->uninstall();
     }
 
     private function _unregisterEvents(): void
@@ -793,7 +789,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         return (bool) $response;
     }
 
-    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string &$output = null)
+    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string &$output): void
     {
         if (!isset($this->request->get['action'])) {
             return;
