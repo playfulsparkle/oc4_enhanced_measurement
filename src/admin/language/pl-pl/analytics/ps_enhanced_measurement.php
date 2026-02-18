@@ -190,7 +190,6 @@ $_['error_gtm_id']                          = 'Wymagane ID Śledzenia!';
 $_['error_gtm_id_invalid']                  = 'Nieprawidłowy format ID Śledzenia!';
 $_['error_mp_api_secret']                   = 'Wymagany Sekret API!';
 $_['error_mp_api_secret_invalid']           = 'Nieprawidłowy format Sekretu API!';
-$_['error_measurement_implementation']      = 'Nie skonfigurowano metody implementacji!';
 $_['error_refund_no_items']                 = 'Nie znaleziono produktu!';
 $_['error_refund_no_order_id']              = 'Niekompletne dane zamówienia!';
 $_['error_analytics_extension']             = 'Wykryto inne aktywne rozszerzenie analityczne!';

@@ -3,7 +3,7 @@
     "description": "Easily integrate GA4 and Google Ads tracking to optimize marketing strategies, track user behavior, and ensure compliance with privacy regulations.",
     "code": "ps_enhanced_measurement",
     "license": "GPL",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "author": "Playful Sparkle",
     "link": "https://github.com/playfulsparkle/oc4_enhanced_measurement.git"
   }

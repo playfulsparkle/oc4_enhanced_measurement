@@ -190,7 +190,6 @@ $_['error_gtm_id']                          = 'Απαιτείται Measurement 
 $_['error_gtm_id_invalid']                  = 'Μη έγκυρη μορφή GTM ID!';
 $_['error_mp_api_secret']                   = 'Απαιτείται Measurement Protocol API Secret!';
 $_['error_mp_api_secret_invalid']           = 'Μη έγκυρη μορφή API Secret!';
-$_['error_measurement_implementation']      = 'Δεν έχει ρυθμιστεί μέθοδος υλοποίησης!';
 $_['error_refund_no_items']                 = 'Δεν βρέθηκε το προϊόν!';
 $_['error_refund_no_order_id']              = 'Ελλιπή δεδομένα παραγγελίας!';
 $_['error_analytics_extension']             = 'Ενεργό άλλο εργαλείο ανάλυσης!';

@@ -190,7 +190,6 @@ $_['error_gtm_id']                          = 'مطلوب إدخال GTM ID.';
 $_['error_gtm_id_invalid']                  = 'تنسيق GTM ID غير صحيح.';
 $_['error_mp_api_secret']                   = 'مطلوب إدخال Measurement Protocol API Secret.';
 $_['error_mp_api_secret_invalid']           = 'تنسيق API Secret غير صحيح.';
-$_['error_measurement_implementation']      = 'لم يتم تهيئة طريقة التنفيذ.';
 $_['error_refund_no_items']                 = 'لم يتم العثور على المنتج المرتبط بالطلب.';
 $_['error_refund_no_order_id']              = 'بيانات الطلب غير مكتملة.';
 $_['error_analytics_extension']             = 'امتداد تحليلات آخر مفعل.';

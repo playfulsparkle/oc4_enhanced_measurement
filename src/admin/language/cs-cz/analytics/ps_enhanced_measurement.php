@@ -190,7 +190,6 @@ $_['error_gtm_id']                          = 'Pole GTM ID je povinné. Zadejte 
 $_['error_gtm_id_invalid']                  = 'Formát GTM ID je neplatný. Ujistěte se, že odpovídá formátu GTM-XXXXXXXX.';
 $_['error_mp_api_secret']                   = 'Pole API tajný klíč protokolu Measurement Protocol je povinné. Zadejte svůj API tajný klíč protokolu Measurement Protocol.';
 $_['error_mp_api_secret_invalid']           = 'Formát API tajného klíče protokolu Measurement Protocol je neplatný. Ujistěte se, že odpovídá formátu XXXXXXX-XXXXXXX-XXXXXX.';
-$_['error_measurement_implementation']      = 'Implementace měření není správně nakonfigurována. Vyberte buď Global Site Tag, nebo Google Tag Manager.';
 $_['error_refund_no_items']                 = 'Varování: ID produktu spojené s touto objednávkou nebylo nalezeno.';
 $_['error_refund_no_order_id']              = 'Varování: Chybí nebo jsou neúplné povinné parametry žádosti.';
 $_['error_analytics_extension']             = 'Zdá se, že na vašem webu je již aktivní jiný analytický nástroj. Používání více nástrojů tohoto typu může způsobit problémy, jako je duplicitní nebo chybějící sledování. Zkontrolujte nastavení svého webu.';
