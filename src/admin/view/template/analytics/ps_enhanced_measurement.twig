@@ -129,12 +129,12 @@
 							</div>
 
 							<ul class="nav nav-tabs">
-								<li class="nav-item"><a href="#tab-gtag" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">{{ tab_gtag }}</a></li>
+								<li class="nav-item"><a href="#tab-gtag" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtag' %} active{% endif %}">{{ tab_gtag }}</a></li>
 								<li class="nav-item"><a href="#tab-gtm" data-bs-toggle="tab" class="nav-link{% if analytics_ps_enhanced_measurement_implementation == 'gtm' %} active{% endif %}">{{ tab_gtm }}</a></li>
 							</ul>
 
 							<div class="tab-content">
-								<div id="tab-gtag" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtag' or analytics_ps_enhanced_measurement_implementation == '' %} active{% endif %}">
+								<div id="tab-gtag" class="tab-pane{% if analytics_ps_enhanced_measurement_implementation == 'gtag' %} active{% endif %}">
 
 									<div class="row mb-3 required">
 										<label for="input-google-tag-id" class="col-sm-2 col-form-label">{{ entry_google_tag_id }}</label>

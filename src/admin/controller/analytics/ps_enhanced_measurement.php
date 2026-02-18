@@ -481,10 +481,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
     public function send_refund(): void
     {
-        if (
-            !(bool) $this->config->get('analytics_ps_enhanced_measurement_status') ||
-            !$this->config->get('analytics_ps_enhanced_measurement_implementation')
-        ) {
+        if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
 
