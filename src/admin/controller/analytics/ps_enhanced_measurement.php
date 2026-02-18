@@ -326,13 +326,13 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             'analytics_ps_enhanced_measurement_adwords_status' => 0,
             'analytics_ps_enhanced_measurement_affiliation' => $this->config->get('config_name'),
             'analytics_ps_enhanced_measurement_analytics_storage' => 1,
-            'analytics_ps_enhanced_measurement_close_convert_lead_status' => '', // array
-            'analytics_ps_enhanced_measurement_close_unconvert_lead_status' => '', // array
+            'analytics_ps_enhanced_measurement_close_convert_lead_status' => [],
+            'analytics_ps_enhanced_measurement_close_unconvert_lead_status' => [],
             'analytics_ps_enhanced_measurement_console_log_adwords_events' => 0,
             'analytics_ps_enhanced_measurement_console_log_ga4_events' => 0,
             'analytics_ps_enhanced_measurement_currency' => $this->config->get('config_currency'),
             'analytics_ps_enhanced_measurement_debug_global_site_tag' => 0,
-            'analytics_ps_enhanced_measurement_disqualify_lead_status' => '', // array
+            'analytics_ps_enhanced_measurement_disqualify_lead_status' => [],
             'analytics_ps_enhanced_measurement_functionality_storage' => 1,
             'analytics_ps_enhanced_measurement_gcm_status' => 0,
             'analytics_ps_enhanced_measurement_google_tag_id' => '',
