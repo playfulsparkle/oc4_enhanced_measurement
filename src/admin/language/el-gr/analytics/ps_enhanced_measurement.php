@@ -7,7 +7,7 @@ $_['heading_contact']                       = 'Επικοινωνία με Υπ�
 $_['text_extension']                        = 'Επεκτάσεις';
 $_['text_edit']                             = 'Επεξεργασία Βελτιωμένης Μέτρησης';
 $_['text_success']                          = 'Επιτυχία: Έχετε τροποποιήσει τη Βελτιωμένη Μέτρηση!';
-$_['text_contact']                          = '<p>Για περαιτέρω βοήθεια, επικοινωνήστε με την ομάδα υποστήριξης:</p><ul><li><strong>Email:</strong> <a href="mailto:%s">%s</a></li><li><strong>Τεκμηρίωση:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Εγχειρίδιο Χρήσης</a></li></ul>';
+$_['text_contact']                          = '<p>Για περαιτέρω βοήθεια, επικοινωνήστε με την ομάδα υποστήριξής μας:</p><ul><li><strong>Επικοινωνία:</strong> <a href="mailto:%s">%s</a></li><li><strong>Τεκμηρίωση:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Τεκμηρίωση χρήστη</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Επιλογές Αντικειμένου';

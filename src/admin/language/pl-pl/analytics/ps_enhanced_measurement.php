@@ -7,7 +7,7 @@ $_['heading_contact']                       = 'Kontakt z Wsparciem';
 $_['text_extension']                        = 'Rozszerzenia';
 $_['text_edit']                             = 'Edytuj Rozszerzone Śledzenie';
 $_['text_success']                          = 'Sukces: Zmodyfikowano ustawienia Rozszerzonego Śledzenia!';
-$_['text_contact']                          = '<p>W celu uzyskania pomocy skontaktuj się z naszym wsparciem:</p><ul><li><strong>Email:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentacja:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Podręcznik Użytkownika</a></li></ul>';
+$_['text_contact']                          = '<p>W celu uzyskania dodatkowej pomocy prosimy o kontakt z zespołem wsparcia:</p><ul><li><strong>Kontakt:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentacja:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Dokumentacja użytkownika</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Opcje Produktu';
