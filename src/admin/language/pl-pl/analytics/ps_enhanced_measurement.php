@@ -1,20 +1,12 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Rozszerzone Śledzenie';
-$_['heading_getting_started']               = 'Wprowadzenie';
-$_['heading_setup']                         = 'Konfiguracja Rozszerzonego Śledzenia';
-$_['heading_troubleshoot']                  = 'Rozwiązywanie Problemów';
-$_['heading_faq']                           = 'FAQ';
 $_['heading_contact']                       = 'Kontakt z Wsparciem';
 
 // Text
 $_['text_extension']                        = 'Rozszerzenia';
 $_['text_edit']                             = 'Edytuj Rozszerzone Śledzenie';
 $_['text_success']                          = 'Sukces: Zmodyfikowano ustawienia Rozszerzonego Śledzenia!';
-$_['text_getting_started']                  = '<p><strong>Przegląd:</strong> Rozszerzenie Playful Sparkle - Rozszerzone Śledzenie GA4 dla OpenCart 4 zapewnia zaawansowane możliwości śledzenia dla Twojego sklepu internetowego. Obsługuje śledzenie wielu zdarzeń, w tym logowania użytkowników, aktywności koszyka i transakcji. Integruje się z Google Tag Manager lub Global Site Tag.</p><p><strong>Wymagania:</strong> OpenCart 4.x, aktywny kont Google Analytics GA4 oraz odpowiednie dane uwierzytelniające.</p>';
-$_['text_setup']                            = '<ul><li>Wybierz preferowaną metodę implementacji (Global Site Tag lub Google Tag Manager)</li><li>Dla Global Site Tag wprowadź Google Tag ID i Measurement Protocol API Secret</li><li>Dla Google Tag Manager wprowadź Measurement ID</li><li>Skonfiguruj zdarzenia śledzenia</li><li>Wyłącz inne rozszerzenia analityczne aby uniknąć konfliktów</li></ul>';
-$_['text_troubleshoot']                     = '<ul><li><strong>Problem:</strong> Brak zdarzeń w Google Analytics. <strong>Rozwiązanie:</strong> Sprawdź poprawność Measurement ID/Tag ID</li><li><strong>Problem:</strong> Podwójne śledzenie zdarzeń. <strong>Rozwiązanie:</strong> Wyłącz konkurujące rozszerzenia</li><li><strong>Problem:</strong> Błąd śledzenia w wielu sklepach. <strong>Rozwiązanie:</strong> Skonfiguruj unikalne ID dla każdego sklepu</li></ul>';
-$_['text_faq']                              = '<details><summary>Dlaczego nie ma trybu debugowania dla Google Tag Manager?</summary>Tryb debugowania należy skonfigurować bezpośrednio w Google Tag Manager.</details><details><summary>Co się stanie jeśli wybiorę niedostępny ID produktu?</summary>Zostanie użyty product_id.</details>';
 $_['text_contact']                          = '<p>W celu uzyskania pomocy skontaktuj się z naszym wsparciem:</p><ul><li><strong>Email:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentacja:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Podręcznik Użytkownika</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';

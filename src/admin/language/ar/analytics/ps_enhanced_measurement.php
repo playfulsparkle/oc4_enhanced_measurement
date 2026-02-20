@@ -1,21 +1,13 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - القياس المعزز';
-$_['heading_getting_started']               = 'بدء الاستخدام';
-$_['heading_setup']                         = 'إعداد القياس المعزز';
-$_['heading_troubleshoot']                  = 'استكشاف الأخطاء وإصلاحها';
-$_['heading_faq']                           = 'الأسئلة الشائعة';
 $_['heading_contact']                       = 'اتصال بالدعم';
 
 // Text
 $_['text_extension']                        = 'الامتدادات';
 $_['text_edit']                             = 'تعديل القياس المعزز';
 $_['text_success']                          = 'نجاح: تم تعديل إعدادات القياس المعزز بنجاح!';
-$_['text_getting_started']                  = '<p><strong>نظرة عامة:</strong> امتداد Playful Sparkle - القياس المعزز GA4 لمتاجر OpenCart 4 يوفر إمكانيات تتبع متقدمة لمتجرك الإلكتروني، بما في ذلك تتبع الأحداث مثل تفاعلات المستخدمين وأنشطة السلة وأحداث الشراء. كما يتكامل مع Google Tag Manager أو Global Site Tag، ويُدعم تتبع تحويلات Google AdWords.</p><p><strong>المتطلبات:</strong> OpenCart 4.x، حساب Google Analytics GA4 صالح، ومعرفات الاعتماد المناسبة بناءً على طريقة التنفيذ المختارة.</p>';
-$_['text_setup']                            = '<ul><li>اختر طريقة التنفيذ المفضلة (Global Site Tag أو Google Tag Manager).</li><li>لـ Global Site Tag، أدخل Google Tag ID وMeasurement Protocol API Secret. لـ Google Tag Manager، أدخل Measurement ID.</li><li>قم بتهيئة الأحداث المراد تتبعها مثل تسجيل الدخول أو الشراء.</li><li>تأكد من تعطيل أي امتدادات تحليلات أخرى لتجنب التعارض.</li></ul>';
-$_['text_troubleshoot']                     = '<ul><li><strong>المشكلة:</strong> عدم ظهور الأحداث في لوحة Google Analytics. <strong>الحل:</strong> تأكد من صحة إدخال المعرفات وتوافقها مع خاصية GA4.</li><li><strong>المشكلة:</strong> تتبع مكرر للأحداث. <strong>الحل:</strong> تفقد الإعدادات وتأكد من استخدام طريقة تنفيذ واحدة فقط.</li></ul>';
-$_['text_faq']                              = '<details><summary>لماذا لا يوجد وضع تصحيح لـ Google Tag Manager؟</summary>يجب إعداد وضع التصحيح مباشرة من خلال Google Tag Manager.</details><details><summary>ماذا يحدث إذا اخترت معرف عنصر غير متاح؟</summary>سيتم استخدام product_id بدلاً من ذلك.</details>';
-$_['text_contact']                          = '<p>للمساعدة الإضافية، تواصل مع فريق الدعم:</p><ul><li><strong>الاتصال:</strong> <a href="mailto:%s">%s</a></li><li><strong>الوثائق:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">الوثائق المستخدم</a></li></ul>';
+$_['text_contact']                          = '<p>للمساعدة الإضافية، يرجى التواصل مع فريق الدعم لدينا:</p><ul><li><strong>الاتصال:</strong> <a href="mailto:%s">%s</a></li><li><strong>التوثيق:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">توثيق المستخدم</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'خيارات العنصر';

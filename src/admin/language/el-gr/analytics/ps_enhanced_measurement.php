@@ -1,20 +1,12 @@
 <?php
 // Heading
 $_['heading_title']                         = 'Playful Sparkle - Βελτιωμένη Μέτρηση';
-$_['heading_getting_started']               = 'Έναρξη Χρήσης';
-$_['heading_setup']                         = 'Ρύθμιση Βελτιωμένης Μέτρησης';
-$_['heading_troubleshoot']                  = 'Αντιμετώπιση Προβλημάτων';
-$_['heading_faq']                           = 'Συχνές Ερωτήσεις (FAQ)';
 $_['heading_contact']                       = 'Επικοινωνία με Υποστήριξη';
 
 // Text
 $_['text_extension']                        = 'Επεκτάσεις';
 $_['text_edit']                             = 'Επεξεργασία Βελτιωμένης Μέτρησης';
 $_['text_success']                          = 'Επιτυχία: Έχετε τροποποιήσει τη Βελτιωμένη Μέτρηση!';
-$_['text_getting_started']                  = '<p><strong>Επισκόπηση:</strong> Η επέκταση Playful Sparkle - Βελτιωμένη Μέτρηση GA4 για OpenCart 4 παρέχει προηγμένες δυνατότητες παρακολούθησης για το ηλεκτρονικό σας κατάστημα. Υποστηρίζει παρακολούθηση πολλαπλών συμβάντων όπως διαδικασίες σύνδεσης, δραστηριότητες καλαθιού και συμβάντα αγοράς. Επίσης, ενσωματώνεται με το Google Tag Manager ή Global Site Tag και υποστηρίζει παρακολούθηση μετατροπών Google AdWords.</p><p><strong>Απαιτήσεις:</strong> OpenCart 4.x, έγκυρος λογαριασμός Google Analytics GA4 και τα απαραίτητα διαπιστευτήρια ανάλογα με την επιλεγμένη μέθοδο υλοποίησης.</p>';
-$_['text_setup']                            = '<ul><li>Επιλέξτε την προτιμώμενη μέθοδο υλοποίησης (Global Site Tag ή Google Tag Manager)</li><li>Για Global Site Tag, εισαγάγετε το Google Tag ID και το Measurement Protocol API secret. Για Google Tag Manager, εισαγάγετε το Measurement ID</li><li>Ρυθμίστε τα συμβάντα παρακολούθησης που θέλετε να ενεργοποιήσετε</li><li>Απενεργοποιήστε τυχόν άλλες επεκτάσεις ανάλυσης για να αποφύγετε διενέξεις κώδικα</li></ul>';
-$_['text_troubleshoot']                     = '<ul><li><strong>Πρόβλημα:</strong> Τα συμβάντα δεν εμφανίζονται στο Google Analytics. <strong>Λύση:</strong> Ελέγξτε την ορθότητα του Measurement ID/Tag ID και την απουσία διενέξεων</li><li><strong>Πρόβλημα:</strong> Διπλή καταγραφή συμβάντων. <strong>Λύση:</strong> Απενεργοποιήστε άλλες επεκτάσεις ανάλυσης</li><li><strong>Πρόβλημα:</strong> Η παρακολούθηση δεν λειτουργεί σε πολλαπλά καταστήματα. <strong>Λύση:</strong> Ρυθμίστε ξεχωριστά IDs για κάθε κατάστημα</li></ul>';
-$_['text_faq']                              = '<details><summary>Γιατί δεν υπάρχει λειτουργία debug για το Google Tag Manager;</summary>Πρέπει να ρυθμίσετε το debug mode απευθείας μέσω Google Tag Manager.</details><details><summary>Τι συμβαίνει αν επιλέξω μη διαθέσιμο αναγνωριστικό προϊόντος;</summary>Θα χρησιμοποιηθεί το product_id.</details>';
 $_['text_contact']                          = '<p>Για περαιτέρω βοήθεια, επικοινωνήστε με την ομάδα υποστήριξης:</p><ul><li><strong>Email:</strong> <a href="mailto:%s">%s</a></li><li><strong>Τεκμηρίωση:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Εγχειρίδιο Χρήσης</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
