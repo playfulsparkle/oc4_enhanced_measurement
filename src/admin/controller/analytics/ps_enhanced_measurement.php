@@ -795,7 +795,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         return (bool) $response;
     }
 
-    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string &$output): void
+    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string|null &$output = null): void
     {
         if (!isset($this->request->get['action'])) {
             return;
