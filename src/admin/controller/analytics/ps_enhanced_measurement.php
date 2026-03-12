@@ -40,7 +40,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $data['breadcrumbs'][] = [
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('extension/analytics/ps_enhanced_measurement', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $this->request->get['store_id'], true),
+            'href' => $this->url->link('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement', 'user_token=' . $this->session->data['user_token'] . '&store_id=' . $this->request->get['store_id'], true),
         ];
 
 
