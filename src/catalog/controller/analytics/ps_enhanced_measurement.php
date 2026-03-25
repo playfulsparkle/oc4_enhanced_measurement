@@ -148,15 +148,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     }
 
     /**
-     * Event handler for `catalog/view/common/header/before`.
+     * Event: catalog/view/common/header/before
      *
      * @param string $route
      * @param array $args
-     * @param string $template
+     * @param string $output
      *
      * @return void
      */
-    public function eventCatalogViewCommonHeaderBefore(string &$route, array &$args, string &$template): void
+    public function eventCatalogViewCommonHeaderBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -274,17 +274,26 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
-        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
 
-        $template = $this->replaceViews($route, $template, $headerViews);
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCommonHeaderBefore($args);
+
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewAccountDownloadBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/account/download/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountDownloadBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
         }
-
 
         $ps_config_track_file_download = (bool) $this->config->get('analytics_ps_enhanced_measurement_track_file_download');
 
@@ -336,12 +345,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_track_file_download'] = $ps_config_track_file_download;
 
 
-        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountDownloadBefore($args);
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountDownloadBefore($args);
 
-        $template = $this->replaceViews($route, $template, $headerViews);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductThumbBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/thumb/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductThumbBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -376,12 +394,21 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_track_select_promotion'] = $ps_config_track_select_promotion;
 
 
-        $headerViews = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductThumbBefore($args);
+        $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductThumbBefore($args);
 
-        $template = $this->replaceViews($route, $template, $headerViews);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductCategoryBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/category/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductCategoryBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -650,12 +677,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $args['ps_track_view_item_list'] = $ps_config_track_view_item_list;
 
 
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCategoryBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductSearchBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/search/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductSearchBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -986,10 +1023,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSearchBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductSpecialBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/special/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductSpecialBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -1238,10 +1284,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductSpecialBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductCompareBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/compare/before
+     *
+     * @param string $route
+     * @param array $args
+     *
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductCompareBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -1469,10 +1525,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductCompareBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductManufacturerInfoBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/manufacturer_info/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductManufacturerInfoBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -1729,10 +1794,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductManufacturerInfoBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewAccountOrderInfoBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/account/order_info/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountOrderInfoBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -1963,10 +2037,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountOrderInfoBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewAccountWishlistBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/account/wishlist/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountWishlistBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2188,10 +2271,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewAccountWishlistListBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/account/wishlist_list/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountWishlistListBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2227,10 +2319,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountWishlistListBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewProductProductBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/product/product/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewProductProductBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2604,19 +2705,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewProductProductBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
     /**
      * Save newsletter state on index.php?route=account/newsletter.save
      * we are going to be redirected to index.php?route=account/account
      *
+     * Event: catalog/controller/account/newsletter.save/after
+     *
      * @param string $route
      * @param array $args
      * @param string $output
+     *
      * @return void
      */
-    public function eventCatalogControllerAccountNewsletterSaveAfter(string &$route, array &$args, string|null &$output = null): void
+    public function eventCatalogControllerAccountNewsletterSaveAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2639,7 +2743,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogControllerInformationContactSendAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/information/contact
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogControllerInformationContactSendAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2660,7 +2773,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->session->data['ps_generate_lead_contact_form_event'] = 1;
     }
 
-    public function eventCatalogViewInformationContactSuccessBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/common/success/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewInformationContactSuccessBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2706,11 +2828,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewInformationContactSuccessBefore($args);
 
-            $template = $this->replaceViews($route, $template, $views);
+            $output = $this->replaceViews($route, $output, $views);
         }
     }
 
-    public function eventCatalogControllerAccountLoginLoginAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/account/login.login/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogControllerAccountLoginLoginAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2731,7 +2862,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewAccountAccountBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/account/account/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountAccountBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2769,11 +2909,20 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
             $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountAccountBefore($args);
 
-            $template = $this->replaceViews($route, $template, $views);
+            $output = $this->replaceViews($route, $output, $views);
         }
     }
 
-    public function eventCatalogControllerCheckoutCartAddAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/checkout/cart.add/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogControllerCheckoutCartAddAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2971,7 +3120,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewCheckoutPaymentMethodBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/payment_method/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutPaymentMethodBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -2993,10 +3151,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutPaymentMethodBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutPaymentMethodSaveAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/checkout/payment_method.save/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutPaymentMethodSaveAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3169,7 +3336,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogViewCheckoutShippingMethodBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/shipping_method/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutShippingMethodBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3188,12 +3364,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $args['ps_track_add_shipping_info'] = $ps_config_track_add_shipping_info;
 
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutShippingMethodBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutShippingMethodSaveAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/checkout/shipping_method.save/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutShippingMethodSaveAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3366,7 +3552,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogViewCheckoutConfirmBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/confirm/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutConfirmBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3406,10 +3601,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutConfirmBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutCheckoutBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/checkout/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutCheckoutBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3586,10 +3790,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCheckoutBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewAccountSuccessBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/common/success/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewAccountSuccessBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3654,10 +3867,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewAccountSuccessBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutRegisterBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/register/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutRegisterBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3683,10 +3905,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutRegisterBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogControllerCheckoutRegisterSaveAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/checkout/register.save/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogControllerCheckoutRegisterSaveAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3734,7 +3965,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogControllerAccountRegisterRegisterAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/account/register.register/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogControllerAccountRegisterRegisterAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3769,7 +4009,15 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventCatalogControllerCheckoutSuccessBefore(string &$route, array &$args): void
+    /**
+     * Event: catalog/controller/checkout/success/before
+     *
+     * @param string $route
+     * @param array $args
+     *
+     * @return void
+     */
+    public function eventCatalogControllerCheckoutSuccessBefore(&$route, &$args)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3963,7 +4211,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewCheckoutSuccessBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/common/success/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutSuccessBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -3992,12 +4249,22 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $this->load->model('extension/ps_enhanced_measurement/analytics/ps_enhanced_measurement');
 
+
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutSuccessBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutCartBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/cart/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutCartBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -4151,10 +4418,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutCartListBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/cart_list/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutCartListBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -4373,10 +4649,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartListBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewCheckoutCartInfoBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: catalog/view/checkout/cart_info/before, catalog/view/common/cart/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewCheckoutCartInfoBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -4572,10 +4857,19 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
 
         $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceCatalogViewCheckoutCartInfoBefore($args);
 
-        $template = $this->replaceViews($route, $template, $views);
+        $output = $this->replaceViews($route, $output, $views);
     }
 
-    public function eventCatalogViewExtensionOpencartModuleBestsellerAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/extension/opencart/module/bestseller/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewExtensionOpencartModuleBestsellerAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -4778,7 +5072,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewExtensionOpencartModuleFeaturedAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/extension/opencart/module/featured/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewExtensionOpencartModuleFeaturedAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -4988,7 +5291,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewExtensionOpencartModuleLatestAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/extension/opencart/module/latest/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewExtensionOpencartModuleLatestAfter(&$route, &$args, &$output)
     {
         if (!$this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -5199,7 +5511,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         }
     }
 
-    public function eventCatalogViewExtensionOpencartModuleSpecialAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: catalog/controller/extension/opencart/module/special/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventCatalogViewExtensionOpencartModuleSpecialAfter(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -5793,7 +6114,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      * If positions are specified, the method performs replacements only at those positions.
      *
      * @param string $route The route associated with the template.
-     * @param string $template The name of the template to be processed.
+     * @param string|null $template The name of the template to be processed.
      * @param array $views An array of associative arrays where each associative array contains:
      *                     - string 'search': The string to search for in the template.
      *                     - string 'replace': The string to replace the 'search' string with.
@@ -5803,8 +6124,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      *
      * @return mixed The modified template content after performing the replacements.
      */
-    protected function replaceViews(string $route, string $template, array $views): mixed
+    protected function replaceViews(string $route, string|null $template, array $views): mixed
     {
+        if (is_null($template)) {
+            $template = '';
+        }
+
+        if (empty($views)) {
+            return $this->getTemplateBuffer($route, $template);
+        }
+
         $output = $this->getTemplateBuffer($route, $template);
 
         foreach ($views as $view) {

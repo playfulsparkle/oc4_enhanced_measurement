@@ -795,7 +795,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         return (bool) $response;
     }
 
-    public function eventAdminControllerSaleOrderAddHistoryAfter(string &$route, array &$args, string|null &$output = null): void
+    /**
+     * Event: admin/controller/sale/order.call/after
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventAdminControllerSaleOrderAddHistoryAfter(&$route, &$args, &$output)
     {
         if (!isset($this->request->get['action'])) {
             return;
@@ -989,7 +998,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
         $this->response->setOutput(json_encode($json_response, JSON_NUMERIC_CHECK));
     }
 
-    public function eventAdminViewSaleOrderInfoBefore(string &$route, array &$args, string &$template): void
+    /**
+     * Event: admin/view/sale/order_info/before
+     *
+     * @param string $route
+     * @param array $args
+     * @param string $output
+     *
+     * @return void
+     */
+    public function eventAdminViewSaleOrderInfoBefore(&$route, &$args, &$output)
     {
         if (!(bool) $this->config->get('analytics_ps_enhanced_measurement_status')) {
             return;
@@ -1028,9 +1046,10 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
                 $args['ps_client_info'] = false;
             }
 
+
             $views = $this->model_extension_ps_enhanced_measurement_analytics_ps_enhanced_measurement->replaceAdminViewSaleOrderInfoBefore($args);
 
-            $template = $this->replaceViews($route, $template, $views);
+            $output = $this->replaceViews($route, $output, $views);
         }
     }
 
@@ -1263,7 +1282,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      * If positions are specified, the method performs replacements only at those positions.
      *
      * @param string $route The route associated with the template.
-     * @param string $template The name of the template to be processed.
+     * @param string|null $template The name of the template to be processed.
      * @param array $views An array of associative arrays where each associative array contains:
      *                     - string 'search': The string to search for in the template.
      *                     - string 'replace': The string to replace the 'search' string with.
@@ -1273,8 +1292,16 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
      *
      * @return mixed The modified template content after performing the replacements.
      */
-    protected function replaceViews(string $route, string $template, array $views): mixed
+    protected function replaceViews(string $route, string|null $template, array $views): mixed
     {
+        if (is_null($template)) {
+            $template = '';
+        }
+
+        if (empty($views)) {
+            return $this->getTemplateBuffer($route, $template);
+        }
+
         $output = $this->getTemplateBuffer($route, $template);
 
         foreach ($views as $view) {
