@@ -7,7 +7,7 @@ $_['heading_contact']                       = 'Support kontaktieren';
 $_['text_extension']                        = 'Erweiterungen';
 $_['text_edit']                             = 'Bearbeiten der Enhanced Measurement';
 $_['text_success']                          = 'Erfolg: Sie haben die Enhanced Measurement erfolgreich bearbeitet!';
-$_['text_contact']                          = '<p>Für weitere Unterstützung wenden Sie sich bitte an unser Support-Team:</p><ul><li><strong>Kontakt:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokumentation:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Benutzerdokumentation</a></li></ul>';
+$_['text_contact']                          = '<p>Für weitere Unterstützung wenden Sie sich bitte an unser Support-Team:</p><ul><li><strong>Support-Webseite:</strong> <a href="%1$s">%1$s</a></li><li><strong>GitHub-Repository:</strong> <a href="%2$s" target="_blank" rel="noopener noreferrer">%2$s</a></li><li><strong>Support kontaktieren:</strong> <a href="mailto:%3$s">%3$s</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'Artikeloptionen';

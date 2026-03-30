@@ -7,7 +7,7 @@ $_['heading_contact']                       = '고객 지원 문의';
 $_['text_extension']                        = '확장 모듈';
 $_['text_edit']                             = '향상된 측정 편집';
 $_['text_success']                          = '성공: 향상된 측정 설정을 수정했습니다!';
-$_['text_contact']                          = '<p>추가 지원이 필요하시면 지원 팀에 문의해 주십시오:</p><ul><li><strong>연락처:</strong> <a href="mailto:%s">%s</a></li><li><strong>문서:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">사용자 문서</a></li></ul>';
+$_['text_contact']                          = '<p>추가적인 도움이 필요하시면 당사의 지원 팀에 문의해 주시기 바랍니다.</p><ul><li><strong>지원 웹사이트:</strong> <a href="%1$s">%1$s</a></li><li><strong>GitHub 저장소:</strong> <a href="%2$s" target="_blank" rel="noopener noreferrer">%2$s</a></li><li><strong>지원 문의:</strong> <a href="mailto:%3$s">%3$s</a></li></ul>';
 $_['text_gtag']                             = '전역 사이트 태그 - gtag.js';
 $_['text_gtm']                              = 'Google 태그 관리자';
 $_['text_item_options_group']               = '항목 옵션';

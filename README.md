@@ -14,7 +14,7 @@ The **Playful Sparkle - Enhanced Measurement** extension for OpenCart 4.x+ makes
 - **Hassle-Free Setup:** No technical expertise needed. Just provide your Google IDs and API secrets, and the extension does the rest.
 - **Multi-Store Support:** Easily manage and track analytics across multiple stores with a single setup.
 - **Enhanced Insights for Smarter Decisions:** Leverage Google Analytics GA4's powerful features to improve performance, enhance user experience, and increase revenue.
-- **Multilingual Support**: Ready for international use with languages including العربية (ar), Български (bg), 中文(简体) (zh-cn), 中文(繁體) (zh-tw), Čeština (cs-cz), English (UK) (en-gb), English (US) (en-us), Français (fr-fr), Deutsch (de-de), Ελληνικά (el-gr), Magyar (hu-hu), Italiano (it-it), 日本語 (ja), 한국어 (ko-kr), Polski (pl-pl), Português (Brasil) (pt-br), Русский (ru-ru), Slovenčina (sk-sk), Español (es-es), and Türkçe (tr-tr).
+- **Multilingual Support**: Ready for international use with languages including العربية (ar), فارسی (fa-ir), Български (bg), 中文(简体) (zh-cn), 中文(繁體) (zh-tw), Čeština (cs-cz), English (UK) (en-gb), English (US) (en-us), Français (fr-fr), Deutsch (de-de), Ελληνικά (el-gr), Magyar (hu-hu), Italiano (it-it), 日本語 (ja), 한국어 (ko-kr), Polski (pl-pl), Português (Brasil) (pt-br), Русский (ru-ru), Slovenčina (sk-sk), Español (es-es), and Türkçe (tr-tr).
 
 ---
 
@@ -92,7 +92,7 @@ This extension enables tracking of key conversion actions in your online store t
 
 ## Support & Inquiries
 
-For assistance or inquiries related to this extension, please open an issue on this repository or contact us via email at [support@playfulsparkle.com](mailto:support@playfulsparkle.com).
+For assistance or inquiries related to this extension, please open an issue on this repository, visit our [url=https://support.playfulsparkle.com]support website[/url], or contact us via email at [support@playfulsparkle.com](mailto:support@playfulsparkle.com).
 
 ---
 

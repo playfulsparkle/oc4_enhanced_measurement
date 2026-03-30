@@ -7,7 +7,7 @@ $_['heading_contact']                       = 'Destekle İletişime Geçin';
 $_['text_extension']                        = 'Eklentiler';
 $_['text_edit']                             = 'Gelişmiş Ölçümü Düzenle';
 $_['text_success']                          = 'Başarılı: Gelişmiş Ölçüm ayarlarını değiştirdiniz!';
-$_['text_contact']                          = '<p>Daha fazla yardım için lütfen destek ekibimizle iletişime geçin:</p><ul><li><strong>İletişim:</strong> <a href="mailto:%s">%s</a></li><li><strong>Dokümantasyon:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">Kullanıcı Dokümantasyonu</a></li></ul>';
+$_['text_contact']                          = '<p>Daha fazla yardım için lütfen destek ekibimizle iletişime geçin:</p><ul><li><strong>Destek Web Sitesi:</strong> <a href="%1$s">%1$s</a></li><li><strong>GitHub Deposu:</strong> <a href="%2$s" target="_blank" rel="noopener noreferrer">%2$s</a></li><li><strong>Destekle İletişime Geçin:</strong> <a href="mailto:%3$s">%3$s</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Etiketi - gtag.js';
 $_['text_gtm']                              = 'Google Etiket Yöneticisi';
 $_['text_item_options_group']               = 'Öğe Seçenekleri';

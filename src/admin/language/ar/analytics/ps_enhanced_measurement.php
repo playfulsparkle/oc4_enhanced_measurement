@@ -7,7 +7,7 @@ $_['heading_contact']                       = 'اتصال بالدعم';
 $_['text_extension']                        = 'الامتدادات';
 $_['text_edit']                             = 'تعديل القياس المعزز';
 $_['text_success']                          = 'نجاح: تم تعديل إعدادات القياس المعزز بنجاح!';
-$_['text_contact']                          = '<p>للحصول على مزيد من المساعدة، يرجى التواصل مع فريق الدعم لدينا:</p><ul><li><strong>الاتصال:</strong> <a href="mailto:%s">%s</a></li><li><strong>التوثيق:</strong> <a href="%s" target="_blank" rel="noopener noreferrer">توثيق المستخدم</a></li></ul>';
+$_['text_contact']                          = '<p>للمزيد من المساعدة، يرجى التواصل مع فريق الدعم لدينا:</p><ul><li><strong>موقع الدعم:</strong> <a href="%1$s">%1$s</a></li><li><strong>مستودع GitHub:</strong> <a href="%2$s" target="_blank" rel="noopener noreferrer">%2$s</a></li><li><strong>الاتصال بالدعم:</strong> <a href="mailto:%3$s">%3$s</a></li></ul>';
 $_['text_gtag']                             = 'Global Site Tag - gtag.js';
 $_['text_gtm']                              = 'Google Tag Manager';
 $_['text_item_options_group']               = 'خيارات العنصر';

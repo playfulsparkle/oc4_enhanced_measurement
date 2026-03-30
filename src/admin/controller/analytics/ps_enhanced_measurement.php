@@ -13,9 +13,14 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
     const EXTENSION_EMAIL = 'support@playfulsparkle.com';
 
     /**
-     * @var string The documentation URL for the extension.
+     * @var string The URL to the support website.
      */
-    const EXTENSION_DOC = 'https://github.com/playfulsparkle/oc4_enhanced_measurement.git';
+    const SUPPORT_URL = 'https://support.playfulsparkle.com';
+
+    /**
+     * @var string The GitHub repository URL of the extension.
+     */
+    const GITHUB_REPO_URL = 'https://github.com/playfulsparkle/oc4_enhanced_measurement';
 
     /**
      * @return void
@@ -149,7 +154,7 @@ class PsEnhancedMeasurement extends \Opencart\System\Engine\Controller
             $data['analytics_ps_enhanced_measurement_gcm_profiles'] = 2;
         }
 
-        $data['text_contact'] = sprintf($this->language->get('text_contact'), self::EXTENSION_EMAIL, self::EXTENSION_EMAIL, self::EXTENSION_DOC);
+        $data['text_contact'] = sprintf($this->language->get('text_contact'), self::SUPPORT_URL, self::GITHUB_REPO_URL, self::EXTENSION_EMAIL);
 
         $this->load->model('localisation/order_status');
 
