@@ -9,9 +9,16 @@
   "keywords": [
     "opencart",
     "opencart4",
+    "opencart-extension",
     "playfulsparkle",
     "ga4",
-    "enhanced measurement"
+    "google-analytics",
+    "enhanced-measurement",
+    "google-tag-manager",
+    "gtm",
+    "google-ads",
+    "conversion-tracking",
+    "consent-mode"
   ],
   "author": "zsoltoroszlany82 <zsolt.oroszlany@playfulsparkle.com>",
   "license": "GPL",
